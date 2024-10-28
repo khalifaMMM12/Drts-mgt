@@ -15,4 +15,11 @@ if (isset($_GET['id'])) {
         echo json_encode(['error' => 'Vehicle not found']);
     }
 }
+
+// Fetch vehicle data from the database
+$sql = "SELECT * FROM vehicles";
+$stmt = $pdo->query($sql);
+$vehicles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
+

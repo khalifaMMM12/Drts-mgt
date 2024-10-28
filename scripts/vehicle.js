@@ -52,3 +52,36 @@ function closeDetailsModal() {
     document.getElementById("detailsModal").classList.add("hidden");
 }
 
+// Open Modal and populate it with vehicle details
+    function openModal(vehicleId) {
+        const vehicle = vehicles[vehicleId];
+        document.getElementById('vehicleTitle').innerText = vehicle.title;
+        document.getElementById('vehicleInfo').innerText = vehicle.info;
+        
+        // Populate images
+        const imageGallery = document.getElementById('imageGallery');
+        imageGallery.innerHTML = ''; // Clear existing images
+        vehicle.images.forEach(image => {
+            const imgElement = document.createElement('img');
+            imgElement.src = `assets/${image}`;
+            imgElement.alt = "Vehicle Image";
+            imgElement.className = "w-32 h-32 object-cover rounded-md";
+            imageGallery.appendChild(imgElement);
+        });
+
+        // Show the modal
+        document.getElementById('vehicleModal').classList.remove('hidden');
+    }
+
+    // Close Modal
+    function closeModal() {
+        document.getElementById('vehicleModal').classList.add('hidden');
+    }
+
+    // Close Modal by clicking outside
+    document.getElementById('vehicleModal').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) {
+            closeModal();
+        }
+    });
+

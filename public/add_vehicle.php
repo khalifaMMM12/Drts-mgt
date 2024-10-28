@@ -1,36 +1,40 @@
 <?php
 include '../config/db.php';
 
-if (isset($_POST['submit'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    // Collect form data
     $reg_no = $_POST['reg_no'];
     $type = $_POST['type'];
     $make = $_POST['make'];
     $location = $_POST['location'];
     $inspection_date = $_POST['inspection_date'];
-    $status = isset($_POST['needs_repairs']) ? 'Needs Repairs' : 'Fixed';
-    $repair_type = isset($_POST['needs_repairs']) ? $_POST['repair_type'] : null;
-    $picture = $_FILES['picture']['name'];
 
-    // Upload vehicle image
-    $targetDir = "../public/assets/";
-    $targetFilePath = $targetDir . basename($picture);
-    move_uploaded_file($_FILES['picture']['tmp_name'], $targetFilePath);
+    // Initialize an array to hold the filenames
+    $imageNames = [];
+    
+    // Handle multiple file assets
+    if (isset($_FILES['images'])) {
+        foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
+            $fileName = basename($_FILES['images']['name'][$key]);
+            $targetDir = "assets/"; // Make sure this directory exists
+            $targetFilePath = $targetDir . $fileName;
 
-    $sql = "INSERT INTO vehicles (reg_no, type, make, location, status, repair_type, picture, inspection_date)
-            VALUES (:reg_no, :type, :make, :location, :status, :repair_type, :picture, :inspection_date)";
+            // Move the uploaded file to the target directory
+            if (move_uploaded_file($tmp_name, $targetFilePath)) {
+                $imageNames[] = $fileName; // Store the file name in the array
+            }
+        }
+    }
 
+    // Convert the array of image names to a comma-separated string
+    $imagesString = implode(',', $imageNames);
+
+    // Insert vehicle data into the database
+    $sql = "INSERT INTO vehicles (reg_no, type, make, location, inspection_date, images) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([
-        ':reg_no' => $reg_no,
-        ':type' => $type,
-        ':make' => $make,
-        ':location' => $location,
-        ':status' => $status,
-        ':repair_type' => $repair_type,
-        ':picture' => $picture,
-        ':inspection_date' => $inspection_date
-    ]);
+    $stmt->execute([$reg_no, $type, $make, $location, $inspection_date, $imagesString]);
 
+    // Redirect back to the main page
     header("Location: index.php");
     exit();
 }
@@ -89,16 +93,20 @@ if (isset($_POST['submit'])) {
             <label>Inspection Date:</label>
             <input type="date" name="inspection_date" required class="border p-2 w-full mb-4">
 
-            <label>Needs Repairs:</label>
-            <input type="checkbox" id="needsRepairs" name="needs_repairs" onclick="toggleRepairType()">
+            <div class="mb-4">
+                <label>Needs Repairs:</label>
+                <input type="checkbox" id="needsRepairs" name="needs_repairs" onclick="toggleRepairType()">
+            </div>
 
             <div id="repairTypeField" class="hidden mt-4">
                 <label>Type of Repair:</label>
                 <textarea name="repair_type" class="border p-2 w-full"></textarea>
             </div>
 
-            <label>Vehicle Image:</label>
-            <input type="file" name="picture" class="border p-2 w-full mb-4">
+            <div class="mb-4">
+             <label for="images" class="block font-semibold">Upload Vehicle Pictures</label>
+             <input type="file" name="images[]" id="images" class="border border-gray-300 p-2 w-full rounded" accept="image/*" multiple required>
+            </div>
 
             <button type="submit" name="submit" class="bg-blue-500 text-white p-2 rounded">Add Vehicle</button>
         </form>

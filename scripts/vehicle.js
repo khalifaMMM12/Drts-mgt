@@ -2,9 +2,9 @@ function openModal() {
     document.getElementById("vehicleModal").classList.remove("hidden");
 }
 
-function closeModal() {
-    document.getElementById("vehicleModal").classList.add("hidden");
-}
+// function closeModal() {
+//     document.getElementById("vehicleModal").classList.add("hidden");
+// }
 
 function toggleRepairType() {
     const repairField = document.getElementById("repairTypeField");
@@ -53,35 +53,40 @@ function closeDetailsModal() {
 }
 
 // Open Modal and populate it with vehicle details
-    function openModal(vehicleId) {
-        const vehicle = vehicles[vehicleId];
-        document.getElementById('vehicleTitle').innerText = vehicle.title;
-        document.getElementById('vehicleInfo').innerText = vehicle.info;
-        
-        // Populate images
-        const imageGallery = document.getElementById('imageGallery');
-        imageGallery.innerHTML = ''; // Clear existing images
-        vehicle.images.forEach(image => {
-            const imgElement = document.createElement('img');
-            imgElement.src = `assets/${image}`;
-            imgElement.alt = "Vehicle Image";
-            imgElement.className = "w-32 h-32 object-cover rounded-md";
-            imageGallery.appendChild(imgElement);
-        });
+function openModal() {
+    document.getElementById('vehicleModal').classList.remove('hidden');
+}
 
-        // Show the modal
-        document.getElementById('vehicleModal').classList.remove('hidden');
-    }
+function closeModal() {
+    document.getElementById('vehicleModal').classList.add('hidden');
+    document.getElementById('responseMessage').textContent = ''; // Clear response message
+}
 
-    // Close Modal
-    function closeModal() {
-        document.getElementById('vehicleModal').classList.add('hidden');
-    }
+    document.getElementById('addVehicleForm').addEventListener('submit', function(event) {
+    event.preventDefault();
 
-    // Close Modal by clicking outside
-    document.getElementById('vehicleModal').addEventListener('click', (e) => {
-        if (e.target === e.currentTarget) {
+    const formData = new FormData(this);
+
+    fetch('add_vehicle.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        const responseMessage = document.getElementById('responseMessage');
+        if (data.status === 'success') {
+            responseMessage.textContent = data.message;
+            responseMessage.classList.add('text-green-600');
             closeModal();
+            // Optionally refresh or reload vehicle list
+        } else {
+            responseMessage.textContent = data.message;
+            responseMessage.classList.add('text-red-600');
         }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('responseMessage').textContent = 'An error occurred. Please try again.';
     });
+});
 

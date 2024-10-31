@@ -24,7 +24,7 @@ $vehicles = $stmt->fetchAll();
 <div class="bg-gray-800 text-white p-4">
     <a href="index.php" class="mr-4">All Vehicles</a>
     <a href="fixed_vehicles.php" class="mr-4">Fixed Vehicles</a>
-    <a href="add_vehicle.php" class="mr-4">Add New Vehicle</a>
+    <!-- <a href="add_vehicle.php" class="mr-4">Add New Vehicle</a> -->
 </div>
 
 
@@ -32,13 +32,18 @@ $vehicles = $stmt->fetchAll();
     <h1 class="text-3xl font-bold mb-6">Vehicle Inspection Status</h1>
 
     <!-- Search Bar -->
-    <form method="GET" action="index.php" class="mb-6">
-        <input type="text" name="search" placeholder="Search by registration, type, or location"
-               value="<?php echo htmlspecialchars($search); ?>"
-               class="border p-2 w-1/3 rounded">
-        <button type="submit" class="bg-blue-500 text-white p-2 rounded">Search</button>
-        <button onclick="openModal()"class="bg-gray-500 text-white p-2 rounded" >Add Vehicle</button>
-    </form>
+    <div class="flex items-center w-full gap-4 mb-6"> 
+        <!-- Search Form -->
+        <form method="GET" action="index.php" class="flex w-full max-w-md">
+            <input type="text" name="search" placeholder="Search by registration, type, or location"
+                value="<?php echo htmlspecialchars($search); ?>"
+                class="border p-2 flex-grow rounded-l">
+            <button type="submit" class="bg-blue-500 text-white p-2 rounded-r">Search</button>
+        </form>
+        
+        <!-- Add Vehicle Button -->
+        <button onclick="openModal()" class="bg-gray-500 text-white p-2 rounded w-auto">Add Vehicle</button>
+    </div>
 
     <!-- Vehicle List -->
     <table class="w-full bg-white rounded shadow">
@@ -78,13 +83,18 @@ $vehicles = $stmt->fetchAll();
                             <a href="clear_vehicle.php?id=<?php echo $vehicle['id']; ?>" class="text-green-500">✔ Clear</a>
                         
                             <?php endif; ?>
-
+                            <a href="delete_vehicle.php?id=<?php echo $vehicle['id']; ?>" class="text-red-500" onclick="return confirm('Are you sure you want to delete this vehicle?')">🗑</a>   
                     </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
 </div>
+    <?php if (isset($_GET['message'])): ?>
+        <div class="bg-green-100 text-green-700 p-2 mb-4 rounded">
+            <?php echo htmlspecialchars($_GET['message']); ?>
+        </div>
+    <?php endif; ?>
 
 <!-- Vehicle Details Modal -->
 <div id="detailsModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
@@ -103,52 +113,61 @@ $vehicles = $stmt->fetchAll();
     </div>
 </div>
 
-<!-- Vehicle Modal -->
-<div id="vehicleModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
-    <div class="bg-white p-6 rounded shadow-lg w-full max-w-md">
+<!-- Add Vehicle Modal -->
+<div id="vehicleModal" class="hidden fixed inset-0 bg-gray-500 w-full bg-opacity-75 flex items-center justify-center">
+    <div class="relative bg-white p-6 rounded shadow-lg w-full max-w-3xl"> 
+        <button onclick="closeModal()" class="absolute p-2 top-2 right-2 text-gray-700 text-3xl">&times;</button>
         <h2 class="text-2xl mb-4">Add Vehicle</h2>
-        <form action="add_vehicle.php" method="POST" enctype="multipart/form-data">
-            <label>Registration No:</label>
-            <input type="text" name="reg_no" required class="border p-2 w-full mb-4">
+        <form action="add_vehicle.php" id="addVehicleForm" method="POST" enctype="multipart/form-data">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label>Registration No:</label>
+                    <input type="text" name="reg_no" required class="border p-2 w-full mb-4">
+                </div>
+                
+                <div>
+                    <label for="type" class="block font-semibold">Vehicle Type</label>
+                    <select name="type" id="type" class="border border-gray-300 p-2 w-full rounded" required>
+                        <option value="" disabled selected>Select a type</option>
+                        <option value="Sedan">Sedan</option>
+                        <option value="SUV">SUV</option>
+                        <option value="Truck">Truck</option>
+                        <option value="Van">Van</option>
+                        <option value="Wagon">Wagon</option>
+                        <option value="Coupe">Coupe</option>
+                        <option value="Convertible">Convertible</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label>Make:</label>
+                    <input type="text" name="make" required class="border p-2 w-full mb-4">
+                </div>
 
-           <!-- Vehicle Type (Dropdown) -->
-            <div class="mb-4">
-                <label for="type" class="block font-semibold">Vehicle Type</label>
-                <select name="type" id="type" class="border border-gray-300 p-2 w-full rounded" required>
-                    <option value="" disabled selected>Select a type</option>
-                    <option value="Sedan">Sedan</option>
-                    <option value="SUV">SUV</option>
-                    <option value="Truck">Truck</option>
-                    <option value="Van">Van</option>
-                    <option value="Wagon">Wagon</option>
-                    <option value="Coupe">Coupe</option>
-                    <option value="Convertible">Convertible</option>
-                    <!-- Add more vehicle types as needed -->
-                </select>
-            </div>
+                <div>
+                    <label>Location:</label>
+                    <input type="text" name="location" required class="border p-2 w-full mb-4">
+                </div>
 
-            <label>Make:</label>
-            <input type="text" name="make" required class="border p-2 w-full mb-4">
+                <div>
+                    <label>Inspection Date:</label>
+                    <input type="date" name="inspection_date" required class="border p-2 w-full mb-4">
+                </div>
 
-            <label>Location:</label>
-            <input type="text" name="location" required class="border p-2 w-full mb-4">
+                <div class="mb-4">
+                    <label>Needs Repairs:</label>
+                    <input type="checkbox" id="needsRepairs" name="needs_repairs" onclick="toggleRepairType()">
+                    <div id="repairTypeField" class="hidden mt-4 col-span-2">
+                        <label>Type of Repair:</label>
+                        <textarea name="repair_type" class="border p-2 w-full"></textarea>
+                    </div>
+                </div>
 
-            <label>Inspection Date:</label>
-            <input type="date" name="inspection_date" required class="border p-2 w-full mb-4">
 
-            <div class="mb-4">
-                <label>Needs Repairs:</label>
-                <input type="checkbox" id="needsRepairs" name="needs_repairs" onclick="toggleRepairType()">
-            </div>
-
-            <div id="repairTypeField" class="hidden mt-4">
-                <label>Type of Repair:</label>
-                <textarea name="repair_type" class="border p-2 w-full"></textarea>
-            </div>
-
-            <div class="mb-4">
-             <label for="images" class="block font-semibold">Upload Vehicle Pictures</label>
-             <input type="file" name="images[]" id="images" class="border border-gray-300 p-2 w-full rounded" accept="image/*" multiple required>
+                <div class="mb-4 col-span-2">
+                    <label for="images" class="block font-semibold">Upload Vehicle Pictures</label>
+                    <input type="file" name="images[]" id="images" class="border border-gray-300 p-2 w-full rounded" accept="image/*" multiple required>
+                </div>
             </div>
 
             <button type="submit" name="submit" class="bg-blue-500 text-white p-2 rounded">Add Vehicle</button>

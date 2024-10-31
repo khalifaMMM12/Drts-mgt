@@ -52,15 +52,26 @@ function closeDetailsModal() {
     document.getElementById("detailsModal").classList.add("hidden");
 }
 
-// Open Modal and populate it with vehicle details
 function openModal() {
-    document.getElementById('vehicleModal').classList.remove('hidden');
-}
+    const modal = document.getElementById("vehicleModal");
+    const modalContent = document.getElementById("vehicleModalContent");
+    modal.classList.remove("hidden");
+    setTimeout(() => {
+      modal.classList.add("opacity-100");
+      modalContent.classList.add("translate-y-0", "opacity-100");
+    }, 10);
+  }
 
-function closeModal() {
-    document.getElementById('vehicleModal').classList.add('hidden');
-    document.getElementById('responseMessage').textContent = ''; // Clear response message
-}
+  function closeModal() {
+    const modal = document.getElementById("vehicleModal");
+    const modalContent = document.getElementById("vehicleModalContent");
+    modal.classList.remove("opacity-100");
+    modalContent.classList.remove("translate-y-0", "opacity-100");
+    modalContent.classList.add("translate-y-full");
+    setTimeout(() => {
+      modal.classList.add("hidden");
+    }, 300);
+  }
 
     document.getElementById('addVehicleForm').addEventListener('submit', function(event) {
     event.preventDefault();
@@ -89,4 +100,26 @@ function closeModal() {
         document.getElementById('responseMessage').textContent = 'An error occurred. Please try again.';
     });
 });
+
+function previewImages() {
+    const imagePreview = document.getElementById('imagePreview');
+    const files = document.getElementById('images').files;
+
+    imagePreview.innerHTML = ''; // Clear previous previews
+
+    for (const file of files) {
+        const reader = new FileReader();
+        
+        reader.onload = function(event) {
+            const imgElement = document.createElement('img');
+            imgElement.src = event.target.result;
+            imgElement.classList.add('w-40', 'h-40', 'object-cover', 'rounded');
+            imagePreview.appendChild(imgElement);
+        };
+
+        reader.readAsDataURL(file);
+    }
+
+    console.log("Preview function called");
+}
 

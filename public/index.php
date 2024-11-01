@@ -19,6 +19,7 @@ $vehicles = $stmt->fetchAll();
     <meta charset="UTF-8">
     <title>Vehicle Inspection Status</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
 </head>
 
 <body class="bg-gray-100">
@@ -45,7 +46,7 @@ $vehicles = $stmt->fetchAll();
             </form>
 
             <!-- Add Vehicle Button -->
-            <button onclick="openModal()" class="bg-gradient-to-b from-blue-500 to-indigo-600 hover:to-indigo-700 text-white px-4 py-2 shadow-lg">Add Vehicle</button>
+            <button onclick="openModal()" class="rounded bg-gradient-to-b from-blue-500 to-indigo-600 hover:to-indigo-700 text-white px-4 py-2 shadow-lg">Add Vehicle</button>
         </div>
 
         <!-- Vehicle List Table -->
@@ -104,13 +105,12 @@ $vehicles = $stmt->fetchAll();
     </div>
 
     <!-- Add Vehicle Modal -->
-    <!-- Add Vehicle Modal -->
-    <div id="vehicleModal" class="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center p-4 hidden transition-opacity duration-300 ease-out">
-        <div id="vehicleModalContent" class="relative border-2 border-yellow-400 bg-white p-6 rounded-lg shadow-lg w-full max-w-lg md:max-w-2xl lg:max-w-3xl overflow-y-auto max-h-full transform translate-y-full opacity-0 transition-all duration-300 ease-out">
-        <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-700 text-4xl md:text-4xl">&times;</button>            
-        <h2 class="text-xl md:text-2xl mb-4 text-yellow-500 font-bold">Add Vehicle</h2>
+    <div id="vehicleModal" class="modal-overlay hidden">
+        <div id="vehicleModalContent" class="modal-content">
+            <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-700 text-4xl">&times;</button>            
+            <h2 class="text-xl mb-4 text-yellow-500 font-bold">Add Vehicle</h2>
             <form action="add_vehicle.php" id="addVehicleForm" method="POST" enctype="multipart/form-data">
-                <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-2">   
                     <div>
                         <label class="block">Registration No:</label>
                         <input type="text" name="reg_no" required class="border p-2 w-full mb-4">

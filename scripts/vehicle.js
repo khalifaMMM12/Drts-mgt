@@ -55,24 +55,22 @@ function closeDetailsModal() {
 function openModal() {
     const modal = document.getElementById("vehicleModal");
     const modalContent = document.getElementById("vehicleModalContent");
-    modal.classList.remove("hidden");
-    setTimeout(() => {
-      modal.classList.add("opacity-100");
-      modalContent.classList.add("translate-y-0", "opacity-100");
-    }, 10);
+  
+    modal.classList.remove("hidden"); // Show the overlay
+    modalContent.classList.remove("modal-hide"); // Remove any hide animation class
   }
-
+  
   function closeModal() {
     const modal = document.getElementById("vehicleModal");
     const modalContent = document.getElementById("vehicleModalContent");
-    modal.classList.remove("opacity-100");
-    modalContent.classList.remove("translate-y-0", "opacity-100");
-    modalContent.classList.add("translate-y-full");
-    setTimeout(() => {
-      modal.classList.add("hidden");
-    }, 300);
+  
+    modalContent.classList.add("modal-hide"); // Add slide-down animation
+    modalContent.addEventListener("animationend", () => {
+      modal.classList.add("hidden"); // Hide overlay once the animation ends
+    }, { once: true });
   }
-
+  
+  
     document.getElementById('addVehicleForm').addEventListener('submit', function(event) {
     event.preventDefault();
 

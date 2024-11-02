@@ -1,6 +1,6 @@
-function openModal() {
-    document.getElementById("vehicleModal").classList.remove("hidden");
-}
+// function openModal() {
+//     document.getElementById("vehicleModal").classList.remove("hidden");
+// }
 
 // function closeModal() {
 //     document.getElementById("vehicleModal").classList.add("hidden");
@@ -27,7 +27,12 @@ function showDetails(vehicleId) {
         .then(response => response.json())
         .then(data => {
             const detailsModal = document.getElementById("detailsModal");
-            const vehicleDetails = document.getElementById("vehicleDetails");
+            // const vehicleDetails = document.getElementById("vehicleDetails");
+
+            // if (!detailsModal || !vehicleDetails) {
+            //     console.error("Modal or vehicle details container not found in DOM.");
+            //     return;
+            // }
 
             vehicleDetails.innerHTML = `
                 <p><strong>Registration No:</strong> ${data.reg_no}</p>
@@ -38,9 +43,17 @@ function showDetails(vehicleId) {
                 <p><strong>Repair Type:</strong> ${data.repair_type || 'N/A'}</p>
                 <p><strong>Inspection Date:</strong> ${data.inspection_date}</p>
                 <p><strong>Repair Completion Date:</strong> ${data.repair_completion_date || 'N/A'}</p>
-                <img src="../public/assets/${data.picture}" alt="Vehicle Image" class="mt-4 w-full rounded shadow">
+                <img src="../public/assets/${data.picture}" alt="Vehicle Image" class="mt-4 w-full rounded shadow-lg object-cover">
             `;
+
             detailsModal.classList.remove("hidden");
+
+            // Close modal if clicked outside of it
+            detailsModal.addEventListener("click", (event) => {
+                if (event.target === detailsModal) {
+                    closeDetailsModal();
+                }
+            });
         })
         .catch(error => {
             alert("Failed to load vehicle details");
@@ -56,17 +69,17 @@ function openModal() {
     const modal = document.getElementById("vehicleModal");
     const modalContent = document.getElementById("vehicleModalContent");
   
-    modal.classList.remove("hidden"); // Show the overlay
-    modalContent.classList.remove("modal-hide"); // Remove any hide animation class
+    modal.classList.add("active");
+    modalContent.classList.remove("hide");
   }
   
   function closeModal() {
     const modal = document.getElementById("vehicleModal");
     const modalContent = document.getElementById("vehicleModalContent");
   
-    modalContent.classList.add("modal-hide"); // Add slide-down animation
+    modalContent.classList.add("hide");
     modalContent.addEventListener("animationend", () => {
-      modal.classList.add("hidden"); // Hide overlay once the animation ends
+      modal.classList.remove("active");
     }, { once: true });
   }
   
@@ -121,3 +134,56 @@ function previewImages() {
     console.log("Preview function called");
 }
 
+const images = []; // Fill this array with image paths
+let currentIndex = 0;
+
+function openModal() {
+    document.getElementById("detailsModal").classList.remove("hidden");
+}
+
+function closeModal() {
+    document.getElementById("detailsModal").classList.add("hidden");
+    closeCarousel(); // Close the carousel if open
+}
+
+// Dynamically populate thumbnails
+function populateGallery() {
+    const gallery = document.getElementById("imageGallery");
+    gallery.innerHTML = '';
+    images.forEach((src, index) => {
+        const img = document.createElement("img");
+        img.src = src;
+        img.classList.add("cursor-pointer", "object-cover", "w-full", "h-24", "rounded");
+        img.onclick = () => openCarousel(index);
+        gallery.appendChild(img);
+    });
+}
+
+// Carousel open, close, and navigation functions
+function openCarousel(index) {
+    currentIndex = index;
+    updateCarouselImage();
+    document.getElementById("carouselModal").classList.remove("hidden");
+}
+
+function closeCarousel() {
+    document.getElementById("carouselModal").classList.add("hidden");
+}
+
+function updateCarouselImage() {
+    const enlargedImg = document.getElementById("enlargedImg");
+    enlargedImg.src = images[currentIndex];
+}
+
+function showPrevImage() {
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    updateCarouselImage();
+}
+
+function showNextImage() {
+    currentIndex = (currentIndex + 1) % images.length;
+    updateCarouselImage();
+}
+
+// Call this function when you open the modal to load the thumbnails
+populateGallery();

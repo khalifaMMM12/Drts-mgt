@@ -1,6 +1,6 @@
 <?php
 $host = 'localhost';
-$db = 'VehicleInspection';
+$db = 'vehicleinspection_db';
 $user = 'root';
 $pass = '';
 

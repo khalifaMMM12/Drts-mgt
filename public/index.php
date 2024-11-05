@@ -46,7 +46,7 @@ $vehicles = $stmt->fetchAll();
             </form>
 
             <!-- Add Vehicle Button -->
-            <button onclick="openModal()" class="rounded bg-gradient-to-b from-blue-500 to-indigo-600 hover:to-indigo-700 text-white px-4 py-2 shadow-lg">Add Vehicle</button>
+            <button onclick="openModal()" class="rounded bg-gradient-to-b from-blue-500 to-indigo-600 hover:to-indigo-700 text-white px-4 py-2 shadow-lg">Add Vehicles</button>
         </div>
 
         <!-- Vehicle List Table -->
@@ -95,7 +95,7 @@ $vehicles = $stmt->fetchAll();
     <div id="detailsModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
     <div class="bg-white p-6 rounded shadow-lg w-full max-w-md relative">
         <!-- Close Button -->
-        <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-700 text-2xl font-bold">
+        <button onclick="closeDetails()" class="absolute top-2 right-2 text-gray-700 text-2xl font-bold">
             &times;
         </button>
         <h2 class="text-2xl mb-4">Vehicle Details</h2>
@@ -154,7 +154,7 @@ $vehicles = $stmt->fetchAll();
                         <input type="date" name="inspection_date" required class="border p-2 w-full mb-4">
                     </div>
 
-                    <div class="mb-4 col-span-2">
+                    <div>
                         <label>Needs Repairs:</label>
                         <input type="checkbox" id="needsRepairs" name="needs_repairs" onclick="toggleRepairType()">
                         <div id="repairTypeField" class="hidden mt-4">
@@ -165,7 +165,7 @@ $vehicles = $stmt->fetchAll();
 
                     <div class="mb-4 col-span-2">
                         <label for="images" class="block font-semibold">Upload Vehicle Pictures</label>
-                        <input type="file" name="images[]" id="images" onchange="previewImages()" class="border border-gray-300 p-2 w-full rounded" accept="image/*" multiple required>
+                        <input type="file" name="images[]" id="images" onchange="previewImages()" class="border border-gray-300 p-2 w-full rounded" accept="image/*" multiple>
                     </div>
 
                     <!-- Image Preview Section -->

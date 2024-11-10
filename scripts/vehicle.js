@@ -146,7 +146,18 @@ function addVehicleToTable(vehicle) {
 //     return responseMessage;
 // }
 
+// Edit Vehicle Model
+function editVehicle(vehicleId){
+    document.getElementById("EditvehicleModal").classList.add("active");
+}
 
+function closeEditModal(){
+    document.getElementById("EditvehicleModal").classList.remove("active");
+    document.getElementById("EditvehicleModal").classList.add("hide");
+}
+
+
+// Show Vehicle Details Model
 function showDetails(vehicleId) {
     const detailsModal = document.getElementById("detailsModal");
     const detailsModalContent = document.getElementById("detailsModalContent");
@@ -205,7 +216,7 @@ function closeDetailsModal() {
 
     setTimeout(() => {
         detailsModal.classList.remove("active"); 
-    }, 3000);
+    }, 400);
 }
 
 
@@ -260,15 +271,21 @@ function populateGallery() {
 }
 
 // Carousel open, close, and navigation functions
-function openCarousel(index) {
-    currentIndex = index;
-    updateCarouselImage();
-    document.getElementById("carouselModal").classList.remove("hidden");
+function openCarousel() {
+    const carousel = document.getElementById('carouselModal');
+    const carouselContent = document.querySelector('.carousel-content');
+    carousel.classList.add('active');
+    setTimeout(() => carouselContent.classList.add('active'), 10);
 }
 
 function closeCarousel() {
-    document.getElementById("carouselModal").classList.add("hidden");
+    const carousel = document.getElementById('carouselModal');
+    const carouselContent = document.querySelector('.carousel-content');
+    carouselContent.classList.remove('active');
+    setTimeout(() => carousel.classList.remove('active'), 300);
 }
+
+document.getElementById('carouselModal').addEventListener('click', closeCarousel);
 
 function updateCarouselImage() {
     const enlargedImg = document.getElementById("enlargedImg");

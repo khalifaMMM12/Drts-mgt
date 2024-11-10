@@ -80,7 +80,7 @@ $vehicles = $stmt->fetchAll();
                             <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['inspection_date']); ?></td>
                             <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
                                 <button onclick="showDetails(<?php echo $vehicle['id']; ?>)" class="text-blue-500 hover:text-blue-700">ℹ</button>
-                                <a href="edit_vehicle.php?id=<?php echo $vehicle['id']; ?>" class="text-yellow-500 hover:text-yellow-700">✏</a>
+                                <button onclick="editVehicle(<?php echo $vehicle['id']; ?>)" class="text-yellow-500 hover:text-yellow-700">✏</button>
                                 <a href="clear_vehicle.php?id=<?php echo $vehicle['id']; ?>" class="text-green-500 hover:text-green-700">✔ Clear</a>
                                 <a href="delete_vehicle.php?id=<?php echo $vehicle['id']; ?>" class="text-red-500 hover:text-red-700" onclick="return confirm('Are you sure you want to delete this vehicle?')">🗑</a>
                             </td>
@@ -91,13 +91,13 @@ $vehicles = $stmt->fetchAll();
         </div>
     </div>
 
-    <!-- Vehicle Details Modal -->
-    <div id="detailsModal" class="modal-overlay hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
-    <div id="detailsModalContent" class="modal-content relative bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+   <!-- Vehicle Details Modal -->
+<div id="detailsModal" class="modal-overlay hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
+    <div id="detailsModalContent" class="modal-content relative bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
         <!-- Close Button -->
-        <button onclick="closeDetails()" class="absolute top-2 right-2 text-gray-700 text-4xl">&times;</button>
+        <button onclick="closeDetailsModal()" class="absolute top-2 right-2 text-gray-700 text-4xl">&times;</button>
         <h2 class="text-xl mb-4 text-gray-800 font-bold">Vehicle Details</h2>
-        
+
         <div id="vehicleDetails">
             <p><strong>Registration Number:</strong> <span id="detailRegNo"></span></p>
             <p><strong>Type:</strong> <span id="detailType"></span></p>
@@ -107,26 +107,89 @@ $vehicles = $stmt->fetchAll();
             <p><strong>Repair Type:</strong> <span id="detailRepair"></span></p>
             <p><strong>Inspection Date:</strong> <span id="detailInspectionDate"></span></p>
         </div>
-        <!-- Image Gallery -->
-        <div id="imageGallery" class="grid grid-cols-3 gap-2 mb-4">
-            <!-- Thumbnails populated dynamically with JavaScript -->
-        </div>
+
         <!-- Enlarged Image View with Carousel Controls -->
-        <div id="carouselModal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center">
-            <div class="relative w-11/12 md:w-3/4 lg:w-1/2">
+        <div id="carouselModal" class="carousel-overlay hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center">
+            <div onclick="event.stopPropagation()" class="carousel-content relative w-11/12 md:w-3/4 lg:w-1/2 transform scale-95 opacity-0 transition duration-300">
                 <button onclick="closeCarousel()" class="absolute top-2 right-2 text-white text-2xl font-bold">&times;</button>
                 <button id="prevImage" onclick="showPrevImage()" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-3xl font-bold">&larr;</button>
-                <img id="enlargedImg" class="w-full h-auto rounded shadow-lg">
+                <img id="enlargedImg" class="w-full h-auto rounded-lg shadow-lg">
                 <button id="nextImage" onclick="showNextImage()" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-3xl font-bold">&rarr;</button>
             </div>
         </div>
     </div>
 </div>
 
+
     <!-- Add Vehicle Modal -->
     <div id="vehicleModal" class="modal-overlay hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
         <div id="vehicleModalContent" class="modal-content relative bg-white p-6 rounded-lg shadow-lg border-2 border-yellow-400 w-full max-w-lg md:max-w-2xl lg:max-w-3xl overflow-y-auto max-h-full">
             <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-700 text-4xl">&times;</button>            
+            <h2 class="text-xl mb-4 text-yellow-500 font-bold">Add Vehicle</h2>
+            <form action="add_vehicle.php" id="addVehicleForm" method="POST" enctype="multipart/form-data">
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div>
+                        <label class="block">Registration No:</label>
+                        <input type="text" name="reg_no" required class="border p-2 w-full mb-4">
+                    </div>
+                    <div>
+                        <label class="block font-semibold">Vehicle Type</label>
+                        <select name="type" class="border border-gray-300 p-2 w-full rounded" required>
+                            <option value="" disabled selected>Select a type</option>
+                            <option value="Sedan">Sedan</option>
+                            <option value="SUV">SUV</option>
+                            <option value="Truck">Truck</option>
+                            <option value="Van">Van</option>
+                            <option value="Wagon">Wagon</option>
+                            <option value="Coupe">Coupe</option>
+                            <option value="Convertible">Convertible</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Make:</label>
+                        <input type="text" name="make" required class="border p-2 w-full mb-4">
+                    </div>
+
+                    <div>
+                        <label>Location:</label>
+                        <input type="text" name="location" required class="border p-2 w-full mb-4">
+                    </div>
+
+                    <div>
+                        <label>Inspection Date:</label>
+                        <input type="date" name="inspection_date" required class="border p-2 w-full mb-4">
+                    </div>
+
+                    <div>
+                        <label>Needs Repairs:</label>
+                        <input type="checkbox" id="needsRepairs" name="needs_repairs" onclick="toggleRepairType()">
+                        <div id="repairTypeField" class="hidden mt-4">
+                            <label>Type of Repair:</label>
+                            <textarea name="repair_type" class="border p-2 w-full"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 col-span-2">
+                        <label for="images" class="block font-semibold">Upload Vehicle Pictures</label>
+                        <input type="file" name="images[]" id="images" onchange="previewImages()" class="border border-gray-300 p-2 w-full rounded" accept="image/*" multiple>
+                    </div>
+
+                    <!-- Image Preview Section -->
+                    <div id="imagePreview" class="col-span-2 grid grid-cols-2 gap-2 md:grid-cols-4">
+                        <!-- Preview images will be dynamically inserted here by JavaScript -->
+                    </div>
+                </div>
+                <button type="submit" name="submit" class="bg-yellow-500 text-black p-2 rounded mt-4 w-full md:w-auto">Add Vehicle</button>
+            </form>
+        </div>
+    </div>
+
+
+
+    <!-- Edit Vehicle Modal -->
+    <div id="EditvehicleModal" class="modal-overlay hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
+        <div id="EditvehicleContent" class="modal-content relative bg-white p-6 rounded-lg shadow-lg border-2 border-yellow-400 w-full max-w-lg md:max-w-2xl lg:max-w-3xl overflow-y-auto max-h-full">
+            <button onclick="closeEditModal()" class="absolute top-2 right-2 text-gray-700 text-4xl">&times;</button>            
             <h2 class="text-xl mb-4 text-yellow-500 font-bold">Add Vehicle</h2>
             <form action="add_vehicle.php" id="addVehicleForm" method="POST" enctype="multipart/form-data">
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2">

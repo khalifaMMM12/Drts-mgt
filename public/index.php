@@ -92,13 +92,11 @@ $vehicles = $stmt->fetchAll();
     </div>
 
     <!-- Vehicle Details Modal -->
-    <div id="detailsModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
-    <div class="bg-white p-6 rounded shadow-lg w-full max-w-md relative">
+    <div id="detailsModal" class="modal-overlay hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
+    <div id="detailsModalContent" class="modal-content relative bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <!-- Close Button -->
-        <button onclick="closeDetails()" class="absolute top-2 right-2 text-gray-700 text-2xl font-bold">
-            &times;
-        </button>
-        <h2 class="text-2xl mb-4">Vehicle Details</h2>
+        <button onclick="closeDetails()" class="absolute top-2 right-2 text-gray-700 text-4xl">&times;</button>
+        <h2 class="text-xl mb-4 text-gray-800 font-bold">Vehicle Details</h2>
         
         <div id="vehicleDetails">
             <p><strong>Registration Number:</strong> <span id="detailRegNo"></span></p>
@@ -106,6 +104,7 @@ $vehicles = $stmt->fetchAll();
             <p><strong>Make:</strong> <span id="detailMake"></span></p>
             <p><strong>Location:</strong> <span id="detailLocation"></span></p>
             <p><strong>Status:</strong> <span id="detailStatus"></span></p>
+            <p><strong>Repair Type:</strong> <span id="detailRepair"></span></p>
             <p><strong>Inspection Date:</strong> <span id="detailInspectionDate"></span></p>
         </div>
         <!-- Image Gallery -->

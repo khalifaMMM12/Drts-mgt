@@ -14,7 +14,7 @@ try {
     }
 
     // Validate required fields
-    $required_fields = ['reg_no', 'type', 'make', 'location', 'inspection_date'];
+    $required_fields = ['reg_no', 'type', 'make', 'location', 'repair_type', 'inspection_date'];
     foreach ($required_fields as $field) {
         if (empty($_POST[$field])) {
             throw new Exception("$field is required");
@@ -26,6 +26,7 @@ try {
     $type = filter_var($_POST['type'], FILTER_SANITIZE_STRING);
     $make = filter_var($_POST['make'], FILTER_SANITIZE_STRING);
     $location = filter_var($_POST['location'], FILTER_SANITIZE_STRING);
+    $repair_type = filter_var($_POST['repair_type'], FILTER_SANITIZE_STRING);
     $inspection_date = filter_var($_POST['inspection_date'], FILTER_SANITIZE_STRING);
 
     // Validate inspection date format
@@ -86,11 +87,11 @@ try {
     }
 
     // Insert vehicle data
-    $sql = "INSERT INTO vehicles (reg_no, type, make, location, inspection_date, images) 
-            VALUES (?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO vehicles (reg_no, type, make, location, repair_type, inspection_date, images) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)";
     $stmt = $pdo->prepare($sql);
     
-    if (!$stmt->execute([$reg_no, $type, $make, $location, $inspection_date, $imagesString])) {
+    if (!$stmt->execute([$reg_no, $type, $make, $location, $repair_type, $inspection_date, $imagesString])) {
         throw new Exception('Database error while adding vehicle');
     }
 
@@ -106,6 +107,7 @@ try {
             'type' => $type,
             'make' => $make,
             'location' => $location,
+            'repair_type'=> $repair_type,
             'inspection_date' => $inspection_date,
             'images' => $imageNames
         ]

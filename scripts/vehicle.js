@@ -148,11 +148,18 @@ function addVehicleToTable(vehicle) {
 
 
 function showDetails(vehicleId) {
+    const detailsModal = document.getElementById("detailsModal");
+    const detailsModalContent = document.getElementById("detailsModalContent");
+
+    // Remove "hide" class to trigger slide-up animation
+    detailsModalContent.classList.remove("hide");
+    detailsModal.classList.add("active"); // Show modal overlay
+
     fetch(`get_vehicle_details.php?id=${vehicleId}`)
         .then(response => response.json())
         .then(data => {
 
-            const detailsModal = document.getElementById("detailsModal");
+            // const detailsModal = document.getElementById("detailsModal");
             const imageGallery = document.getElementById("imageGallery");
 
             // Populate vehicle details
@@ -161,6 +168,7 @@ function showDetails(vehicleId) {
             document.getElementById("detailMake").textContent = data.make || "N/A";
             document.getElementById("detailLocation").textContent = data.location || "N/A";
             document.getElementById("detailStatus").textContent = data.status || "Needs Repairs";
+            document.getElementById("detailRepair").textContent = data.repair_type || data.status;
             document.getElementById("detailInspectionDate").textContent = data.inspection_date || "N/A";
   
 
@@ -190,7 +198,14 @@ function showDetails(vehicleId) {
 
 
 function closeDetailsModal() {
-    document.getElementById("detailsModal").classList.add("hidden");
+    const detailsModal = document.getElementById("detailsModal");
+    const detailsModalContent = document.getElementById("detailsModalContent");
+
+    detailsModalContent.classList.add("hide");  
+
+    setTimeout(() => {
+        detailsModal.classList.remove("active"); 
+    }, 3000);
 }
 
 

@@ -5,6 +5,14 @@ include '../config/db.php';
 $sql = "SELECT * FROM vehicles WHERE status = 'Fixed'";
 $stmt = $pdo->query($sql);
 $fixedVehicles = $stmt->fetchAll();
+
+// Search logic
+$search = isset($_GET['search']) ? $_GET['search'] : '';
+
+$sql = "SELECT * FROM vehicles WHERE reg_no LIKE :search OR type LIKE :search OR location LIKE :search";
+$stmt = $pdo->prepare($sql);
+$stmt->execute([':search' => '%' . $search . '%']);
+$vehicles = $stmt->fetchAll();
 ?>
 
 <!DOCTYPE html>
@@ -20,11 +28,22 @@ $fixedVehicles = $stmt->fetchAll();
 <div class="bg-gray-800 text-white p-4">
     <a href="index.php" class="mr-4">All Vehicles</a>
     <a href="fixed_vehicles.php" class="mr-4">Fixed Vehicles</a>
-    <a href="add_vehicle.php" class="mr-4">Add New Vehicle</a>
 </div>
 
 <div class="container mx-auto p-6">
     <h1 class="text-3xl font-bold mb-6">Fixed Vehicles</h1>
+
+        <div class="flex flex-col md:flex-row items-center w-full gap-4 mb-6">
+            <!-- Search Form -->
+            <form method="GET" action="index.php" class="flex w-full max-w-md">
+                <input type="text" name="search" placeholder="Search by registration, type, or location" value="<?php echo htmlspecialchars($search); ?>"
+                    class="border border-yellow-400 p-2 flex-grow rounded-l focus:border-yellow-500 focus:ring focus:ring-yellow-200 focus:ring-opacity-50">
+                <button type="submit" class="bg-yellow-500 text-black font-semibold p-2 rounded-r hover:bg-yellow-600">Search</button>
+            </form>
+
+            <!-- Add Vehicle Button -->
+            <button onclick="openModal()" class="rounded bg-gradient-to-b from-blue-500 to-indigo-600 hover:to-indigo-700 text-white px-4 py-2 shadow-lg">Add Vehicles</button>
+        </div>
 
     <!-- Fixed Vehicle List -->
     <table class="w-full bg-white rounded shadow">

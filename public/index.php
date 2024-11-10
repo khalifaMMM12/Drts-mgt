@@ -99,6 +99,15 @@ $vehicles = $stmt->fetchAll();
             &times;
         </button>
         <h2 class="text-2xl mb-4">Vehicle Details</h2>
+        
+        <div id="vehicleDetails">
+            <p><strong>Registration Number:</strong> <span id="detailRegNo"></span></p>
+            <p><strong>Type:</strong> <span id="detailType"></span></p>
+            <p><strong>Make:</strong> <span id="detailMake"></span></p>
+            <p><strong>Location:</strong> <span id="detailLocation"></span></p>
+            <p><strong>Status:</strong> <span id="detailStatus"></span></p>
+            <p><strong>Inspection Date:</strong> <span id="detailInspectionDate"></span></p>
+        </div>
         <!-- Image Gallery -->
         <div id="imageGallery" class="grid grid-cols-3 gap-2 mb-4">
             <!-- Thumbnails populated dynamically with JavaScript -->

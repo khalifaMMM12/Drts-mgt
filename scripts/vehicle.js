@@ -6,6 +6,7 @@
 //     document.getElementById("vehicleModal").classList.add("hidden");
 // }
 
+
 function toggleRepairType() {
     const repairField = document.getElementById("repairTypeField");
     const needsRepairsCheckbox = document.getElementById("needsRepairs");
@@ -13,54 +14,12 @@ function toggleRepairType() {
 }
 
 
-function showDetails(vehicleId) {
-    // Fetch and display vehicle details (AJAX implementation can be added later for dynamic fetching)
-    alert("Display details for vehicle ID: " + vehicleId);
-    // Logic for opening and populating modal with vehicle info will go here
-}
+// function showDetails(vehicleId) {
+//     // Fetch and display vehicle details (AJAX implementation can be added later for dynamic fetching)
+//     alert("Display details for vehicle ID: " + vehicleId);
+//     // Logic for opening and populating modal with vehicle info will go here
+// }
 
-function showDetails(vehicleId) {
-    fetch(`get_vehicle_details.php?id=${vehicleId}`)
-        .then(response => response.json())
-        .then(data => {
-            const detailsModal = document.getElementById("detailsModal");
-            const vehicleDetails = document.getElementById("vehicleDetails");
-
-            if (!detailsModal || !vehicleDetails) {
-                console.error("Modal or vehicle details container not found in DOM.");
-                return;
-            }
-
-            vehicleDetails.innerHTML = `
-                <p><strong>Registration No:</strong> ${data.reg_no}</p>
-                <p><strong>Type:</strong> ${data.type}</p>
-                <p><strong>Make:</strong> ${data.make}</p>
-                <p><strong>Location:</strong> ${data.location}</p>
-                <p><strong>Status:</strong> ${data.status}</p>
-                <p><strong>Repair Type:</strong> ${data.repair_type || 'N/A'}</p>
-                <p><strong>Inspection Date:</strong> ${data.inspection_date}</p>
-                <p><strong>Repair Completion Date:</strong> ${data.repair_completion_date || 'N/A'}</p>
-                <img src="../public/assets/${data.picture}" alt="Vehicle Image" class="mt-4 w-full rounded shadow-lg object-cover">
-            `;
-
-            detailsModal.classList.remove("hidden");
-
-            // Close modal if clicked outside of it
-            detailsModal.addEventListener("click", (event) => {
-                if (event.target === detailsModal) {
-                    closeDetailsModal();
-                }
-            });
-        })
-        .catch(error => {
-            alert("Failed to load vehicle details");
-            console.error(error);
-        });
-}
-
-function closeDetailsModal() {
-    document.getElementById("detailsModal").classList.add("hidden");
-}
 
 function openModal() {
     const modal = document.getElementById("vehicleModal");
@@ -68,7 +27,7 @@ function openModal() {
   
     modal.classList.add("active");
     modalContent.classList.remove("hide");
-  }
+}
   
   function closeModal() {
     const modal = document.getElementById("vehicleModal");
@@ -78,10 +37,10 @@ function openModal() {
     modalContent.addEventListener("animationend", () => {
       modal.classList.remove("active");
     }, { once: true });
-  }
-  
-  
-  const createResponseElement = () => {
+}
+
+
+const createResponseElement = () => {
     let responseMessage = document.getElementById('responseMessage');
     if (!responseMessage) {
         responseMessage = document.createElement('div');
@@ -100,9 +59,9 @@ document.getElementById('addVehicleForm').addEventListener('submit', function(ev
     const responseMessage = createResponseElement();
     responseMessage.textContent = 'Uploading...';
     responseMessage.className = '';
-
+    
     const formData = new FormData(this);
-
+    
     // Log the FormData contents for debugging (optional)
     for (let pair of formData.entries()) {
         console.log(`${pair[0]}: ${pair[1]}`);
@@ -112,6 +71,7 @@ document.getElementById('addVehicleForm').addEventListener('submit', function(ev
         method: 'POST',
         body: formData
     })
+        
     .then(response => response.text()) // Fetch raw text for debugging
     .then(text => {
         console.log('Raw server response:', text); // Debug log
@@ -187,6 +147,54 @@ function addVehicleToTable(vehicle) {
 // }
 
 
+function showDetails(vehicleId) {
+    fetch(`get_vehicle_details.php?id=${vehicleId}`)
+        .then(response => response.json())
+        .then(data => {
+
+            const detailsModal = document.getElementById("detailsModal");
+            const imageGallery = document.getElementById("imageGallery");
+
+            // Populate vehicle details
+            document.getElementById("detailRegNo").textContent = data.reg_no || "N/A";
+            document.getElementById("detailType").textContent = data.type || "N/A";
+            document.getElementById("detailMake").textContent = data.make || "N/A";
+            document.getElementById("detailLocation").textContent = data.location || "N/A";
+            document.getElementById("detailStatus").textContent = data.status || "Needs Repairs";
+            document.getElementById("detailInspectionDate").textContent = data.inspection_date || "N/A";
+  
+
+            // Check if images exist and convert to an array if it's a comma-separated string
+            const imagesArray = typeof data.images === 'string' ? data.images.split(',') : [];
+
+            imageGallery.innerHTML = ''; // Clear existing content
+            images.length = 0; // Clear previous images
+            images.push(...imagesArray); // Populate the global images array for carousel navigation
+
+            // Populate image gallery with thumbnails
+            imagesArray.forEach((image, index) => {
+                const imgElement = document.createElement("img");
+                imgElement.src = `../assets/vehicles/${image}`;
+                imgElement.classList.add("cursor-pointer", "rounded", "shadow-lg");
+                imgElement.onclick = () => openCarousel(index);
+                imageGallery.appendChild(imgElement);
+            });
+
+            detailsModal.classList.remove("hidden");
+        })
+        .catch(error => {
+            alert("Failed to load vehicle details");
+            console.error(error);
+        });
+}
+
+
+function closeDetailsModal() {
+    document.getElementById("detailsModal").classList.add("hidden");
+}
+
+
+
 function previewImages() {
     const imagePreview = document.getElementById('imagePreview');
     const files = document.getElementById('images').files;
@@ -208,6 +216,8 @@ function previewImages() {
 
     console.log("Preview function called");
 }
+
+
 
 const images = []; // Fill this array with image paths
 let currentIndex = 0;
@@ -247,7 +257,7 @@ function closeCarousel() {
 
 function updateCarouselImage() {
     const enlargedImg = document.getElementById("enlargedImg");
-    enlargedImg.src = images[currentIndex];
+    enlargedImg.src = `../assets/vehicles/${images[currentIndex]}`;
 }
 
 function showPrevImage() {

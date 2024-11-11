@@ -127,7 +127,7 @@ function addVehicleToTable(vehicle) {
         <td class="p-4 border-b">${vehicle.inspection_date}</td>
         <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
             <button onclick="showDetails(${vehicle.id})" class="text-blue-500 hover:text-blue-700">ℹ</button>
-            <a href="edit_vehicle.php?id=${vehicle.id}" class="text-yellow-500 hover:text-yellow-700">✏</a>
+            <button onclick="editVehicle(${vehicle.id})" class="text-yellow-500 hover:text-yellow-700">✏</button>
             <a href="clear_vehicle.php?id=${vehicle.id}" class="text-green-500 hover:text-green-700">✔ Clear</a>
             <a href="delete_vehicle.php?id=${vehicle.id}" class="text-red-500 hover:text-red-700" onclick="return confirm('Are you sure you want to delete this vehicle?')">🗑</a>
         </td>
@@ -149,6 +149,27 @@ function addVehicleToTable(vehicle) {
 // Edit Vehicle Model
 function editVehicle(vehicleId){
     document.getElementById("EditvehicleModal").classList.add("active");
+
+    fetch(`get_vehicle_details.php?id=${vehicleId}`)
+    .then(response => response.json())
+    .then(vehicle => {
+        // Populate modal fields with vehicle data
+        document.querySelector("input[name='reg_no']").value = vehicle.reg_no;
+        document.querySelector("select[name='type']").value = vehicle.type;
+        document.querySelector("input[name='make']").value = vehicle.make;
+        document.querySelector("input[name='location']").value = vehicle.location;
+        document.querySelector("input[name='inspection_date']").value = vehicle.inspection_date;
+        document.querySelector("input[name='repair_completion_date']").value = vehicle.repair_completion_date;
+        
+        // Show the needs repair checkbox and repair type field as necessary
+        const needsRepairs = document.querySelector("input[name='needs_repairs']");
+        needsRepairs.checked = vehicle.status === 'Needs Repairs';
+        toggleRepairType(); // This will show/hide the repair type field based on checkbox
+        
+        // Display the modal
+        document.getElementById("EditvehicleModal").classList.remove("hidden");
+    })
+    .catch(error => console.error('Error loading vehicle data:', error));
 }
 
 function closeEditModal(){

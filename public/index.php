@@ -91,14 +91,15 @@ $vehicles = $stmt->fetchAll();
         </div>
     </div>
 
-   <!-- Vehicle Details Modal -->
+  <!-- Vehicle Details Modal -->
 <div id="detailsModal" class="modal-overlay hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
-    <div id="detailsModalContent" class="modal-content relative bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+    <div id="detailsModalContent" class="modal-content relative bg-white p-8 rounded-lg shadow-2xl border-4 border-yellow-400 w-full max-w-lg md:max-w-2xl lg:max-w-3xl">
         <!-- Close Button -->
-        <button onclick="closeDetailsModal()" class="absolute top-2 right-2 text-gray-700 text-4xl">&times;</button>
-        <h2 class="text-xl mb-4 text-gray-800 font-bold">Vehicle Details</h2>
-
-        <div id="vehicleDetails">
+        <button onclick="closeDetailsModal()" class="absolute top-4 right-4 text-gray-600 text-3xl font-bold hover:text-gray-800">&times;</button>
+        
+        <h2 class="text-2xl mb-6 text-gray-800 font-semibold border-b-2 border-gray-200 pb-2">Vehicle Details</h2>
+        
+        <div id="vehicleDetails" class="text-gray-700 space-y-3 mb-6">
             <p><strong>Registration Number:</strong> <span id="detailRegNo"></span></p>
             <p><strong>Type:</strong> <span id="detailType"></span></p>
             <p><strong>Make:</strong> <span id="detailMake"></span></p>
@@ -108,17 +109,26 @@ $vehicles = $stmt->fetchAll();
             <p><strong>Inspection Date:</strong> <span id="detailInspectionDate"></span></p>
         </div>
 
+        <!-- Image Gallery Thumbnails -->
+        <div id="imageGallery" class="grid grid-cols-3 gap-4 mb-6">
+            <!-- Thumbnails populated dynamically with JavaScript -->
+        </div>
+        
         <!-- Enlarged Image View with Carousel Controls -->
-        <div id="carouselModal" class="carousel-overlay hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center">
-            <div onclick="event.stopPropagation()" class="carousel-content relative w-11/12 md:w-3/4 lg:w-1/2 transform scale-95 opacity-0 transition duration-300">
-                <button onclick="closeCarousel()" class="absolute top-2 right-2 text-white text-2xl font-bold">&times;</button>
-                <button id="prevImage" onclick="showPrevImage()" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-3xl font-bold">&larr;</button>
-                <img id="enlargedImg" class="w-full h-auto rounded-lg shadow-lg">
-                <button id="nextImage" onclick="showNextImage()" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-3xl font-bold">&rarr;</button>
+        <div id="carouselModal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-6">
+            <div class="carousel-content relative w-11/12 md:w-3/4 lg:w-1/2 bg-white rounded-lg shadow-lg p-4">
+                <button onclick="closeCarousel()" class="absolute top-3 right-3 text-gray-600 text-2xl font-bold hover:text-gray-800">&times;</button>
+                
+                <button id="prevImage" onclick="showPrevImage()" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-yellow-400 text-4xl font-bold">&larr;</button>
+                
+                <img id="enlargedImg" class="w-full h-auto rounded-lg border-4 border-yellow-400 shadow-md">
+                
+                <button id="nextImage" onclick="showNextImage()" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-yellow-400 text-4xl font-bold">&rarr;</button>
             </div>
         </div>
     </div>
 </div>
+
 
 
     <!-- Add Vehicle Modal -->
@@ -190,48 +200,53 @@ $vehicles = $stmt->fetchAll();
     <div id="EditvehicleModal" class="modal-overlay hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
         <div id="EditvehicleContent" class="modal-content relative bg-white p-6 rounded-lg shadow-lg border-2 border-yellow-400 w-full max-w-lg md:max-w-2xl lg:max-w-3xl overflow-y-auto max-h-full">
             <button onclick="closeEditModal()" class="absolute top-2 right-2 text-gray-700 text-4xl">&times;</button>            
-            <h2 class="text-xl mb-4 text-yellow-500 font-bold">Add Vehicle</h2>
-            <form action="add_vehicle.php" id="addVehicleForm" method="POST" enctype="multipart/form-data">
+            <h2 class="text-xl mb-4 text-yellow-500 font-bold">Edit Vehicle</h2>
+            <form action="edit_vehicle.php" id="editVehicleForm" method="POST" enctype="multipart/form-data">
                 <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                     <div>
                         <label class="block">Registration No:</label>
-                        <input type="text" name="reg_no" required class="border p-2 w-full mb-4">
+                        <input type="text" name="reg_no" value="<?php echo htmlspecialchars($vehicle['reg_no']); ?>" class="border p-2 w-full mb-4">
                     </div>
-                    <div>
-                        <label class="block font-semibold">Vehicle Type</label>
-                        <select name="type" class="border border-gray-300 p-2 w-full rounded" required>
-                            <option value="" disabled selected>Select a type</option>
-                            <option value="Sedan">Sedan</option>
-                            <option value="SUV">SUV</option>
-                            <option value="Truck">Truck</option>
-                            <option value="Van">Van</option>
-                            <option value="Wagon">Wagon</option>
-                            <option value="Coupe">Coupe</option>
-                            <option value="Convertible">Convertible</option>
-                        </select>
-                    </div>
+                <div>
+                    <label class="block font-semibold">Vehicle Type</label>
+                    <select name="type" class="border border-gray-300 p-2 w-full rounded">
+                        <option value="" disabled>Select a type</option>
+                        <option value="Sedan" <?php if ($vehicle['type'] === 'Sedan') echo 'selected'; ?>>Sedan</option>
+                        <option value="SUV" <?php if ($vehicle['type'] === 'SUV') echo 'selected'; ?>>SUV</option>
+                        <option value="Truck" <?php if ($vehicle['type'] === 'Truck') echo 'selected'; ?>>Truck</option>
+                        <option value="Van" <?php if ($vehicle['type'] === 'Van') echo 'selected'; ?>>Van</option>
+                        <option value="Wagon" <?php if ($vehicle['type'] === 'Wagon') echo 'selected'; ?>>Wagon</option>
+                        <option value="Coupe" <?php if ($vehicle['type'] === 'Coupe') echo 'selected'; ?>>Coupe</option>
+                        <option value="Convertible" <?php if ($vehicle['type'] === 'Convertible') echo 'selected'; ?>>Convertible</option>
+                    </select>
+                </div>
                     <div>
                         <label>Make:</label>
-                        <input type="text" name="make" required class="border p-2 w-full mb-4">
+                        <input type="text" name="make" value="<?php echo htmlspecialchars($vehicle['make']); ?>" class="border p-2 w-full mb-4">
                     </div>
 
                     <div>
                         <label>Location:</label>
-                        <input type="text" name="location" required class="border p-2 w-full mb-4">
+                        <input type="text" name="location" value="<?php echo htmlspecialchars($vehicle['location']); ?>" class="border p-2 w-full mb-4">
                     </div>
 
                     <div>
                         <label>Inspection Date:</label>
-                        <input type="date" name="inspection_date" required class="border p-2 w-full mb-4">
+                        <input type="date" name="inspection_date" value="<?php echo htmlspecialchars($vehicle['inspection_date']); ?>" class="border p-2 w-full mb-4">
                     </div>
 
                     <div>
                         <label>Needs Repairs:</label>
-                        <input type="checkbox" id="needsRepairs" name="needs_repairs" onclick="toggleRepairType()">
-                        <div id="repairTypeField" class="hidden mt-4">
+                        <input type="checkbox" id="needsRepairs" name="needs_repairs"  <?php echo $vehicle['status'] === 'Needs Repairs' ? 'checked' : ''; ?> onclick="toggleRepairType()">
+                        <div id="repairTypeField" class="mt-4">
                             <label>Type of Repair:</label>
-                            <textarea name="repair_type" class="border p-2 w-full"></textarea>
+                            <textarea name="repair_type" <?php echo htmlspecialchars($vehicle['repair_type']); ?> class="border p-2 w-full"></textarea>
                         </div>
+                    </div>
+
+                    <div>
+                        <label>Repair Completion Date:</label>
+                        <input type="date" name="repair_completion_date" value="<?php echo htmlspecialchars($vehicle['repair_completion_date']); ?>"class="border p-2 w-full mb-4">
                     </div>
 
                     <div class="mb-4 col-span-2">

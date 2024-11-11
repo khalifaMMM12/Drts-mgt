@@ -1,17 +1,17 @@
 <?php
 include '../config/db.php';
 
-if (isset($_GET['id'])) {
-    $vehicleId = $_GET['id'];
-    $stmt = $pdo->prepare("SELECT * FROM vehicles WHERE id = :id");
-    $stmt->execute([':id' => $vehicleId]);
-    $vehicle = $stmt->fetch(PDO::FETCH_ASSOC);
+// if (isset($_GET['id'])) {
+//     $vehicleId = $_GET['id'];
+//     $stmt = $pdo->prepare("SELECT * FROM vehicles WHERE id = :id");
+//     $stmt->execute([':id' => $vehicleId]);
+//     $vehicle = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if (!$vehicle) {
-        echo "Vehicle not found.";
-        exit;
-    }
-}
+//     if (!$vehicle) {
+//         echo "Vehicle not found.";
+//         exit;
+//     }
+// }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $reg_no = $_POST['reg_no'];

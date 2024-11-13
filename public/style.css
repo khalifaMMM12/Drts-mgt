@@ -93,3 +93,30 @@
   transform: scale(1);
   opacity: 1;
 }
+
+#imagePreview {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.image-item {
+  margin: 10px;
+  position: relative;
+}
+
+.image-item img {
+  max-width: 100px;
+  max-height: 100px;
+  object-fit: cover;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+}

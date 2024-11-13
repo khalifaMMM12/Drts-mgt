@@ -10,6 +10,7 @@ $stmt->execute([':search' => '%' . $search . '%']);
 $vehicles = $stmt->fetchAll();
 
 
+
 ?>
 
 <!DOCTYPE html>
@@ -115,7 +116,7 @@ $vehicles = $stmt->fetchAll();
         </div>
         
         <!-- Enlarged Image View with Carousel Controls -->
-        <div id="carouselModal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-6">
+        <div id="carouselModal" onclick="openCarousel()" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-6">
             <div class="carousel-content relative w-11/12 md:w-3/4 lg:w-1/2 bg-white rounded-lg shadow-lg p-4">
                 <button onclick="closeCarousel()" class="absolute top-3 right-3 text-gray-600 text-2xl font-bold hover:text-gray-800">&times;</button>
                 
@@ -195,21 +196,21 @@ $vehicles = $stmt->fetchAll();
     </div>
 
 
-
-    <!-- Edit Vehicle Modal -->
+<!-- Edit vehicle Modal -->
     <div id="EditvehicleModal" class="modal-overlay hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
-        <div id="EditvehicleContent" class="modal-content relative bg-white p-6 rounded-lg shadow-lg border-2 border-yellow-400 w-full max-w-lg md:max-w-2xl lg:max-w-3xl overflow-y-auto max-h-full">
-            <button onclick="closeEditModal()" class="absolute top-2 right-2 text-gray-700 text-4xl">&times;</button>            
-            <h2 class="text-xl mb-4 text-yellow-500 font-bold">Edit Vehicle</h2>
-            <form action="edit_vehicle.php" id="editVehicleForm" method="POST" enctype="multipart/form-data">
-                <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <div>
-                        <label class="block">Registration No:</label>
-                        <input type="text" name="reg_no" value="<?php echo htmlspecialchars($vehicle['reg_no']); ?>" class="border p-2 w-full mb-4">
-                    </div>
+    <div id="EditvehicleContent" class="modal-content relative bg-white p-6 rounded-lg shadow-lg border-2 border-yellow-400 w-full max-w-lg md:max-w-2xl lg:max-w-3xl overflow-y-auto max-h-full">
+        <button onclick="closeEditModal()" class="absolute top-2 right-2 text-gray-700 text-4xl">&times;</button>
+        <h2 class="text-xl mb-4 text-yellow-500 font-bold">Edit Vehicle</h2>
+        <form action="edit_vehicle.php" id="editVehicleForm" method="POST" enctype="multipart/form-data">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <!-- Form Fields -->
+                <div>
+                    <label class="block">Registration No:</label>
+                    <input type="text" name="reg_no" id="reg_no" value="<?php echo htmlspecialchars($vehicle['reg_no']); ?>" class="border p-2 w-full mb-4">
+                </div>
                 <div>
                     <label class="block font-semibold">Vehicle Type</label>
-                    <select name="type" class="border border-gray-300 p-2 w-full rounded">
+                    <select name="type" id="type" class="border border-gray-300 p-2 w-full rounded">
                         <option value="" disabled>Select a type</option>
                         <option value="Sedan" <?php if ($vehicle['type'] === 'Sedan') echo 'selected'; ?>>Sedan</option>
                         <option value="SUV" <?php if ($vehicle['type'] === 'SUV') echo 'selected'; ?>>SUV</option>
@@ -220,49 +221,48 @@ $vehicles = $stmt->fetchAll();
                         <option value="Convertible" <?php if ($vehicle['type'] === 'Convertible') echo 'selected'; ?>>Convertible</option>
                     </select>
                 </div>
-                    <div>
-                        <label>Make:</label>
-                        <input type="text" name="make" value="<?php echo htmlspecialchars($vehicle['make']); ?>" class="border p-2 w-full mb-4">
-                    </div>
-
-                    <div>
-                        <label>Location:</label>
-                        <input type="text" name="location" value="<?php echo htmlspecialchars($vehicle['location']); ?>" class="border p-2 w-full mb-4">
-                    </div>
-
-                    <div>
-                        <label>Inspection Date:</label>
-                        <input type="date" name="inspection_date" value="<?php echo htmlspecialchars($vehicle['inspection_date']); ?>" class="border p-2 w-full mb-4">
-                    </div>
-
-                    <div>
-                        <label>Needs Repairs:</label>
-                        <input type="checkbox" id="needsRepairs" name="needs_repairs"  <?php echo $vehicle['status'] === 'Needs Repairs' ? 'checked' : ''; ?> onclick="toggleRepairType()">
-                        <div id="repairTypeField" class="mt-4">
-                            <label>Type of Repair:</label>
-                            <textarea name="repair_type" <?php echo htmlspecialchars($vehicle['repair_type']); ?> class="border p-2 w-full"></textarea>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label>Repair Completion Date:</label>
-                        <input type="date" name="repair_completion_date" value="<?php echo htmlspecialchars($vehicle['repair_completion_date']); ?>"class="border p-2 w-full mb-4">
-                    </div>
-
-                    <div class="mb-4 col-span-2">
-                        <label for="images" class="block font-semibold">Upload Vehicle Pictures</label>
-                        <input type="file" name="images[]" id="images" onchange="previewImages()" class="border border-gray-300 p-2 w-full rounded" accept="image/*" multiple>
-                    </div>
-
-                    <!-- Image Preview Section -->
-                    <div id="imagePreview" class="col-span-2 grid grid-cols-2 gap-2 md:grid-cols-4">
-                        <!-- Preview images will be dynamically inserted here by JavaScript -->
+                <div>
+                    <label>Make:</label>
+                    <input type="text" name="make" id="make" value="<?php echo htmlspecialchars($vehicle['make']); ?>" class="border p-2 w-full mb-4">
+                </div>
+                <div>
+                    <label>Location:</label>
+                    <input type="text" name="location" id="location" value="<?php echo htmlspecialchars($vehicle['location']); ?>" class="border p-2 w-full mb-4">
+                </div>
+                <div>
+                    <label>Inspection Date:</label>
+                    <input type="date" name="inspection_date" id="inspection_date" value="<?php echo htmlspecialchars($vehicle['inspection_date']); ?>" class="border p-2 w-full mb-4">
+                </div>
+                <div>
+                    <label>Needs Repairs:</label>
+                    <input type="checkbox" id="needsRepairs" name="needs_repairs" <?php echo $vehicle['status'] === 'Needs Repairs' ? 'checked' : ''; ?> onclick="toggleRepairType()">
+                    <div id="repairTypeField" class="mt-4">
+                        <label>Type of Repair:</label>
+                        <textarea name="repair_type" id="repair_type" class="border p-2 w-full"><?php echo htmlspecialchars($vehicle['repair_type']); ?></textarea>
                     </div>
                 </div>
-                <button type="submit" name="submit" class="bg-yellow-500 text-black p-2 rounded mt-4 w-full md:w-auto">Add Vehicle</button>
-            </form>
-        </div>
+                <input type="hidden" name="id" id="vehicleId" value="<?php echo htmlspecialchars($vehicle['id']); ?>">
+                <div>
+                    <label>Repair Completion Date:</label>
+                    <input type="date" name="repair_completion_date" id="repair_completion_date" value="<?php echo htmlspecialchars($vehicle['repair_completion_date']); ?>" class="border p-2 w-full mb-4">
+                </div>
+
+                <!-- Image Upload Section -->
+                <div class="mb-4 col-span-2">
+                    <label for="images" class="block font-semibold">Upload Vehicle Pictures</label>
+                    <input type="file" name="images[]" id="images" onchange="previewImages()" class="border border-gray-300 p-2 w-full rounded" accept="image/*" multiple>
+                </div>
+
+                <!-- Image Preview Section -->
+                <div id="imagePreview" class="col-span-2 grid grid-cols-2 gap-2 md:grid-cols-4">
+                   
+                </div>
+            </div>
+
+            <button type="submit" name="submit" class="bg-yellow-500 text-black p-2 rounded mt-4 w-full md:w-auto">Update Vehicle</button>
+        </form>
     </div>
+</div>
 
     <!-- Script -->
     <script src="../scripts/vehicle.js"></script>

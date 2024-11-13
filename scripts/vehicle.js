@@ -135,46 +135,105 @@ function addVehicleToTable(vehicle) {
     tbody.appendChild(newRow); // Append the new row to the table body
 }
 
-// function createResponseElement() {
-//     let responseMessage = document.getElementById('responseMessage');
-//     if (!responseMessage) {
-//         responseMessage = document.createElement('div');
-//         responseMessage.id = 'responseMessage';
-//         const form = document.getElementById('addVehicleForm');
-//         form.parentNode.insertBefore(responseMessage, form.nextSibling);
-//     }
-//     return responseMessage;
-// }
-
 // Edit Vehicle Model
-function editVehicle(vehicleId){
-    document.getElementById("EditvehicleModal").classList.add("active");
+function editVehicle(vehicleId) {
+    console.log("Opening edit modal for vehicle ID:", vehicleId);
 
+    // Open the edit modal
+    const modal = document.getElementById("EditvehicleModal");
+    const imageGallery = document.getElementById("imagePreview");
+    modal.classList.add("active");
+
+    // Clear form fields to avoid showing old data and set the vehicleId immediately
+    document.getElementById("reg_no").value = "";
+    document.getElementById("type").value = "";
+    document.getElementById("make").value = "";
+    document.getElementById("location").value = "";
+    document.getElementById("inspection_date").value = "";
+    document.getElementById("repair_completion_date").value = "";
+    document.getElementById("vehicleId").value = "";
+
+    // Fetch data for the specific vehicle ID
     fetch(`get_vehicle_details.php?id=${vehicleId}`)
-    .then(response => response.json())
-    .then(vehicle => {
-        // Populate modal fields with vehicle data
-        document.querySelector("input[name='reg_no']").value = vehicle.reg_no;
-        document.querySelector("select[name='type']").value = vehicle.type;
-        document.querySelector("input[name='make']").value = vehicle.make;
-        document.querySelector("input[name='location']").value = vehicle.location;
-        document.querySelector("input[name='inspection_date']").value = vehicle.inspection_date;
-        document.querySelector("input[name='repair_completion_date']").value = vehicle.repair_completion_date;
-        
-        // Show the needs repair checkbox and repair type field as necessary
-        const needsRepairs = document.querySelector("input[name='needs_repairs']");
-        needsRepairs.checked = vehicle.status === 'Needs Repairs';
-        toggleRepairType(); // This will show/hide the repair type field based on checkbox
-        
-        // Display the modal
-        document.getElementById("EditvehicleModal").classList.remove("hidden");
-    })
-    .catch(error => console.error('Error loading vehicle data:', error));
+        .then(response => response.json())
+        .then(vehicle => {
+            console.log("Received vehicle data:", vehicle);
+
+            // Update form fields with the fetched vehicle data
+            document.getElementById("reg_no").value = vehicle.reg_no;
+            document.getElementById("type").value = vehicle.type;
+            document.getElementById("make").value = vehicle.make;
+            document.getElementById("location").value = vehicle.location;
+            document.getElementById("inspection_date").value = vehicle.inspection_date;
+            document.getElementById("repair_completion_date").value = vehicle.repair_completion_date;
+            document.getElementById("vehicleId").value = vehicle.id;
+
+            // Check if images exist and display them
+            const imagesArray = vehicle.images ? vehicle.images.split(',') : []; // Ensure images are split by comma
+
+            imageGallery.innerHTML = '';  // Clear existing images
+            imagesArray.forEach(image => {
+                // Create an image element for each image in the array
+                const imgElement = document.createElement("img");
+                imgElement.src = `../assets/vehicles/${image}`;
+                imgElement.alt = image;
+                imgElement.classList.add("cursor-pointer", "rounded", "shadow-lg", "w-20", "h-20");
+
+                // Append the image element to the image preview section
+                imageGallery.appendChild(imgElement);
+
+                // Add a delete button next to the image
+                const deleteBtn = document.createElement("button");
+                deleteBtn.classList.add("text-red-500", "ml-2");
+                deleteBtn.innerHTML = "Delete";
+                deleteBtn.onclick = function() {
+                    deleteImage(vehicle.id, image); // Call a delete function when clicked
+                };
+                imageGallery.appendChild(deleteBtn);
+            });
+        })
+        .catch(error => console.error('Error loading vehicle data:', error));
 }
 
+function deleteImage(vehicleId, image) {
+    if (confirm("Are you sure you want to delete this image?")) {
+        fetch(`delete_image.php?vehicle_id=${vehicleId}&image=${image}`, { method: 'GET' })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    // Remove the image from the display
+                    alert("Image deleted successfully!");
+                    editVehicle(vehicleId);  // Reload the modal to refresh images
+                } else {
+                    alert("Failed to delete the image.");
+                }
+            })
+            .catch(error => console.error('Error deleting image:', error));
+    }
+}
+
+
 function closeEditModal(){
+    console.log("Closing Edit Modal");
     document.getElementById("EditvehicleModal").classList.remove("active");
     document.getElementById("EditvehicleModal").classList.add("hide");
+}
+
+function submitEditForm() {
+    const formData = new FormData(document.getElementById("editVehicleForm"));
+    fetch("edit_vehicle.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.text())
+    .then(data => {
+        if (data.includes("Update successful")) {
+            closeEditModal();
+        } else {
+            console.error("Update failed:", data);
+        }
+    })
+    .catch(error => console.error("Error submitting form:", error));
 }
 
 
@@ -295,6 +354,7 @@ function populateGallery() {
 function openCarousel() {
     const carousel = document.getElementById('carouselModal');
     const carouselContent = document.querySelector('.carousel-content');
+    carousel.classList.remove('hidden');
     carousel.classList.add('active');
     setTimeout(() => carouselContent.classList.add('active'), 10);
 }
@@ -302,7 +362,8 @@ function openCarousel() {
 function closeCarousel() {
     const carousel = document.getElementById('carouselModal');
     const carouselContent = document.querySelector('.carousel-content');
-    carouselContent.classList.remove('active');
+    carouselContent.classList.add('hidden');
+    carouselContent.classList.remove('active'); 
     setTimeout(() => carousel.classList.remove('active'), 300);
 }
 

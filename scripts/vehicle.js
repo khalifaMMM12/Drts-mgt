@@ -139,27 +139,22 @@ function addVehicleToTable(vehicle) {
 function editVehicle(vehicleId) {
     console.log("Opening edit modal for vehicle ID:", vehicleId);
 
-    // Open the edit modal
     const modal = document.getElementById("EditvehicleModal");
-    const imageGallery = document.getElementById("imagePreview");
+    const imageGallery = document.getElementById("editImagePreview");
     modal.classList.add("active");
 
-    // Clear form fields to avoid showing old data and set the vehicleId immediately
-    document.getElementById("reg_no").value = "";
-    document.getElementById("type").value = "";
-    document.getElementById("make").value = "";
-    document.getElementById("location").value = "";
-    document.getElementById("inspection_date").value = "";
-    document.getElementById("repair_completion_date").value = "";
-    document.getElementById("vehicleId").value = "";
-
-    // Fetch data for the specific vehicle ID
     fetch(`get_vehicle_details.php?id=${vehicleId}`)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        })
         .then(vehicle => {
-            console.log("Received vehicle data:", vehicle);
+            console.log("Vehicle data received:", vehicle);
+            console.log("Vehicle images:", vehicle.images);
 
-            // Update form fields with the fetched vehicle data
+            // Clear and update form fields
             document.getElementById("reg_no").value = vehicle.reg_no;
             document.getElementById("type").value = vehicle.type;
             document.getElementById("make").value = vehicle.make;
@@ -168,32 +163,34 @@ function editVehicle(vehicleId) {
             document.getElementById("repair_completion_date").value = vehicle.repair_completion_date;
             document.getElementById("vehicleId").value = vehicle.id;
 
-            // Check if images exist and display them
-            const imagesArray = vehicle.images ? vehicle.images.split(',') : []; // Ensure images are split by comma
+            // Clear the image gallery
+            imageGallery.innerHTML = ''; 
 
-            imageGallery.innerHTML = '';  // Clear existing images
-            imagesArray.forEach(image => {
-                // Create an image element for each image in the array
-                const imgElement = document.createElement("img");
-                imgElement.src = `../assets/vehicles/${image}`;
-                imgElement.alt = image;
-                imgElement.classList.add("cursor-pointer", "rounded", "shadow-lg", "w-20", "h-20");
+            const imagesArray = typeof vehicle.images === 'string' ? vehicle.images.split(',') : vehicle.images;
+            if (imagesArray.length > 0) {
+                imagesArray.forEach((image, index) => {
+                    const imagePath = `../assets/vehicles/${image.trim()}`;
+                    console.log(`Attempting to load image from path: ${imagePath}`);
 
-                // Append the image element to the image preview section
-                imageGallery.appendChild(imgElement);
+                    const imgElement = document.createElement("img");
+                    imgElement.src = imagePath;
+                    imgElement.classList.add("cursor-pointer", "rounded", "shadow-lg");
 
-                // Add a delete button next to the image
-                const deleteBtn = document.createElement("button");
-                deleteBtn.classList.add("text-red-500", "ml-2");
-                deleteBtn.innerHTML = "Delete";
-                deleteBtn.onclick = function() {
-                    deleteImage(vehicle.id, image); // Call a delete function when clicked
-                };
-                imageGallery.appendChild(deleteBtn);
-            });
+                    // Error handling for image load
+                    imgElement.onerror = () => {
+                        console.error(`Image failed to load: ${imagePath}`);
+                    };
+
+                    imgElement.onclick = () => openCarousel(index);
+                    imageGallery.appendChild(imgElement);
+                });
+            } else {
+                console.log("No images to display for this vehicle.");
+            }
         })
-        .catch(error => console.error('Error loading vehicle data:', error));
+        .catch(error => console.error("Error loading vehicle data:", error));
 }
+
 
 function deleteImage(vehicleId, image) {
     if (confirm("Are you sure you want to delete this image?")) {
@@ -211,6 +208,29 @@ function deleteImage(vehicleId, image) {
             .catch(error => console.error('Error deleting image:', error));
     }
 }
+
+function uploadNewImage(vehicleId) {
+    const fileInput = document.getElementById("newImageUpload");
+    const formData = new FormData();
+    formData.append("vehicle_id", vehicleId);
+    formData.append("new_image", fileInput.files[0]);
+
+    fetch("upload_new_image.php", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            alert("Image uploaded successfully!");
+            editVehicle(vehicleId);
+        } else {
+            alert("Failed to upload image.");
+        }
+    })
+    .catch(error => console.error("Error uploading image:", error));
+}
+
 
 
 function closeEditModal(){

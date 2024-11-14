@@ -21,9 +21,9 @@ if (isset($_GET['id'])) {
 // In get_vehicle_details.php
 
 // Fetch vehicle data from the database
-$sql = "SELECT * FROM vehicles";
-$stmt = $pdo->query($sql);
-$vehicles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// $sql = "SELECT * FROM vehicles";
+// $stmt = $pdo->query($sql);
+// $vehicles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 

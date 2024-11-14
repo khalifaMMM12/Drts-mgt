@@ -180,9 +180,24 @@ $vehicles = $stmt->fetchAll();
                         </div>
                     </div>
 
-                    <div class="mb-4 col-span-2">
+                    <!-- <div class="mb-4 col-span-2">
                         <label for="images" class="block font-semibold">Upload Vehicle Pictures</label>
                         <input type="file" name="images[]" id="images" onchange="previewImages()" class="border border-gray-300 p-2 w-full rounded" accept="image/*" multiple>
+                    </div> -->
+
+                    <div class="relative">
+                        <label title="Click to upload" for="images" class="cursor-pointer flex items-center gap-4 px-6 py-4 before:border-gray-400/60 hover:before:border-gray-300 group before:bg-gray-100 before:absolute before:inset-0 before:rounded-3xl before:border before:border-dashed before:transition-transform before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95">
+                        <div class="w-max relative">
+                            <img class="w-12" src="https://www.svgrepo.com/show/485545/upload-cicle.svg" alt="file upload icon" width="512" height="512">
+                        </div>
+                        <div class="relative">
+                            <span class="block text-base font-semibold relative text-blue-900 group-hover:text-blue-500">
+                                Upload Images
+                            </span>
+                            <span class="mt-0.5 block text-sm text-gray-500">Max 2 MB</span>
+                        </div>
+                        </label>
+                        <input hidden="" type="file" name="images[]" id="images" onchange="previewImages()">
                     </div>
 
                     <!-- Image Preview Section -->
@@ -248,13 +263,28 @@ $vehicles = $stmt->fetchAll();
                 </div>
 
                 <!-- Image Upload Section -->
-                <div class="mb-4 col-span-2">
+                <!-- <div class="mb-4 col-span-2">
                     <label for="images" class="block font-semibold">Upload Vehicle Pictures</label>
-                    <input type="file" name="images[]" id="images" onchange="previewImages()" class="border border-gray-300 p-2 w-full rounded" accept="image/*" multiple>
+                    <input type="file" name="images[]" id="images" id="newImageUpload" onclick="uploadNewImage(vehicleId)"class="border border-gray-300 p-2 w-full rounded" accept="image/*" multiple>
+                </div> -->
+
+                <div class="relative bg-blue">
+                    <label title="Click to upload" for="images" class="cursor-pointer flex items-center gap-4 px-6 py-4 before:border-gray-400/60 hover:before:border-gray-300 group before:bg-gray-100 before:absolute before:inset-0 before:rounded-3xl before:border before:border-dashed before:transition-transform before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95">
+                    <div class="w-max relative">
+                        <img class="w-12" src="https://www.svgrepo.com/show/485545/upload-cicle.svg" alt="file upload icon" width="512" height="512">
+                    </div>
+                        <div class="relative">
+                            <span class="block text-base font-semibold relative text-blue-900 group-hover:text-blue-500">
+                                Upload New Image
+                            </span>
+                        <span class="mt-0.5 block text-sm text-gray-500">Max 2 MB</span>
+                    </div>
+                    </label>
+                    <input hidden="" type="file" name="images[]" id="images" id="newImageUpload" onclick="uploadNewImage(vehicleId)">
                 </div>
 
                 <!-- Image Preview Section -->
-                <div id="imagePreview" class="col-span-2 grid grid-cols-2 gap-2 md:grid-cols-4">
+                <div id="editImagePreview" class="col-span-2 grid grid-cols-2 gap-2 md:grid-cols-4 rounded-2xl">
                    
                 </div>
             </div>

@@ -269,8 +269,6 @@ function showDetails(vehicleId) {
     fetch(`get_vehicle_details.php?id=${vehicleId}`)
         .then(response => response.json())
         .then(data => {
-
-            // const detailsModal = document.getElementById("detailsModal");
             const imageGallery = document.getElementById("imageGallery");
 
             // Populate vehicle details
@@ -281,23 +279,30 @@ function showDetails(vehicleId) {
             document.getElementById("detailStatus").textContent = data.status || "Needs Repairs";
             document.getElementById("detailRepair").textContent = data.repair_type || data.status;
             document.getElementById("detailInspectionDate").textContent = data.inspection_date || "N/A";
-  
 
-            // Check if images exist and convert to an array if it's a comma-separated string
-            const imagesArray = typeof data.images === 'string' ? data.images.split(',') : [];
+            // Process images
+            const imagesArray = (typeof data.images === 'string' && data.images.trim()) 
+                ? data.images.split(',').map(img => img.trim())
+                : [];
 
             imageGallery.innerHTML = ''; // Clear existing content
             images.length = 0; // Clear previous images
             images.push(...imagesArray); // Populate the global images array for carousel navigation
 
-            // Populate image gallery with thumbnails
-            imagesArray.forEach((image, index) => {
-                const imgElement = document.createElement("img");
-                imgElement.src = `../assets/vehicles/${image}`;
-                imgElement.classList.add("cursor-pointer", "rounded", "shadow-lg");
-                imgElement.onclick = () => openCarousel(index);
-                imageGallery.appendChild(imgElement);
-            });
+            if (imagesArray.length > 0) {
+                imageGallery.style.display = "grid"; // Show gallery if images exist
+
+                // Populate image gallery with thumbnails
+                imagesArray.forEach((image, index) => {
+                    const imgElement = document.createElement("img");
+                    imgElement.src = `../assets/vehicles/${image}`;
+                    imgElement.classList.add("cursor-pointer", "rounded", "shadow-lg");
+                    imgElement.onclick = () => openCarousel(index); // Open carousel at specific image
+                    imageGallery.appendChild(imgElement);
+                });
+            } else {
+                imageGallery.style.display = "none"; // Hide gallery if no images
+            }
 
             detailsModal.classList.remove("hidden");
         })
@@ -306,6 +311,7 @@ function showDetails(vehicleId) {
             console.error(error);
         });
 }
+
 
 
 function closeDetailsModal() {
@@ -357,52 +363,95 @@ function closeDetails() {
     closeCarousel(); // Close the carousel if open
 }
 
-// Dynamically populate thumbnails
-function populateGallery() {
-    const gallery = document.getElementById("imageGallery");
-    gallery.innerHTML = '';
-    images.forEach((src, index) => {
-        const img = document.createElement("img");
-        img.src = src;
-        img.classList.add("cursor-pointer", "object-cover", "w-full", "h-24", "rounded");
-        img.onclick = () => openCarousel(index);
-        gallery.appendChild(img);
-    });
-}
 
 // Carousel open, close, and navigation functions
-function openCarousel() {
+function openCarousel(index) {
+    currentIndex = index !== undefined ? index : 0; // Default to 0 if index is not provided
+    if (images.length > 0) {
+        updateCarouselImage();
+    }
+
     const carousel = document.getElementById('carouselModal');
     const carouselContent = document.querySelector('.carousel-content');
+
+    // Show or hide navigation arrows based on the number of images
+    const prevArrow = document.getElementById("prevImage");
+    const nextArrow = document.getElementById("nextImage");
+
+    if (images.length > 1) {
+        prevArrow.style.display = "block";
+        nextArrow.style.display = "block";
+    } else {
+        prevArrow.style.display = "none";
+        nextArrow.style.display = "none";
+    }
+
     carousel.classList.remove('hidden');
     carousel.classList.add('active');
     setTimeout(() => carouselContent.classList.add('active'), 10);
 }
 
+
 function closeCarousel() {
     const carousel = document.getElementById('carouselModal');
     const carouselContent = document.querySelector('.carousel-content');
-    carouselContent.classList.add('hidden');
-    carouselContent.classList.remove('active'); 
-    setTimeout(() => carousel.classList.remove('active'), 300);
+
+    carouselContent.classList.remove('active');
+    setTimeout(() => {
+        carousel.classList.add('hidden');
+    }, 100);
+}
+
+// Update carousel image with bounds check
+function updateCarouselImage() {
+    const enlargedImg = document.getElementById("enlargedImg");
+
+    // Check that currentIndex is within the valid range of images
+    if (images[currentIndex] !== undefined) {
+        enlargedImg.src = `../assets/vehicles/${images[currentIndex].trim()}`;
+    } else {
+        console.error(`No image found at index ${currentIndex}`);
+        enlargedImg.src = ''; // Prevent src from being cleared inadvertently
+    }
+}
+
+// Show previous image if multiple images exist
+function showPrevImage() {
+    if (images.length > 1) {
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        updateCarouselImage();
+    }
+}
+
+// Show next image if multiple images exist
+function showNextImage() {
+    if (images.length > 1) {
+        currentIndex = (currentIndex + 1) % images.length;
+        updateCarouselImage();
+    }
+}
+
+// Conditionally show image icon based on images
+function populateGallery() {
+    const gallery = document.getElementById("imageGallery");
+    gallery.innerHTML = ''; // Clear existing gallery content
+
+    // Check if there are images; hide gallery if empty
+    if (images.length > 0) {
+        gallery.style.display = "grid"; // Show gallery if images exist
+        images.forEach((src, index) => {
+            const img = document.createElement("img");
+            img.src = `../assets/vehicles/${src.trim()}`;
+            img.classList.add("cursor-pointer", "object-cover", "w-full", "h-24", "rounded");
+            img.onclick = () => openCarousel(index);
+            gallery.appendChild(img);
+        });
+    } else {
+        gallery.style.display = "none"; // Hide the gallery if no images are available
+    }
 }
 
 document.getElementById('carouselModal').addEventListener('click', closeCarousel);
-
-function updateCarouselImage() {
-    const enlargedImg = document.getElementById("enlargedImg");
-    enlargedImg.src = `../assets/vehicles/${images[currentIndex]}`;
-}
-
-function showPrevImage() {
-    currentIndex = (currentIndex - 1 + images.length) % images.length;
-    updateCarouselImage();
-}
-
-function showNextImage() {
-    currentIndex = (currentIndex + 1) % images.length;
-    updateCarouselImage();
-}
 
 // Call this function when you open the modal to load the thumbnails
 populateGallery();

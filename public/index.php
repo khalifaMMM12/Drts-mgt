@@ -23,15 +23,15 @@ $vehicles = $stmt->fetchAll();
     <link href="style.css" rel="stylesheet">
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-100 mt-8">
 
-    <!-- Navigation Bar -->
+    <!-- Navigation Bar
     <div class="bg-black text-yellow-400 p-4 flex flex-wrap justify-between items-center">
         <div class="flex items-center space-x-4">
             <a href="index.php" class="hover:text-white">All Vehicles</a>
             <a href="fixed_vehicles.php" class="hover:text-white">Fixed Vehicles</a>
         </div>
-    </div>
+    </div> -->
 
     <!-- Main Content Container -->
     <div class="container mx-auto p-4 md:p-6 lg:px-8">
@@ -143,6 +143,7 @@ $vehicles = $stmt->fetchAll();
                         <label class="block">Registration No:</label>
                         <input type="text" name="reg_no" required class="border p-2 w-full mb-4">
                     </div>
+                    
                     <div>
                         <label class="block font-semibold">Vehicle Type</label>
                         <select name="type" class="border border-gray-300 p-2 w-full rounded" required>
@@ -186,18 +187,21 @@ $vehicles = $stmt->fetchAll();
                     </div> -->
 
                     <div class="relative">
-                        <label title="Click to upload" for="images" class="cursor-pointer flex items-center gap-4 px-6 py-4 before:border-gray-400/60 hover:before:border-gray-300 group before:bg-gray-100 before:absolute before:inset-0 before:rounded-3xl before:border before:border-dashed before:transition-transform before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95">
-                        <div class="w-max relative">
-                            <img class="w-12" src="https://www.svgrepo.com/show/485545/upload-cicle.svg" alt="file upload icon" width="512" height="512">
-                        </div>
-                        <div class="relative">
-                            <span class="block text-base font-semibold relative text-blue-900 group-hover:text-blue-500">
-                                Upload Images
-                            </span>
-                            <span class="mt-0.5 block text-sm text-gray-500">Max 2 MB</span>
-                        </div>
+                        <label title="Click to upload" for="images" class="cursor-pointer flex items-center gap-4 px-6 py-4 relative group">
+                            <div class="w-max relative z-10">
+                                <img class="w-12" src="https://www.svgrepo.com/show/485545/upload-cicle.svg" alt="file upload icon" width="512" height="512">
+                            </div>
+                            <div class="relative z-10">
+                                <span class="block text-base font-semibold relative text-blue-900 group-hover:text-blue-500">
+                                    Upload Images
+                                </span>
+                                <span class="mt-0.5 block text-sm text-gray-500">Max 2 MB</span>
+                            </div>
+                            <span class="absolute inset-0 border-dashed border-2 border-gray-400/60 rounded-3xl group-hover:border-gray-300 z-0"></span>
+                            <span class="absolute inset-0 bg-gray-100 rounded-3xl transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:scale-105 active:scale-95 z-0"></span>
                         </label>
-                        <input hidden="" type="file" name="images[]" id="images" onchange="previewImages()">
+
+                        <input hidden="" type="file" name="images[]" id="images" onchange="previewImages()" accept="image/*" multiple>
                     </div>
 
                     <!-- Image Preview Section -->
@@ -268,23 +272,25 @@ $vehicles = $stmt->fetchAll();
                     <input type="file" name="images[]" id="images" id="newImageUpload" onclick="uploadNewImage(vehicleId)"class="border border-gray-300 p-2 w-full rounded" accept="image/*" multiple>
                 </div> -->
 
-                <div class="relative bg-blue">
-                    <label title="Click to upload" for="images" class="cursor-pointer flex items-center gap-4 px-6 py-4 before:border-gray-400/60 hover:before:border-gray-300 group before:bg-gray-100 before:absolute before:inset-0 before:rounded-3xl before:border before:border-dashed before:transition-transform before:duration-300 hover:before:scale-105 active:duration-75 active:before:scale-95">
-                    <div class="w-max relative">
-                        <img class="w-12" src="https://www.svgrepo.com/show/485545/upload-cicle.svg" alt="file upload icon" width="512" height="512">
-                    </div>
-                        <div class="relative">
+                <div class="relative">
+                    <label title="Click to upload" for="images" class="cursor-pointer flex items-center gap-4 px-6 py-4 relative group">
+                        <div class="w-max relative z-10">
+                            <img class="w-12" src="https://www.svgrepo.com/show/485545/upload-cicle.svg" alt="file upload icon" width="512" height="512">
+                        </div>
+                        <div class="relative z-10">
                             <span class="block text-base font-semibold relative text-blue-900 group-hover:text-blue-500">
-                                Upload New Image
+                                    Upload New Images
                             </span>
-                        <span class="mt-0.5 block text-sm text-gray-500">Max 2 MB</span>
-                    </div>
+                            <span class="mt-0.5 block text-sm text-gray-500">Max 2 MB</span>
+                        </div>
+                        <span class="absolute inset-0 border-dashed border-2 border-gray-400/60 rounded-3xl group-hover:border-gray-300 z-0"></span>
+                        <span class="absolute inset-0 bg-gray-100 rounded-3xl transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:scale-105 active:scale-95 z-0"></span>
                     </label>
-                    <input hidden="" type="file" name="images[]" id="images" id="newImageUpload" onclick="uploadNewImage(vehicleId)">
+                    <input hidden="" type="file" name="images[]" id="images" id="newImageUpload" onclick="uploadNewImage(vehicleId)" accept="image/*" multiple>
                 </div>
 
                 <!-- Image Preview Section -->
-                <div id="editImagePreview" class="col-span-2 grid grid-cols-2 gap-2 md:grid-cols-4 rounded-2xl">
+                <div id="editImagePreview" class="col-span-2 grid grid-cols-2 gap-2 md:grid-cols-4 rounded-3xl">
                    
                 </div>
             </div>

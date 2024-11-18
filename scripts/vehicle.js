@@ -112,6 +112,8 @@ document.getElementById('addVehicleForm').addEventListener('submit', function(ev
     });
 });
 
+// document.getElementById('vehicleModal').addEventListener('click', closeModal);
+
 function addVehicleToTable(vehicle) {
     const tbody = document.querySelector("table tbody");
     const newRow = document.createElement("tr");
@@ -239,6 +241,8 @@ function closeEditModal(){
     document.getElementById("EditvehicleModal").classList.add("hide");
 }
 
+document.getElementById('EditvehicleModal').addEventListener('click', closeEditModal);
+
 function submitEditForm() {
     const formData = new FormData(document.getElementById("editVehicleForm"));
     fetch("edit_vehicle.php", {
@@ -313,18 +317,18 @@ function showDetails(vehicleId) {
 }
 
 
-
 function closeDetailsModal() {
     const detailsModal = document.getElementById("detailsModal");
     const detailsModalContent = document.getElementById("detailsModalContent");
-
+    
     detailsModalContent.classList.add("hide");  
-
+    
     setTimeout(() => {
         detailsModal.classList.remove("active"); 
     }, 400);
 }
 
+// document.getElementById('detailsModal').addEventListener('click', closeDetailsModal);
 
 
 function previewImages() {
@@ -391,16 +395,22 @@ function openCarousel(index) {
     setTimeout(() => carouselContent.classList.add('active'), 10);
 }
 
-
-function closeCarousel() {
+// Close the carousel only if clicking outside the enlarged image
+function closeCarousel(event) {
     const carousel = document.getElementById('carouselModal');
     const carouselContent = document.querySelector('.carousel-content');
-
-    carouselContent.classList.remove('active');
-    setTimeout(() => {
-        carousel.classList.add('hidden');
-    }, 100);
+    const enlargedImg = document.getElementById("enlargedImg");
+    
+    if (!event || (event.target !== enlargedImg && !carouselContent.contains(event.target))) {
+        carouselContent.classList.remove('active');
+        setTimeout(() => {
+            carousel.classList.add('hidden');
+        }, 100);
+    }
 }
+
+document.getElementById('closeDetails').onclick = () => closeCarousel();
+document.getElementById('carouselModal').addEventListener('click', closeCarousel);
 
 // Update carousel image with bounds check
 function updateCarouselImage() {
@@ -419,14 +429,15 @@ function updateCarouselImage() {
 function showPrevImage() {
     if (images.length > 1) {
         currentIndex = (currentIndex - 1 + images.length) % images.length;
+        console.log("Previous image index:", currentIndex); // Debugging log
         updateCarouselImage();
     }
 }
 
-// Show next image if multiple images exist
 function showNextImage() {
     if (images.length > 1) {
         currentIndex = (currentIndex + 1) % images.length;
+        console.log("Next image index:", currentIndex); // Debugging log
         updateCarouselImage();
     }
 }
@@ -438,7 +449,7 @@ function populateGallery() {
 
     // Check if there are images; hide gallery if empty
     if (images.length > 0) {
-        gallery.style.display = "grid"; // Show gallery if images exist
+        gallery.style.display = "grid";
         images.forEach((src, index) => {
             const img = document.createElement("img");
             img.src = `../assets/vehicles/${src.trim()}`;
@@ -447,11 +458,8 @@ function populateGallery() {
             gallery.appendChild(img);
         });
     } else {
-        gallery.style.display = "none"; // Hide the gallery if no images are available
+        gallery.style.display = "none"; 
     }
 }
 
-document.getElementById('carouselModal').addEventListener('click', closeCarousel);
-
-// Call this function when you open the modal to load the thumbnails
 populateGallery();

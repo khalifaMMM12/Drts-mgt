@@ -116,9 +116,9 @@ $vehicles = $stmt->fetchAll();
         </div>
         
         <!-- Enlarged Image View with Carousel Controls -->
-        <div id="carouselModal" onclick="openCarousel()" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-6">
+        <div id="carouselModal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-6">
             <div class="carousel-content relative w-11/12 md:w-3/4 lg:w-1/2 bg-white rounded-lg shadow-lg p-4">
-                <button onclick="closeCarousel()" class="absolute top-3 right-3 text-gray-600 text-2xl font-bold hover:text-gray-800">&times;</button>
+                <button onclick="closeCarousel()" id="closeCarousel" class="absolute top-3 right-3 text-gray-600 text-2xl font-bold hover:text-gray-800">&times;</button>
                 
                 <button id="prevImage" onclick="showPrevImage()" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-yellow-400 text-4xl font-bold">&larr;</button>
                 
@@ -129,8 +129,6 @@ $vehicles = $stmt->fetchAll();
         </div>
     </div>
 </div>
-
-
 
     <!-- Add Vehicle Modal -->
     <div id="vehicleModal" class="modal-overlay hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
@@ -265,12 +263,6 @@ $vehicles = $stmt->fetchAll();
                     <label>Repair Completion Date:</label>
                     <input type="date" name="repair_completion_date" id="repair_completion_date" value="<?php echo htmlspecialchars($vehicle['repair_completion_date']); ?>" class="border p-2 w-full mb-4">
                 </div>
-
-                <!-- Image Upload Section -->
-                <!-- <div class="mb-4 col-span-2">
-                    <label for="images" class="block font-semibold">Upload Vehicle Pictures</label>
-                    <input type="file" name="images[]" id="images" id="newImageUpload" onclick="uploadNewImage(vehicleId)"class="border border-gray-300 p-2 w-full rounded" accept="image/*" multiple>
-                </div> -->
 
                 <div class="relative">
                     <label title="Click to upload" for="images" class="cursor-pointer flex items-center gap-4 px-6 py-4 relative group">

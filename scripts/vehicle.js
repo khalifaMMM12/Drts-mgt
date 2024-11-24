@@ -289,8 +289,8 @@ function showDetails(vehicleId) {
             document.getElementById("detailType").textContent = data.type || "N/A";
             document.getElementById("detailMake").textContent = data.make || "N/A";
             document.getElementById("detailLocation").textContent = data.location || "N/A";
-            document.getElementById("detailStatus").textContent = data.status || "Needs Repairs";
-            document.getElementById("detailRepair").textContent = data.repair_type || data.status;
+            document.getElementById("detailStatus").textContent = data.status;
+            document.getElementById("detailRepair").textContent = data.repair_type;
             document.getElementById("detailInspectionDate").textContent = data.inspection_date || "N/A";
 
             // Process images

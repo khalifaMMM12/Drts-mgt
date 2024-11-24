@@ -73,9 +73,11 @@ $vehicles = $stmt->fetchAll();
                             <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['location']); ?></td>
                             <td class="p-4 border-b">
                                 <?php if ($vehicle['status'] === 'Fixed'): ?>
-                                    <span class="text-green-500 font-bold">✔ Fixed</span>
-                                <?php else: ?>
+                                    <span class="text-green-500 font-bold">✔ Cleared</span>
+                                <?php elseif ($vehicle['status'] === 'Needs Repairs'): ?>
                                     <span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>
+                                <?php else: ?>
+                                    <span class="text-gray-500 font-bold">No Repairs Needed</span>
                                 <?php endif; ?>
                             </td>
                             <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['inspection_date']); ?></td>

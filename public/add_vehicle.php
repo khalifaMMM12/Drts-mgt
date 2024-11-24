@@ -13,8 +13,10 @@ try {
         throw new Exception('Invalid request method');
     }
 
+    $status = isset($_POST['needs_repairs']) ? 'Needs Repairs' : 'No Repairs Needed';
+
     // Validate required fields
-    $required_fields = ['reg_no', 'type', 'make', 'location', 'repair_type', 'inspection_date'];
+    $required_fields = ['reg_no', 'type', 'make', 'location', 'inspection_date'];
     foreach ($required_fields as $field) {
         if (empty($_POST[$field])) {
             throw new Exception("$field is required");
@@ -127,7 +129,7 @@ try {
                 unlink($filePath);
             }
         }
-    }
+    }   
 
     // Return error response
     http_response_code(400);

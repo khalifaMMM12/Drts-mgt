@@ -110,6 +110,7 @@ $vehicles = $stmt->fetchAll();
             <p><strong>Status:</strong> <span id="detailStatus"></span></p>
             <p><strong>Repair Type:</strong> <span id="detailRepair"></span></p>
             <p><strong>Inspection Date:</strong> <span id="detailInspectionDate"></span></p>
+            <p><strong>Cleared Date:</strong> <span id="detailRepairDate"></span></p>
         </div>
 
         <!-- Image Gallery Thumbnails -->
@@ -262,12 +263,12 @@ $vehicles = $stmt->fetchAll();
                 </div>
                 <input type="hidden" name="id" id="vehicleId" value="<?php echo htmlspecialchars($vehicle['id']); ?>">
                 <div>
-                    <label>Repair Completion Date:</label>
+                    <label>Cleared Date:</label>
                     <input type="date" name="repair_completion_date" id="repair_completion_date" value="<?php echo htmlspecialchars($vehicle['repair_completion_date']); ?>" class="border p-2 w-full mb-4">
                 </div>
 
                 <div class="relative">
-                    <label title="Click to upload" for="images" class="cursor-pointer flex items-center gap-4 px-6 py-4 relative group">
+                    <label title="Click to upload" for="new_images" class="cursor-pointer flex items-center gap-4 px-6 py-4 relative group">
                         <div class="w-max relative z-10">
                             <img class="w-12" src="https://www.svgrepo.com/show/485545/upload-cicle.svg" alt="file upload icon" width="512" height="512">
                         </div>
@@ -280,7 +281,7 @@ $vehicles = $stmt->fetchAll();
                         <span class="absolute inset-0 border-dashed border-2 border-gray-400/60 rounded-3xl group-hover:border-gray-300 z-0"></span>
                         <span class="absolute inset-0 bg-gray-100 rounded-3xl transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:scale-105 active:scale-95 z-0"></span>
                     </label>
-                    <input hidden="" type="file" name="images[]" id="images" id="newImageUpload" onclick="uploadNewImage(vehicleId)" accept="image/*" multiple>
+                    <input hidden="" type="file" name="new_images[]" id="new_images" onclick="uploadNewImage(vehicleId)" accept="image/*" multiple>
                 </div>
 
                 <!-- Image Preview Section -->

@@ -156,21 +156,29 @@ function editVehicle(vehicleId) {
             console.log("Vehicle data received:", vehicle);
 
             // Update form fields
-            document.getElementById("reg_no").value = vehicle.reg_no;
-            document.getElementById("type").value = vehicle.type;
-            document.getElementById("make").value = vehicle.make;
-            document.getElementById("location").value = vehicle.location;
-            document.getElementById("inspection_date").value = vehicle.inspection_date;
-            document.getElementById("repair_completion_date").value = vehicle.repair_completion_date;
-            document.getElementById("vehicleId").value = vehicle.id;
+            document.getElementById("reg_no").value = vehicle.reg_no || "";
+            document.getElementById("type").value = vehicle.type || "";
+            document.getElementById("make").value = vehicle.make || "";
+            document.getElementById("location").value = vehicle.location || "";
+            document.getElementById("inspection_date").value = vehicle.inspection_date || "";
+            document.getElementById("repair_completion_date").value = vehicle.repair_completion_date || "";
+            document.getElementById("vehicleId").value = vehicle.id || "";
+
+            // Update Needs Repairs checkbox
+            const needsRepairsCheckbox = document.getElementById("needsRepairs");
+            needsRepairsCheckbox.checked = vehicle.status === "Needs Repairs";
+            toggleRepairType(); // Ensure the repair type field is toggled based on status
+
+            // Update Repair Type
+            document.getElementById("repair_type").value = vehicle.repair_type || "";
 
             // Update image gallery
-            imageGallery.innerHTML = '';
-            const imagesArray = vehicle.images ? (typeof vehicle.images === 'string' ? vehicle.images.split(',') : vehicle.images) : [];
+            imageGallery.innerHTML = ""; // Clear existing images
+            const imagesArray = vehicle.images ? (typeof vehicle.images === "string" ? vehicle.images.split(",") : vehicle.images) : [];
             imagesArray.forEach((image, index) => {
-                const sanitizedImage = image.trim().replace(/[^a-zA-Z0-9._-]/g, '');
+                const sanitizedImage = image.trim().replace(/[^a-zA-Z0-9._-]/g, "");
                 const imagePath = `../assets/vehicles/${sanitizedImage}`;
-                
+
                 const imageContainer = document.createElement("div");
                 imageContainer.classList.add("relative", "group");
 
@@ -186,7 +194,7 @@ function editVehicle(vehicleId) {
                 deleteIcon.innerHTML = "&times;";
                 deleteIcon.onclick = () => {
                     if (confirm("Are you sure you want to delete this image?")) {
-                        fetch(`delete_image.php?vehicle_id=${vehicleId}&image=${sanitizedImage}`, { method: 'GET' })
+                        fetch(`delete_image.php?vehicle_id=${vehicleId}&image=${sanitizedImage}`, { method: "GET" })
                             .then(response => response.json())
                             .then(result => {
                                 if (result.success) {
@@ -196,7 +204,7 @@ function editVehicle(vehicleId) {
                                     alert("Failed to delete the image.");
                                 }
                             })
-                            .catch(error => console.error('Error deleting image:', error));
+                            .catch(error => console.error("Error deleting image:", error));
                     }
                 };
 
@@ -208,10 +216,117 @@ function editVehicle(vehicleId) {
         .catch(error => console.error("Error loading vehicle data:", error));
 }
 
+
 function closeEditModal() {
     console.log("Closing Edit Modal");
     document.getElementById("EditvehicleModal").classList.remove("active");
 }
+
+function uploadNewImage(vehicleId) {
+    // Get the file input element
+    const fileInput = document.getElementById("new_images");
+
+    // Validate vehicle ID
+    if (!vehicleId) {
+        alert("Vehicle ID is missing.");
+        return;
+    }
+
+    // Validate if files are selected
+    if (fileInput.files.length === 0) {
+        alert("Please select at least one image.");
+        return;
+    }
+
+    // Create a FormData object and append vehicle ID
+    const formData = new FormData();
+    formData.append("vehicle_id", vehicleId);
+
+    // Append selected files to FormData
+    for (const file of fileInput.files) {
+        formData.append("new_image[]", file); // Ensure this matches the PHP script's expected key
+    }
+
+    // Make the fetch API call
+    fetch("upload_new_image.php", {
+        method: "POST",
+        body: formData,
+    })
+        .then(response => {
+            // Check if the response is JSON
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(result => {
+            console.log("Server response:", result); // Debugging server response
+
+            if (result.success) {
+                alert("Image(s) uploaded successfully!");
+
+                // Update the gallery with new images
+                const newImages = result.new_images; // Array of newly uploaded images
+                const imageGallery = document.getElementById("editImagePreview");
+
+                newImages.forEach((image, index) => {
+                    const sanitizedImage = image.trim().replace(/[^a-zA-Z0-9._-]/g, '');
+                    const imagePath = `../assets/vehicles/${sanitizedImage}`;
+
+                    // Create image container
+                    const imageContainer = document.createElement("div");
+                    imageContainer.classList.add("relative", "group");
+
+                    // Create img element
+                    const imgElement = document.createElement("img");
+                    imgElement.src = imagePath;
+                    imgElement.classList.add("cursor-pointer", "rounded", "shadow-lg");
+                    imgElement.onclick = () => openCarousel(index); // Function for opening carousel
+
+                    // Create delete icon
+                    const deleteIcon = document.createElement("span");
+                    deleteIcon.classList.add(
+                        "absolute", "top-1", "right-1", "text-white", "text-2xl", "cursor-pointer", "opacity-0", "group-hover:opacity-100"
+                    );
+                    deleteIcon.innerHTML = "&times;";
+                    deleteIcon.onclick = () => {
+                        if (confirm("Are you sure you want to delete this image?")) {
+                            fetch(`delete_image.php?vehicle_id=${vehicleId}&image=${sanitizedImage}`, { method: 'GET' })
+                                .then(response => response.json())
+                                .then(deleteResult => {
+                                    if (deleteResult.success) {
+                                        alert("Image deleted successfully!");
+                                        imageContainer.remove();
+                                    } else {
+                                        alert("Failed to delete the image.");
+                                    }
+                                })
+                                .catch(error => console.error("Error deleting image:", error));
+                        }
+                    };
+
+                    // Append img and delete icon to the container
+                    imageContainer.appendChild(imgElement);
+                    imageContainer.appendChild(deleteIcon);
+
+                    // Append container to the gallery
+                    imageGallery.appendChild(imageContainer);
+                });
+
+                // Clear the file input
+                fileInput.value = "";
+            } else {
+                // Show error message from server
+                alert("Failed to upload image(s): " + result.error);
+            }
+        })
+        .catch(error => {
+            // Log any errors for debugging
+            console.error("Error uploading images:", error);
+            alert("An error occurred while uploading images. Please try again.");
+        });
+}
+
 
 
 function deleteImage(vehicleId, image) {
@@ -229,30 +344,11 @@ function deleteImage(vehicleId, image) {
         .catch(error => console.error('Error deleting image:', error));
     }
 }
-function uploadNewImage(vehicleId) {
-    const fileInput = document.getElementById("newImageUpload");
-    const formData = new FormData();
-    formData.append("vehicle_id", vehicleId);
-    formData.append("new_image", fileInput.files[0]);
-
-    fetch("upload_new_image.php", {
-        method: "POST",
-        body: formData
-    })
-    .then(response => response.json())
-    .then(result => {
-        if (result.success) {
-            alert("Image uploaded successfully!");
-            editVehicle(vehicleId);
-        } else {
-            alert("Failed to upload image.");
-        }
-    })
-    .catch(error => console.error("Error uploading image:", error));
-}
 
 function submitEditForm() {
+
     const formData = new FormData(document.getElementById("editVehicleForm"));
+
     fetch("edit_vehicle.php", {
         method: "POST",
         body: formData
@@ -267,6 +363,13 @@ function submitEditForm() {
     })
     .catch(error => console.error("Error submitting form:", error));
 }
+
+document.getElementById("editVehicleForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    
+    submitEditForm();
+});
+
 
 
 // Show Vehicle Details Model
@@ -292,6 +395,7 @@ function showDetails(vehicleId) {
             document.getElementById("detailStatus").textContent = data.status;
             document.getElementById("detailRepair").textContent = data.repair_type;
             document.getElementById("detailInspectionDate").textContent = data.inspection_date || "N/A";
+            document.getElementById("detailRepairDate").textContent = data.repair_completion_date || "N/A";
 
             // Process images
             const imagesArray = (typeof data.images === 'string' && data.images.trim()) 
@@ -329,6 +433,7 @@ function showDetails(vehicleId) {
 function closeDetailsModal() {
     const detailsModal = document.getElementById("detailsModal");
     const detailsModalContent = document.getElementById("detailsModalContent");
+    console.log("details model closed");
     
     detailsModalContent.classList.add("hide");  
     
@@ -365,16 +470,18 @@ function previewImages() {
 
 function showdetails() {
     document.getElementById("detailsModal").classList.remove("hidden");
+    console.log("details model");
 }
 
 function closeDetails() {
     document.getElementById("detailsModal").classList.add("hidden");
-    closeCarousel(); // Close the carousel if open
+    closeCarousel();
+    console.log("details model closed");
 }
 
 
 // Ensure images is an array
-let images = [];  // This will store the images dynamically from the details modal
+let images = []; 
 let currentIndex = 0;
 
 function openCarousel(index = 0) {
@@ -384,24 +491,26 @@ function openCarousel(index = 0) {
     }
 
     const carousel = document.getElementById('carouselModal');
-    carousel.classList.remove('hidden');  // Show the carousel modal
+    carousel.classList.remove('hidden'); 
 
     // Ensure index is within bounds
     currentIndex = Math.min(Math.max(index, 0), images.length - 1);
 
-    updateCarouselImage();  // Update the image in the carousel
+    updateCarouselImage(); 
 }
 
 function updateCarouselImage() {
     const enlargedImg = document.getElementById("enlargedImg");
     
     if (images[currentIndex]) {
-        enlargedImg.src = `../assets/vehicles/${images[currentIndex]}`;  // Update image source
+        enlargedImg.src = `../assets/vehicles/${images[currentIndex]}`; 
         enlargedImg.alt = `Vehicle Image ${currentIndex + 1}`;
     } else {
         console.error("Image not found.");
     }
 }
+
+
 
 function showPrevImage() {
     if (images.length <= 0) return;
@@ -417,7 +526,7 @@ function showNextImage() {
 
 function closeCarousel() {
     const carousel = document.getElementById('carouselModal');
-    carousel.classList.add('hidden');  // Hide the carousel modal
+    carousel.classList.add('hidden'); 
 }
 
 // Attach the image array from the details modal to the carousel

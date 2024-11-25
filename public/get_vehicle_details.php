@@ -17,13 +17,6 @@ if (isset($_GET['id'])) {
     }
     error_log("Received ID in GET request: " . $vehicleId);
 }
-
-// In get_vehicle_details.php
-
-// Fetch vehicle data from the database
-// $sql = "SELECT * FROM vehicles";
-// $stmt = $pdo->query($sql);
-// $vehicles = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 

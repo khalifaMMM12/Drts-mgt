@@ -29,7 +29,7 @@ $vehicles = $stmt->fetchAll();
     <div class="bg-black text-yellow-400 p-4 flex flex-wrap justify-between items-center">
         <div class="flex items-center space-x-4">
             <a href="index.php" class="hover:text-white">All Vehicles</a>
-            <a href="fixed_vehicles.php" class="hover:text-white">Fixed Vehicles</a>
+            <a href="equipment.php" class="hover:text-white">Office e</a>
         </div>
     </div> -->
 
@@ -46,8 +46,8 @@ $vehicles = $stmt->fetchAll();
                 <button type="submit" class="bg-yellow-500 text-black font-semibold p-2 rounded-r hover:bg-yellow-600">Search</button>
             </form>
 
-            <!-- Add Vehicle Button -->
             <button onclick="openModal()" class="rounded bg-gradient-to-b from-blue-500 to-indigo-600 hover:to-indigo-700 text-white px-4 py-2 shadow-lg">Add Vehicles</button>
+            <a  href="equipment.php" class="rounded bg-gradient-to-b from-blue-500 to-indigo-600 hover:to-indigo-700 text-white px-4 py-2 shadow-lg">Office Equipments</a>
         </div>
 
         <!-- Vehicle List Table -->

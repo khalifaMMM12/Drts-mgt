@@ -3,7 +3,6 @@ include '../config/db.php';
 
 // Connect to the database using PDO
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -37,7 +36,7 @@ try {
 
         echo json_encode(['success' => true]);
     }
-} catch (PDOException $e) {
-    echo json_encode(['error' => $e->getMessage()]);
+} catch (Exception $e) {
+    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 }
 ?>

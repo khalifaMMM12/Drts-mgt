@@ -35,6 +35,8 @@ document.addEventListener("DOMContentLoaded", function () {
         } else if (type === "fireExtinguishers") {
             fireExtinguishersTable.classList.remove("hidden");
         }
+
+        loadTableData(type);
     }
 
     // Show modal when Add Equipment is clicked
@@ -160,18 +162,30 @@ addEquipmentForm.addEventListener("submit", function (e) {
 // Load table data
 function loadTableData(type) {
     fetch(`get_equipment_data.php?type=${type}`)
-        .then((response) => response.json())
-        .then((data) => {
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (!Array.isArray(data)) {
+                throw new Error("Invalid JSON format: Expected an array.");
+            }
+            
             const tableBody = document.getElementById(`${type}Data`);
             tableBody.innerHTML = "";
 
             data.forEach((item) => {
-                let row = `<tr>${Object.values(item).map(value => `<td>${value}</td>`).join('')}</tr>`;
+                let row = `<tr>${Object.values(item).map(value => `<td>${value ?? ''}</td>`).join('')}</tr>`;
                 tableBody.innerHTML += row;
             });
         })
-        .catch((error) => console.error("Error:", error));
+        .catch((error) => {
+            console.error("Error:", error);
+        });
 }
+
 
 // Initial table load
 loadTableData('solar');

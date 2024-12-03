@@ -1,10 +1,12 @@
 <?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+header('Content-Type: application/json');
 include '../config/db.php';
 
-// Connect to the database using PDO
 try {
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $equipmentType = $_POST['equipmentType'];
         $location = $_POST['location'] ?? null;
@@ -22,21 +24,30 @@ try {
             $model = $_POST['model'];
             $type = $_POST['type'];
             $noOfUnits = $_POST['noOfUnits'];
+            $capacity = $_POST['capacity'];
+
             $stmt = $pdo->prepare("INSERT INTO air_conditioners (location, model, type, no_of_units, capacity, status) VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$location, $model, $type, $noOfUnits, $_POST['capacity'], $status]);
+            $stmt->execute([$location, $model, $type, $noOfUnits, $capacity, $status]);
         } elseif ($equipmentType === 'fireExtinguishers') {
             $type = $_POST['type'];
             $weight = $_POST['weight'];
             $amount = $_POST['amount'];
             $lastServiceDate = $_POST['lastServiceDate'];
             $expirationDate = $_POST['expirationDate'];
+
             $stmt = $pdo->prepare("INSERT INTO fire_extinguishers (type, weight, amount, location, status, last_service_date, expiration_date) VALUES (?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([$type, $weight, $amount, $location, $status, $lastServiceDate, $expirationDate]);
+        } else {
+            echo json_encode(['success' => false, 'error' => 'Invalid equipment type']);
+            exit;
         }
 
+        // Success response
         echo json_encode(['success' => true]);
+    } else {
+        echo json_encode(['success' => false, 'error' => 'Invalid request method']);
     }
 } catch (Exception $e) {
-    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    echo json_encode(['success' => false, 'error' => 'Database error: ' . $e->getMessage()]);
 }
 ?>

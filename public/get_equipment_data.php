@@ -4,8 +4,6 @@ header('Content-Type: application/json');
 include '../config/db.php';
 
 try {
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
     $equipmentType = $_GET['type'] ?? 'solar';
     $data = [];
 

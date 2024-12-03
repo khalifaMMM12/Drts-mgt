@@ -93,6 +93,17 @@ document.addEventListener("DOMContentLoaded", function () {
                     <label for="noOfUnits" class="block text-sm font-medium text-gray-700">No. of Units</label>
                     <input type="number" id="noOfUnits" name="noOfUnits" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
                 </div>
+                <div class="mb-4">
+                    <label for="capacity" class="block text-sm font-medium text-gray-700">Capacity</label>
+                    <input type="text" id="capacity" name="capacity" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
+                </div>
+                <div class="mb-4">
+                    <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                    <select id="status" name="status" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
+                        <option value="Operational">Operational</option>
+                        <option value="Not Operational">Not Operational</option>
+                    </select>
+                </div>
             `;
         } else if (type === "fireExtinguishers") {
             additionalFields.innerHTML = `
@@ -110,8 +121,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     <input type="number" id="amount" name="amount" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
                 </div>
                 <div class="mb-4">
-                    <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
-                    <input type="text" id="location" name="location" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
+                    <label for="lastServiceDate" class="block text-sm font-medium text-gray-700">Last service date</label>
+                    <input type="date" id="lastServiceDate" name="lastServiceDate" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
+                </div>
+                <div class="mb-4">
+                    <label for="expirationDate" class="block text-sm font-medium text-gray-700">Expiration date</label>
+                    <input type="date" id="expirationDate" name="expirationDate" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
                 </div>
                 <div class="mb-4">
                     <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
@@ -133,7 +148,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-// AJAX to Add New Equipment
+
 addEquipmentForm.addEventListener("submit", function (e) {
     e.preventDefault();
 
@@ -143,7 +158,11 @@ addEquipmentForm.addEventListener("submit", function (e) {
         method: "POST",
         body: formData,
     })
-        .then((response) => response.json())
+        .then((response) => response.text()) // Change from .json() to .text() to capture the raw response
+        .then((data) => {
+            console.log("Raw Response:", data); // Log the response to the console
+            return JSON.parse(data); // Then attempt to parse as JSON
+        })
         .then((data) => {
             if (data.success) {
                 alert("Equipment added successfully!");
@@ -157,34 +176,64 @@ addEquipmentForm.addEventListener("submit", function (e) {
         .catch((error) => {
             console.error("Error:", error);
         });
+    
+    
 });
 
 // Load table data
 function loadTableData(type) {
     fetch(`get_equipment_data.php?type=${type}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
-            if (!Array.isArray(data)) {
-                throw new Error("Invalid JSON format: Expected an array.");
-            }
-            
             const tableBody = document.getElementById(`${type}Data`);
             tableBody.innerHTML = "";
 
-            data.forEach((item) => {
-                let row = `<tr>${Object.values(item).map(value => `<td>${value ?? ''}</td>`).join('')}</tr>`;
-                tableBody.innerHTML += row;
+            data.forEach((equipment) => {
+                const newRow = document.createElement('tr');
+                newRow.classList.add('border-b');
+
+                // Dynamically render each table row based on the equipment type
+                if (type === 'solar') {
+                    newRow.innerHTML = `
+                        <td class="p-4">${equipment.location || 'N/A'}</td>
+                        <td class="p-4">${equipment.capacity || 'N/A'}</td>
+                        <td class="p-4">${equipment.battery_type || 'N/A'}</td>
+                        <td class="p-4">${equipment.no_of_batteries || 'N/A'}</td>
+                        <td class="p-4">${equipment.no_of_panels || 'N/A'}</td>
+                        <td class="p-4">${equipment.date_added || 'N/A'}</td>
+                        <td class="p-4">${equipment.service_rendered || 'N/A'}</td>
+                    `;
+                } else if (type === 'airConditioners') {
+                    newRow.innerHTML = `
+                        <td class="p-4">${equipment.location || 'N/A'}</td>
+                        <td class="p-4">${equipment.model || 'N/A'}</td>
+                        <td class="p-4">${equipment.type || 'N/A'}</td>
+                        <td class="p-4">${equipment.no_of_units || 'N/A'}</td>
+                        <td class="p-4">${equipment.capacity || 'N/A'}</td>
+                        <td class="p-4">${equipment.status || 'N/A'}</td>
+                    `;
+                } else if (type === 'fireExtinguishers') {
+                    newRow.innerHTML = `
+                        <td class="p-4">${equipment.type || 'N/A'}</td>
+                        <td class="p-4">${equipment.weight || 'N/A'}</td>
+                        <td class="p-4">${equipment.amount || 'N/A'}</td>
+                        <td class="p-4">${equipment.location || 'N/A'}</td>
+                        <td class="p-4">${equipment.status || 'N/A'}</td>
+                        <td class="p-4">${equipment.last_service_date || 'N/A'}</td>
+                        <td class="p-4">${equipment.expiration_date || 'N/A'}</td>
+                    `;
+                }
+
+                tableBody.appendChild(newRow);
             });
         })
         .catch((error) => {
             console.error("Error:", error);
+            const tableBody = document.getElementById(`${type}Data`);
+            tableBody.innerHTML = `<tr><td colspan="7" class="text-center p-4 text-red-500">Error fetching data: ${error.message}</td></tr>`;
         });
 }
+
 
 
 // Initial table load

@@ -40,7 +40,8 @@
                         <th class="p-4 border-b">No. of Batteries</th>
                         <th class="p-4 border-b">No. of Panels</th>
                         <th class="p-4 border-b">Date Added</th>
-                        <th class="p-4 border-b">Service Rendered</th>
+                        <th class="p-4 border-b">Action</th>
+                        <!-- <th class="p-4 border-b">Service Rendered</th> -->
                     </tr>
                 </thead>
                 <tbody id="solarData"></tbody>
@@ -104,5 +105,6 @@
     </div>
 
     <script src="../scripts/Equipments.js"></script>
+    <script src="https://kit.fontawesome.com/79a49acde1.js" crossorigin="anonymous"></script>
 </body>
 </html>

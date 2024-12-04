@@ -18,8 +18,8 @@ try {
             $noOfBatteries = $_POST['noOfBatteries'];
             $noOfPanels = $_POST['noOfPanels'];
 
-            $stmt = $pdo->prepare("INSERT INTO solar (location, capacity, battery_type, no_of_batteries, no_of_panels, date_added, service_rendered) VALUES (?, ?, ?, ?, ?, NOW(), ?)");
-            $stmt->execute([$location, $capacity, $batteryType, $noOfBatteries, $noOfPanels, 'N/A']);
+            $stmt = $pdo->prepare("INSERT INTO solar (location, capacity, battery_type, no_of_batteries, no_of_panels, date_added) VALUES (?, ?, ?, ?, ?, NOW())");
+            $stmt->execute([$location, $capacity, $batteryType, $noOfBatteries, $noOfPanels]);
         } elseif ($equipmentType === 'airConditioners') {
             $model = $_POST['model'];
             $type = $_POST['type'];

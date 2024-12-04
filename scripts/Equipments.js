@@ -201,7 +201,10 @@ function loadTableData(type) {
                         <td class="p-4">${equipment.no_of_batteries || 'N/A'}</td>
                         <td class="p-4">${equipment.no_of_panels || 'N/A'}</td>
                         <td class="p-4">${equipment.date_added || 'N/A'}</td>
-                        <td class="p-4">${equipment.service_rendered || 'N/A'}</td>
+                        <td class="p-4">            
+                            <a href="#" class="text-red-500 hover:text-red-700" onclick="deleteEquipment(${equipment.id}, 'solar')"><i class="fa-solid fa-trash-can"></i></a>
+                        </td>
+
                     `;
                 } else if (type === 'airConditioners') {
                     newRow.innerHTML = `
@@ -233,9 +236,42 @@ function loadTableData(type) {
             tableBody.innerHTML = `<tr><td colspan="7" class="text-center p-4 text-red-500">Error fetching data: ${error.message}</td></tr>`;
         });
 }
-
-
-
-// Initial table load
 loadTableData('solar');
+
+function deleteEquipment(equipmentId, equipmentType) {
+    if (!confirm('Are you sure you want to delete this equipment?')) {
+        return;
+    }
+
+    fetch('delete_equipment.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            equipmentId: equipmentId,
+            equipmentType: equipmentType
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.text().then(text => {
+                console.error('Response Text:', text); // Log full response
+                throw new Error('Server Error: ' + text);
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            alert("Equipment deleted successfully.");
+            loadTableData(equipmentType); // Refresh the table after successful deletion
+        } else {
+            alert("Error deleting equipment: " + data.error);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+    
+}
+
 

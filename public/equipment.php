@@ -56,6 +56,7 @@
                         <th class="p-4 border-b">No. of Units</th>
                         <th class="p-4 border-b">Capacity</th>
                         <th class="p-4 border-b">Status</th>
+                        <th class="p-4 border-b">Action</th>
                     </tr>
                 </thead>
                 <tbody id="airConditionersData"></tbody>
@@ -71,6 +72,7 @@
                         <th class="p-4 border-b">Status</th>
                         <th class="p-4 border-b">Last Service Date</th>
                         <th class="p-4 border-b">Expiration Date</th>
+                        <th class="p-4 border-b">Action</th>
                     </tr>
                 </thead>
                 <tbody id="fireExtinguishersData"></tbody>
@@ -79,19 +81,16 @@
     </div>
 
     <!-- Modal -->
-    <div id="addEquipmentModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
-        <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+    <div id="addEquipmentModal" class="modal-overlay hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
+        <div class="modal-content relative bg-white p-6 rounded-lg shadow-lg border-2 border-yellow-400 w-full max-w-lg md:max-w-2xl lg:max-w-3xl overflow-y-auto max-h-full">
+        <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-700 text-4xl">&times;</button>
             <h2 id="modalTitle" class="text-xl font-bold mb-4"></h2>
             <form id="addEquipmentForm">
                 <input type="hidden" id="equipmentType" name="equipmentType">
-
-                <div class="mb-4">
-                    <label for="location" class="block text-sm font-medium text-gray-700">Location</label>
-                    <input type="text" id="location" name="location" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
+                <div id="fields" class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <!-- Fields input -->
+                    
                 </div>
-
-                <div id="additionalFields"></div>
-
                 <div class="mt-6 flex justify-end">
                     <button type="button" id="cancelButton" class="mr-4 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400">
                         Cancel

@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const cancelButton = document.getElementById("cancelButton");
 
     const modalTitle = document.getElementById("modalTitle");
-    const additionalFields = document.getElementById("additionalFields");
+    const fields = document.getElementById("fields");
     const equipmentTypeInput = document.getElementById("equipmentType");
 
     // Show the first table (Solar) by default
@@ -56,81 +56,93 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Populate form fields dynamically based on equipment type
     function populateFormFields(type) {
-        additionalFields.innerHTML = "";
+        fields.innerHTML = "";
 
         if (type === "solar") {
-            additionalFields.innerHTML = `
+            fields.innerHTML = `
                 <!-- Solar Equipment Form Fields -->
-                <div class="mb-4">
-                    <label for="capacity" class="block text-sm font-medium text-gray-700">Capacity</label>
-                    <input type="text" id="capacity" name="capacity" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
+                <div>
+                    <label for="location" class="block">Location</label>
+                    <input type="text" id="location" name="location" required class="border p-2 w-full mb-4">
                 </div>
-                <div class="mb-4">
-                    <label for="batteryType" class="block text-sm font-medium text-gray-700">Battery Type</label>
-                    <input type="text" id="batteryType" name="batteryType" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
+                <div>
+                    <label for="capacity" class="block">Capacity</label>
+                    <input type="text" id="capacity" name="capacity" required class="border p-2 w-full mb-4">
                 </div>
-                <div class="mb-4">
-                    <label for="noOfBatteries" class="block text-sm font-medium text-gray-700">No. of Batteries</label>
-                    <input type="number" id="noOfBatteries" name="noOfBatteries" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
+                <div>
+                    <label for="batteryType" class="block">Battery Type</label>
+                    <input type="text" id="batteryType" name="batteryType" required class="border p-2 w-full mb-4>
                 </div>
-                <div class="mb-4">
-                    <label for="noOfPanels" class="block text-sm font-medium text-gray-700">No. of Panels</label>
-                    <input type="number" id="noOfPanels" name="noOfPanels" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
+                <div>
+                    <label for="noOfBatteries" class="block">No. of Batteries</label>
+                    <input type="number" id="noOfBatteries" name="noOfBatteries" required class="border p-2 w-full mb-4">
+                </div>
+                <div>
+                    <label for="noOfPanels" class="block">No. of Panels</label>
+                    <input type="number" id="noOfPanels" name="noOfPanels" required class="border p-2 w-full mb-4">
                 </div>
             `;
         } else if (type === "airConditioners") {
-            additionalFields.innerHTML = `
+            fields.innerHTML = `
                 <!-- Air Conditioners Form Fields -->
-                <div class="mb-4">
-                    <label for="model" class="block text-sm font-medium text-gray-700">Model</label>
-                    <input type="text" id="model" name="model" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
+                <div>
+                    <label for="location" class="block">Location</label>
+                    <input type="text" id="location" name="location" required class="border p-2 w-full mb-4">
                 </div>
-                <div class="mb-4">
-                    <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
-                    <input type="text" id="type" name="type" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
+                <div>
+                    <label for="model" class="block">Model</label>
+                    <input type="text" id="model" name="model" required class="border p-2 w-full mb-4">
                 </div>
-                <div class="mb-4">
-                    <label for="noOfUnits" class="block text-sm font-medium text-gray-700">No. of Units</label>
-                    <input type="number" id="noOfUnits" name="noOfUnits" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
+                <div>
+                    <label for="type" class="block">Type</label>
+                    <input type="text" id="type" name="type" required class="border p-2 w-full mb-4">
                 </div>
-                <div class="mb-4">
-                    <label for="capacity" class="block text-sm font-medium text-gray-700">Capacity</label>
-                    <input type="text" id="capacity" name="capacity" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
+                <div>
+                    <label for="noOfUnits" class="block">No. of Units</label>
+                    <input type="number" id="noOfUnits" name="noOfUnits" required class="border p-2 w-full mb-4">
                 </div>
-                <div class="mb-4">
-                    <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
-                    <select id="status" name="status" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
+                <div>
+                    <label for="capacity" class="block">Capacity</label>
+                    <input type="text" id="capacity" name="capacity" required class="border p-2 w-full mb-4">
+                </div>
+                <div>
+                    <label for="status" class="block">Status</label>
+                    <select id="status" name="status" class="border p-2 w-full mb-4">
                         <option value="Operational">Operational</option>
                         <option value="Not Operational">Not Operational</option>
                     </select>
                 </div>
             `;
         } else if (type === "fireExtinguishers") {
-            additionalFields.innerHTML = `
+            fields.innerHTML = `
                 <!-- Fire Extinguishers Form Fields -->
-                <div class="mb-4">
-                    <label for="type" class="block text-sm font-medium text-gray-700">Type</label>
-                    <input type="text" id="type" name="type" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
+                <div>
+                    <label for="location" class="block">Location</label>
+                    <input type="text" id="location" name="location" required class="border p-2 w-full mb-4">
                 </div>
-                <div class="mb-4">
-                    <label for="weight" class="block text-sm font-medium text-gray-700">Weight</label>
-                    <input type="text" id="weight" name="weight" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
+                <div>
+                    <label for="type" class="block">Type</label>
+                    <input type="text" id="type" name="type" required class="border p-2 w-full mb-4">
                 </div>
-                <div class="mb-4">
-                    <label for="amount" class="block text-sm font-medium text-gray-700">Amount</label>
-                    <input type="number" id="amount" name="amount" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
+                <div>
+                    <label for="weight" class="block">Weight</label>
+                    <input type="text" id="weight" name="weight" required class="border p-2 w-full mb-4">
                 </div>
-                <div class="mb-4">
-                    <label for="lastServiceDate" class="block text-sm font-medium text-gray-700">Last service date</label>
-                    <input type="date" id="lastServiceDate" name="lastServiceDate" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
+                <div>
+                    <label for="amount" class="block">Amount</label>
+                    <input type="number" id="amount" name="amount" required class="border p-2 w-full mb-4">
                 </div>
-                <div class="mb-4">
-                    <label for="expirationDate" class="block text-sm font-medium text-gray-700">Expiration date</label>
-                    <input type="date" id="expirationDate" name="expirationDate" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
+                <div>
+                    <label for="lastServiceDate" class="block">Last service date</label>
+                    <input type="date" id="lastServiceDate" name="lastServiceDate" required class="border p-2 w-full mb-4">
                 </div>
-                <div class="mb-4">
-                    <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
-                    <select id="status" name="status" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500">
+                <div>
+                    <label for="expirationDate" class="block">Expiration date</label>
+                    <input type="date" id="expirationDate" name="expirationDate" required class="border p-2 w-full mb-4">
+                </div>
+                <div>
+                    <label for="status" class="block">Status</label>
+                    <select id="status" name="status" class="border p-2 w-full mb-4">
                         <option value="Operational">Operational</option>
                         <option value="Not Operational">Not Operational</option>
                     </select>
@@ -148,6 +160,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+function closeModal() {
+    console.log("Closing Edit Modal");
+    addEquipmentModal.classList.add("hidden");
+    addEquipmentForm.reset();
+}
 
 addEquipmentForm.addEventListener("submit", function (e) {
     e.preventDefault();
@@ -185,14 +202,25 @@ function loadTableData(type) {
     fetch(`get_equipment_data.php?type=${type}`)
         .then(response => response.json())
         .then(data => {
+            console.log('Fetched data:', data);  // Log the data for debugging
+
             const tableBody = document.getElementById(`${type}Data`);
+            if (!tableBody) {
+                console.error(`Table body with id ${type}Data not found.`);
+                return;
+            }
+
             tableBody.innerHTML = "";
+
+            if (data.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="7" class="text-center p-4 text-yellow-500">No equipment found</td></tr>`;
+                return;
+            }
 
             data.forEach((equipment) => {
                 const newRow = document.createElement('tr');
                 newRow.classList.add('border-b');
 
-                // Dynamically render each table row based on the equipment type
                 if (type === 'solar') {
                     newRow.innerHTML = `
                         <td class="p-4">${equipment.location || 'N/A'}</td>
@@ -204,7 +232,6 @@ function loadTableData(type) {
                         <td class="p-4">            
                             <a href="#" class="text-red-500 hover:text-red-700" onclick="deleteEquipment(${equipment.id}, 'solar')"><i class="fa-solid fa-trash-can"></i></a>
                         </td>
-
                     `;
                 } else if (type === 'airConditioners') {
                     newRow.innerHTML = `
@@ -214,6 +241,9 @@ function loadTableData(type) {
                         <td class="p-4">${equipment.no_of_units || 'N/A'}</td>
                         <td class="p-4">${equipment.capacity || 'N/A'}</td>
                         <td class="p-4">${equipment.status || 'N/A'}</td>
+                        <td class="p-4">            
+                            <a href="#" class="text-red-500 hover:text-red-700" onclick="deleteEquipment(${equipment.id}, 'air_conditioners')"><i class="fa-solid fa-trash-can"></i></a>
+                        </td>
                     `;
                 } else if (type === 'fireExtinguishers') {
                     newRow.innerHTML = `
@@ -224,6 +254,9 @@ function loadTableData(type) {
                         <td class="p-4">${equipment.status || 'N/A'}</td>
                         <td class="p-4">${equipment.last_service_date || 'N/A'}</td>
                         <td class="p-4">${equipment.expiration_date || 'N/A'}</td>
+                        <td class="p-4">            
+                            <a href="#" class="text-red-500 hover:text-red-700" onclick="deleteEquipment(${equipment.id}, 'fire_extinguishers')"><i class="fa-solid fa-trash-can"></i></a>
+                        </td>
                     `;
                 }
 
@@ -233,9 +266,12 @@ function loadTableData(type) {
         .catch((error) => {
             console.error("Error:", error);
             const tableBody = document.getElementById(`${type}Data`);
-            tableBody.innerHTML = `<tr><td colspan="7" class="text-center p-4 text-red-500">Error fetching data: ${error.message}</td></tr>`;
+            if (tableBody) {
+                tableBody.innerHTML = `<tr><td colspan="7" class="text-center p-4 text-red-500">Error fetching data: ${error.message}</td></tr>`;
+            }
         });
 }
+
 loadTableData('solar');
 
 function deleteEquipment(equipmentId, equipmentType) {
@@ -249,29 +285,29 @@ function deleteEquipment(equipmentId, equipmentType) {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            equipmentId: equipmentId,
-            equipmentType: equipmentType
+            id: equipmentId,    
+            type: equipmentType     
         })
     })
     .then(response => {
         if (!response.ok) {
             return response.text().then(text => {
-                console.error('Response Text:', text); // Log full response
+                console.error('Response Text:', text);
                 throw new Error('Server Error: ' + text);
             });
         }
         return response.json();
     })
     .then(data => {
-        if (data.success) {
+        if (data.status === 'success') {
             alert("Equipment deleted successfully.");
-            loadTableData(equipmentType); // Refresh the table after successful deletion
+            loadTableData(equipmentType);
         } else {
-            alert("Error deleting equipment: " + data.error);
+            alert("Error deleting equipment: " + data.message);
         }
     })
     .catch(error => console.error('Error:', error));
-    
 }
+
 
 

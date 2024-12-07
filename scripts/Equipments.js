@@ -4,6 +4,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const solarTable = document.getElementById("solarTable");
     const airConditionersTable = document.getElementById("airConditionersTable");
     const fireExtinguishersTable = document.getElementById("fireExtinguishersTable");
+    const boreholeTable = document.getElementById("boreholeTable");
+    const generatorTable = document.getElementById("generatorTable");
 
     const addEquipmentButton = document.getElementById("addEquipmentButton");
     const addEquipmentModal = document.getElementById("addEquipmentModal");
@@ -27,6 +29,8 @@ document.addEventListener("DOMContentLoaded", function () {
         solarTable.classList.add("hidden");
         airConditionersTable.classList.add("hidden");
         fireExtinguishersTable.classList.add("hidden");
+        boreholeTable.classList.add("hidden");
+        generatorTable.classList.add("hidden");
 
         if (type === "solar") {
             solarTable.classList.remove("hidden");
@@ -34,6 +38,10 @@ document.addEventListener("DOMContentLoaded", function () {
             airConditionersTable.classList.remove("hidden");
         } else if (type === "fireExtinguishers") {
             fireExtinguishersTable.classList.remove("hidden");
+        }else if (type === "borehole"){
+            boreholeTable.classList.remove("hidden")
+        }else if (type === "generator"){
+            generatorTable.classList.remove("hidden")
         }
 
         loadTableData(type);
@@ -148,6 +156,48 @@ document.addEventListener("DOMContentLoaded", function () {
                     </select>
                 </div>
             `;
+        }else if (type === "borehole"){
+            fields.innerHTML = `
+                <!-- borehole Equipment Form Fields -->
+                <div>
+                    <label for="location" class="block">Location</label>
+                    <input type="text" id="location" name="location" required class="border p-2 w-full mb-4">
+                </div>
+                <div>
+                    <label for="model" class="block">Model</label>
+                    <input type="text" id="model" name="model" required class="border p-2 w-full mb-4">
+                </div>
+                <div>
+                    <label for="status" class="block">Status</label>
+                    <select id="status" name="status" class="border p-2 w-full mb-4">
+                        <option value="Operational">Operational</option>
+                        <option value="Not Operational">Not Operational</option>
+                    </select>
+                </div>
+            `;
+        }else if (type === "generator"){
+            fields.innerHTML = `
+                <!-- generator Equipment Form Fields -->
+                <div>
+                    <label for="location" class="block">Location</label>
+                    <input type="text" id="location" name="location" required class="border p-2 w-full mb-4">
+                </div>
+                <div>
+                    <label for="model" class="block">Model</label>
+                    <input type="text" id="model" name="model" required class="border p-2 w-full mb-4">
+                </div>
+                <div>
+                    <label for="noOfUnits" class="block">Units</label>
+                    <input type="text" id="noOfUnits" name="noOfUnits" required class="border p-2 w-full mb-4">
+                </div>
+                <div>
+                    <label for="status" class="block">Status</label>
+                    <select id="status" name="status" class="border p-2 w-full mb-4">
+                        <option value="Operational">Operational</option>
+                        <option value="Not Operational">Not Operational</option>
+                    </select>
+                </div>
+            `;    
         }
     }
 
@@ -156,6 +206,10 @@ document.addEventListener("DOMContentLoaded", function () {
             ? "Air Conditioners"
             : type === "fireExtinguishers"
             ? "Fire Extinguishers"
+            :type === "borehole"
+            ? "Borehole"
+            :type === "generator"
+            ? "Generator"
             : "Solar";
     }
 });
@@ -242,7 +296,7 @@ function loadTableData(type) {
                         <td class="p-4">${equipment.capacity || 'N/A'}</td>
                         <td class="p-4">${equipment.status || 'N/A'}</td>
                         <td class="p-4">            
-                            <a href="#" class="text-red-500 hover:text-red-700" onclick="deleteEquipment(${equipment.id}, 'air_conditioners')"><i class="fa-solid fa-trash-can"></i></a>
+                            <a href="#" class="text-red-500 hover:text-red-700" onclick="deleteEquipment(${equipment.id}, 'airConditioners')"><i class="fa-solid fa-trash-can"></i></a>
                         </td>
                     `;
                 } else if (type === 'fireExtinguishers') {
@@ -255,7 +309,26 @@ function loadTableData(type) {
                         <td class="p-4">${equipment.last_service_date || 'N/A'}</td>
                         <td class="p-4">${equipment.expiration_date || 'N/A'}</td>
                         <td class="p-4">            
-                            <a href="#" class="text-red-500 hover:text-red-700" onclick="deleteEquipment(${equipment.id}, 'fire_extinguishers')"><i class="fa-solid fa-trash-can"></i></a>
+                            <a href="#" class="text-red-500 hover:text-red-700" onclick="deleteEquipment(${equipment.id}, 'fireExtinguishers')"><i class="fa-solid fa-trash-can"></i></a>
+                        </td>
+                    `;
+                } else if (type === 'borehole'){
+                    newRow.innerHTML = `
+                        <td class="p-4">${equipment.location || 'N/A'}</td>
+                        <td class="p-4">${equipment.model || 'N/A'}</td>
+                        <td class="p-4">${equipment.status || 'N/A'}</td>
+                        <td class="p-4">            
+                            <a href="#" class="text-red-500 hover:text-red-700" onclick="deleteEquipment(${equipment.id}, 'borehole')"><i class="fa-solid fa-trash-can"></i></a>
+                        </td>
+                    `;
+                }else if (type === 'generator'){
+                    newRow.innerHTML = `
+                        <td class="p-4">${equipment.location || 'N/A'}</td>
+                        <td class="p-4">${equipment.model || 'N/A'}</td>
+                        <td class="p-4">${equipment.status || 'N/A'}</td>
+                        <td class="p-4">${equipment.noOfUnits || 'N/A'}</td>
+                        <td class="p-4">            
+                            <a href="#" class="text-red-500 hover:text-red-700" onclick="deleteEquipment(${equipment.id}, 'generator')"><i class="fa-solid fa-trash-can"></i></a>
                         </td>
                     `;
                 }

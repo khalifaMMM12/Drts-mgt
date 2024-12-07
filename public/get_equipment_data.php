@@ -13,15 +13,23 @@ try {
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
             break;
         case 'airConditioners':
-            $stmt = $pdo->query("SELECT * FROM air_conditioners");
+            $stmt = $pdo->query("SELECT * FROM airConditioners");
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
             break;
         case 'fireExtinguishers':
-            $stmt = $pdo->query("SELECT * FROM fire_extinguishers");
+            $stmt = $pdo->query("SELECT * FROM fireExtinguishers");
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            break;
+        case 'borehole':
+            $stmt = $pdo->query("SELECT * FROM borehole");
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            break;
+        case 'generator':
+            $stmt = $pdo->query("SELECT * FROM generator");
             $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
             break;
         default:
-            http_response_code(400); // Bad Request
+            http_response_code(400);
             echo json_encode(['error' => 'Invalid equipment type']);
             exit;
     }

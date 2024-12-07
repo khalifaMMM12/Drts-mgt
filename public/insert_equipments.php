@@ -26,7 +26,7 @@ try {
             $noOfUnits = $_POST['noOfUnits'];
             $capacity = $_POST['capacity'];
 
-            $stmt = $pdo->prepare("INSERT INTO air_conditioners (location, model, type, no_of_units, capacity, status) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt = $pdo->prepare("INSERT INTO airConditioners (location, model, type, no_of_units, capacity, status) VALUES (?, ?, ?, ?, ?, ?)");
             $stmt->execute([$location, $model, $type, $noOfUnits, $capacity, $status]);
         } elseif ($equipmentType === 'fireExtinguishers') {
             $type = $_POST['type'];
@@ -35,9 +35,21 @@ try {
             $lastServiceDate = $_POST['lastServiceDate'];
             $expirationDate = $_POST['expirationDate'];
 
-            $stmt = $pdo->prepare("INSERT INTO fire_extinguishers (type, weight, amount, location, status, last_service_date, expiration_date) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt = $pdo->prepare("INSERT INTO fireExtinguishers (type, weight, amount, location, status, last_service_date, expiration_date) VALUES (?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([$type, $weight, $amount, $location, $status, $lastServiceDate, $expirationDate]);
-        } else {
+        } elseif ($equipmentType === 'borehole'){
+            $model = $_POST['model'];
+
+            $stmt = $pdo->prepare("INSERT INTO borehole (model, location, status) VALUES (?, ?, ?)");
+            $stmt->execute([$model, $location, $status]);
+        } elseif ($equipmentType === 'generator'){
+            $model = $_POST['model'];
+            $noOfUnits = $_POST['noOfUnits'];
+
+            $stmt = $pdo->prepare("INSERT INTO generator (model, no_of_units, location, status) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$model, $noOfUnits, $location, $status]);
+        }
+        else {
             echo json_encode(['success' => false, 'error' => 'Invalid equipment type']);
             exit;
         }

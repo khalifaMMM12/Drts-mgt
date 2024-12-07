@@ -46,8 +46,8 @@ $vehicles = $stmt->fetchAll();
                 <button type="submit" class="bg-yellow-500 text-black font-semibold p-2 rounded-r hover:bg-yellow-600">Search</button>
             </form>
 
-            <button onclick="openModal()" class="rounded bg-gradient-to-b from-blue-500 to-indigo-600 hover:to-indigo-700 text-white px-4 py-2 shadow-lg">Add Vehicles</button>
-            <a  href="equipment.php" class="rounded bg-gradient-to-b from-blue-500 to-indigo-600 hover:to-indigo-700 text-white px-4 py-2 shadow-lg">Office Equipments</a>
+            <button onclick="openModal()" class="rounded bg-gradient-to-b from-yellow-500 to-yellow-600 hover:to-yellow-700 text-white px-4 py-2 shadow-lg">Add Vehicles</button>
+            <a  href="equipment.php" class="rounded bg-gradient-to-b from-yellow-500 to-yellow-600 hover:to-yellow-700 text-white px-4 py-2 shadow-lg">Office Equipments</a>
         </div>
 
         <!-- Vehicle List Table -->

@@ -17,6 +17,8 @@
                 <option value="solar">Solar</option>
                 <option value="airConditioners">Air Conditioners</option>
                 <option value="fireExtinguishers">Fire Extinguishers</option>
+                <option value="borehole">Borehole</option>
+                <option value="generator">Generators</option>
             </select>
 
             <!-- Add Equipment Button -->
@@ -76,6 +78,31 @@
                     </tr>
                 </thead>
                 <tbody id="fireExtinguishersData"></tbody>
+            </table>
+
+            <table id="boreholeTable" class="w-full bg-white shadow-lg rounded overflow-hidden text-sm md:text-base hidden">
+                <thead class="bg-yellow-500 text-black">
+                    <tr>
+                        <th class="p-4 border-b">Location</th>
+                        <th class="p-4 border-b">Model</th>
+                        <th class="p-4 border-b">Status</th>
+                        <th class="p-4 border-b">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="boreholeData"></tbody>
+            </table>
+
+            <table id="generatorTable" class="w-full bg-white shadow-lg rounded overflow-hidden text-sm md:text-base hidden">
+                <thead class="bg-yellow-500 text-black">
+                    <tr>
+                        <th class="p-4 border-b">Location</th>
+                        <th class="p-4 border-b">Model</th>
+                        <th class="p-4 border-b">Status</th>
+                        <th class="p-4 border-b">no_of_units</th>
+                        <th class="p-4 border-b">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="generatorData"></tbody>
             </table>
         </div>
     </div>

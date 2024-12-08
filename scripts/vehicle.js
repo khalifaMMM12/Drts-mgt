@@ -395,7 +395,7 @@ function showDetails(vehicleId) {
             document.getElementById("detailStatus").textContent = data.status;
             document.getElementById("detailRepair").textContent = data.repair_type;
             document.getElementById("detailInspectionDate").textContent = data.inspection_date || "N/A";
-            document.getElementById("detailRepairDate").textContent = data.repair_completion_date || "N/A";
+            document.getElementById("detailRepairDate").textContent = data.repair_completion_date || "Not Cleared";
 
             // Process images
             const imagesArray = (typeof data.images === 'string' && data.images.trim()) 

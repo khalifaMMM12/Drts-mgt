@@ -212,9 +212,19 @@ function editVehicle(vehicleId) {
                 imageContainer.appendChild(deleteIcon);
                 imageGallery.appendChild(imageContainer);
             });
+
+            // Disable edit button for cleared vehicles
+            if (vehicle.status === "Cleared") {
+                document.getElementById("editButton").disabled = true;
+                document.getElementById("editButton").classList.add("disabled");
+            } else {
+                document.getElementById("editButton").disabled = false;
+                document.getElementById("editButton").classList.remove("disabled");
+            }
         })
         .catch(error => console.error("Error loading vehicle data:", error));
 }
+
 
 
 function closeEditModal() {
@@ -442,7 +452,60 @@ function closeDetailsModal() {
     }, 400);
 }
 
-// document.getElementById('detailsModal').addEventListener('click', closeDetailsModal);
+// Render a single vehicle row
+function renderVehicles(vehicles) {
+    const vehicleTable = document.getElementById('vehicleTableBody');
+    vehicleTable.innerHTML = '';
+
+    vehicles.forEach(vehicle => {
+        const row = document.createElement('tr');
+
+        row.innerHTML = `
+            <td>${vehicle.reg_no}</td>
+            <td>${vehicle.status}</td>
+            <td>
+                <button 
+                    class="edit-btn" 
+                    onclick="editVehicle(${vehicle.id})" 
+                    ${vehicle.status === 'cleared' ? 'disabled' : ''}>
+                    ✏️ Edit
+                </button>
+            </td>
+        `;
+
+        vehicleTable.appendChild(row);
+    });
+}
+
+function fetchVehicles() {
+    fetch('fetch_vehicles.php')
+        .then(response => response.json())
+        .then(vehicles => {
+            const vehicleTableBody = document.getElementById('vehicleTableBody');
+            vehicleTableBody.innerHTML = '';
+
+            vehicles.forEach(vehicle => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${vehicle.reg_no}</td>
+                    <td>${vehicle.type}</td>
+                    <td>${vehicle.status}</td>
+                    <td>
+                        <button 
+                            onclick="editVehicle(${vehicle.id})" 
+                            ${vehicle.status === "Cleared" ? "disabled" : ""}>
+                            ✏️ Edit
+                        </button>
+                        <button onclick="showDetails(${vehicle.id})">ℹ️ Details</button>
+                    </td>
+                `;
+                vehicleTableBody.appendChild(row);
+            });
+        })
+        .catch(error => console.error('Error fetching vehicles:', error));
+}
+
+
 
 
 function previewImages() {

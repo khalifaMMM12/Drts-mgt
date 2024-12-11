@@ -73,7 +73,7 @@ $vehicles = $stmt->fetchAll();
                             <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['location']); ?></td>
                             <td class="p-4 border-b">
                                 <?php if ($vehicle['status'] === 'Fixed'): ?>
-                                    <span class="text-green-500 font-bold">✔ Cleared</span>
+                                    <span class="text-green-500 font-bold">✔ fixed</span>
                                 <?php elseif ($vehicle['status'] === 'Needs Repairs'): ?>
                                     <span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>
                                 <?php else: ?>
@@ -83,7 +83,23 @@ $vehicles = $stmt->fetchAll();
                             <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['inspection_date']); ?></td>
                             <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
                                 <button onclick="showDetails(<?php echo $vehicle['id']; ?>)" class="text-blue-500 hover:text-blue-700">ℹ</button>
-                                <button onclick="editVehicle(<?php echo $vehicle['id']; ?>)" class="text-yellow-500 hover:text-yellow-700">✏</button>
+                                
+                                <?php if ($vehicle['status'] === 'Fixed'): ?>
+                                    <!-- Disabled edit button for fixed vehicles -->
+                                    <button 
+                                        class="text-yellow-500 opacity-50 cursor-not-allowed" disabled title="This vehicle is fixed and cannot be edited">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                <?php else: ?>
+                                    <!-- Active edit button for non-fixed vehicles -->
+                                <button 
+                                    id="editButton-<?php echo $vehicle['id']; ?>" 
+                                    onclick="editVehicle(<?php echo $vehicle['id']; ?>)" 
+                                    class="text-yellow-500 hover:text-yellow-700 <?php echo $vehicle['status'] === 'fixed' ? 'cursor-not-allowed opacity-50' : ''; ?>" 
+                                    <?php echo $vehicle['status'] === 'fixed' ? 'disabled' : ''; ?>><i class="fa-solid fa-pen-to-square"></i>
+                                </button>   
+                                <?php endif; ?>
+
                                 <a href="clear_vehicle.php?id=<?php echo $vehicle['id']; ?>" class="text-green-500 hover:text-green-700">✔ Clear</a>
                                 <a href="delete_vehicle.php?id=<?php echo $vehicle['id']; ?>" class="text-red-500 hover:text-red-700" onclick="return confirm('Are you sure you want to delete this vehicle?')"><i class="fa-solid fa-trash-can"></i></a>
                             </td>
@@ -110,7 +126,7 @@ $vehicles = $stmt->fetchAll();
             <p><strong>Status:</strong> <span id="detailStatus"></span></p>
             <p><strong>Repair Type:</strong> <span id="detailRepair"></span></p>
             <p><strong>Inspection Date:</strong> <span id="detailInspectionDate"></span></p>
-            <p><strong>Cleared Date:</strong> <span id="detailRepairDate"></span></p>
+            <p><strong>fixed Date:</strong> <span id="detailRepairDate"></span></p>
         </div>
 
         <!-- Image Gallery Thumbnails -->
@@ -263,7 +279,7 @@ $vehicles = $stmt->fetchAll();
                 </div>
                 <input type="hidden" name="id" id="vehicleId" value="<?php echo htmlspecialchars($vehicle['id']); ?>">
                 <div>
-                    <label>Cleared Date:</label>
+                    <label>fixed Date:</label>
                     <input type="date" name="repair_completion_date" id="repair_completion_date" value="<?php echo htmlspecialchars($vehicle['repair_completion_date']); ?>" class="border p-2 w-full mb-4">
                 </div>
 
@@ -298,6 +314,7 @@ $vehicles = $stmt->fetchAll();
     <!-- Script -->
     <script src="https://kit.fontawesome.com/79a49acde1.js" crossorigin="anonymous"></script>
     <script src="../scripts/vehicle.js"></script>
+    <script src="../scripts/editVehicle.js"></script>
 </body>
 
 </html>

@@ -213,16 +213,24 @@ function editVehicle(vehicleId) {
                 imageGallery.appendChild(imageContainer);
             });
 
-            // Disable edit button for cleared vehicles
-            if (vehicle.status === "Cleared") {
-                document.getElementById("editButton").disabled = true;
-                document.getElementById("editButton").classList.add("disabled");
+            // Find the specific edit button
+        const editButton = document.getElementById(`editButton-${vehicle.id}`);
+        console.log("Edit button element:", editButton);
+
+        // Update edit button status based on vehicle status
+        if (editButton) {
+            if (vehicle.status === "fixed") {
+                editButton.disabled = true;
+                editButton.classList.add("cursor-not-allowed", "opacity-50");
             } else {
-                document.getElementById("editButton").disabled = false;
-                document.getElementById("editButton").classList.remove("disabled");
+                editButton.disabled = false;
+                editButton.classList.remove("cursor-not-allowed", "opacity-50");
             }
-        })
-        .catch(error => console.error("Error loading vehicle data:", error));
+        } else {
+            console.error(`Edit button not found for vehicle ID: ${vehicle.id}`);
+        }
+    })
+    .catch(error => console.error("Error loading vehicle data:", error));
 }
 
 
@@ -230,6 +238,17 @@ function editVehicle(vehicleId) {
 function closeEditModal() {
     console.log("Closing Edit Modal");
     document.getElementById("EditvehicleModal").classList.remove("active");
+}
+
+function updateEditButtonStatus(vehicle) {
+    const editButton = document.getElementById(`editButton-${vehicle.id}`);
+    if (vehicle.status === "fixed") {
+        editButton.disabled = true;
+        editButton.classList.add("cursor-not-allowed", "opacity-50");
+    } else {
+        editButton.disabled = false;
+        editButton.classList.remove("cursor-not-allowed", "opacity-50");
+    }
 }
 
 function uploadNewImage(vehicleId) {
@@ -405,7 +424,7 @@ function showDetails(vehicleId) {
             document.getElementById("detailStatus").textContent = data.status;
             document.getElementById("detailRepair").textContent = data.repair_type;
             document.getElementById("detailInspectionDate").textContent = data.inspection_date || "N/A";
-            document.getElementById("detailRepairDate").textContent = data.repair_completion_date || "Not Cleared";
+            document.getElementById("detailRepairDate").textContent = data.repair_completion_date || "Not fixed";
 
             // Process images
             const imagesArray = (typeof data.images === 'string' && data.images.trim()) 
@@ -452,58 +471,35 @@ function closeDetailsModal() {
     }, 400);
 }
 
-// Render a single vehicle row
-function renderVehicles(vehicles) {
-    const vehicleTable = document.getElementById('vehicleTableBody');
-    vehicleTable.innerHTML = '';
 
-    vehicles.forEach(vehicle => {
-        const row = document.createElement('tr');
 
-        row.innerHTML = `
-            <td>${vehicle.reg_no}</td>
-            <td>${vehicle.status}</td>
-            <td>
-                <button 
-                    class="edit-btn" 
-                    onclick="editVehicle(${vehicle.id})" 
-                    ${vehicle.status === 'cleared' ? 'disabled' : ''}>
-                    ✏️ Edit
-                </button>
-            </td>
-        `;
+// function fetchVehicles() {
+//     fetch('fetch_vehicles.php')
+//         .then(response => response.json())
+//         .then(vehicles => {
+//             const vehicleTableBody = document.getElementById('vehicleTableBody');
+//             vehicleTableBody.innerHTML = '';
 
-        vehicleTable.appendChild(row);
-    });
-}
-
-function fetchVehicles() {
-    fetch('fetch_vehicles.php')
-        .then(response => response.json())
-        .then(vehicles => {
-            const vehicleTableBody = document.getElementById('vehicleTableBody');
-            vehicleTableBody.innerHTML = '';
-
-            vehicles.forEach(vehicle => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${vehicle.reg_no}</td>
-                    <td>${vehicle.type}</td>
-                    <td>${vehicle.status}</td>
-                    <td>
-                        <button 
-                            onclick="editVehicle(${vehicle.id})" 
-                            ${vehicle.status === "Cleared" ? "disabled" : ""}>
-                            ✏️ Edit
-                        </button>
-                        <button onclick="showDetails(${vehicle.id})">ℹ️ Details</button>
-                    </td>
-                `;
-                vehicleTableBody.appendChild(row);
-            });
-        })
-        .catch(error => console.error('Error fetching vehicles:', error));
-}
+//             vehicles.forEach(vehicle => {
+//                 const row = document.createElement('tr');
+//                 row.innerHTML = `
+//                     <td>${vehicle.reg_no}</td>
+//                     <td>${vehicle.type}</td>
+//                     <td>${vehicle.status}</td>
+//                     <td>
+//                         <button 
+//                             onclick="editVehicle(${vehicle.id})" 
+//                             ${vehicle.status === "fixed" ? "disabled" : ""}>
+//                             ✏️ Edit
+//                         </button>
+//                         <button onclick="showDetails(${vehicle.id})">ℹ️ Details</button>
+//                     </td>
+//                 `;
+//                 vehicleTableBody.appendChild(row);
+//             });
+//         })
+//         .catch(error => console.error('Error fetching vehicles:', error));
+// }
 
 
 

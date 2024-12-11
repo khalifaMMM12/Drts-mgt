@@ -73,7 +73,7 @@ $vehicles = $stmt->fetchAll();
                             <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['location']); ?></td>
                             <td class="p-4 border-b">
                                 <?php if ($vehicle['status'] === 'Fixed'): ?>
-                                    <span class="text-green-500 font-bold">✔ fixed</span>
+                                    <span class="text-green-500 font-bold">✔ Cleared</span>
                                 <?php elseif ($vehicle['status'] === 'Needs Repairs'): ?>
                                     <span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>
                                 <?php else: ?>
@@ -90,6 +90,11 @@ $vehicles = $stmt->fetchAll();
                                         class="text-yellow-500 opacity-50 cursor-not-allowed" disabled title="This vehicle is fixed and cannot be edited">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </button>
+                                    <button 
+                                        class="text-green-500 opacity-50 cursor-not-allowed" 
+                                        disabled 
+                                        title="This vehicle is already cleared">✔ Clear
+                                    </button>
                                 <?php else: ?>
                                     <!-- Active edit button for non-fixed vehicles -->
                                 <button 
@@ -98,9 +103,9 @@ $vehicles = $stmt->fetchAll();
                                     class="text-yellow-500 hover:text-yellow-700 <?php echo $vehicle['status'] === 'fixed' ? 'cursor-not-allowed opacity-50' : ''; ?>" 
                                     <?php echo $vehicle['status'] === 'fixed' ? 'disabled' : ''; ?>><i class="fa-solid fa-pen-to-square"></i>
                                 </button>   
+                                <a href="clear_vehicle.php?id=<?php echo $vehicle['id']; ?>" class="text-green-500 hover:text-green-700">✔ Clear</a>
                                 <?php endif; ?>
 
-                                <a href="clear_vehicle.php?id=<?php echo $vehicle['id']; ?>" class="text-green-500 hover:text-green-700">✔ Clear</a>
                                 <a href="delete_vehicle.php?id=<?php echo $vehicle['id']; ?>" class="text-red-500 hover:text-red-700" onclick="return confirm('Are you sure you want to delete this vehicle?')"><i class="fa-solid fa-trash-can"></i></a>
                             </td>
                         </tr>
@@ -312,9 +317,9 @@ $vehicles = $stmt->fetchAll();
 </div>
 
     <!-- Script -->
-    <script src="https://kit.fontawesome.com/79a49acde1.js" crossorigin="anonymous"></script>
     <script src="../scripts/vehicle.js"></script>
     <script src="../scripts/editVehicle.js"></script>
+    <script src="https://kit.fontawesome.com/79a49acde1.js" crossorigin="anonymous"></script>
 </body>
 
 </html>

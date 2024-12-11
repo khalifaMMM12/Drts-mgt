@@ -215,7 +215,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function closeModal() {
-    console.log("Closing Edit Modal");
+    console.log("Closing Modal");
     addEquipmentModal.classList.add("hidden");
     addEquipmentForm.reset();
 }

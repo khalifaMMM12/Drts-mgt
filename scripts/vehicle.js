@@ -131,6 +131,7 @@ function addVehicleToTable(vehicle) {
             <button onclick="showDetails(${vehicle.id})" class="text-blue-500 hover:text-blue-700">ℹ</button>
             <button onclick="editVehicle(${vehicle.id})" class="text-yellow-500 hover:text-yellow-700">✏</button>
             <a href="clear_vehicle.php?id=${vehicle.id}" class="text-green-500 hover:text-green-700">✔ Clear</a>
+            <button class="text-red-500 hover:text-red-700 delete-button" data-vehicle-id="${vehicle.id}"><i class="fa-solid fa-trash-can"></i></button>
             <a href="delete_vehicle.php?id=${vehicle.id}" class="text-red-500 hover:text-red-700" onclick="return confirm('Are you sure you want to delete this vehicle?')"><i class="fa-solid fa-trash-can"></i></a>
         </td>
     `;

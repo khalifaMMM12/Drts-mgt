@@ -60,7 +60,7 @@ $vehicles = $stmt->fetchAll();
                         <th class="p-4 border-b">Make</th>
                         <th class="p-4 border-b">Location</th>
                         <th class="p-4 border-b">Status</th>
-                        <th class="p-4 border-b">Inspection Date</th>
+                        <th class="p-4 border-b">Last inspection date</th>
                         <th class="p-4 border-b">Actions</th>
                     </tr>
                 </thead>
@@ -77,7 +77,7 @@ $vehicles = $stmt->fetchAll();
                                 <?php elseif ($vehicle['status'] === 'Needs Repairs'): ?>
                                     <span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>
                                 <?php else: ?>
-                                    <span class="text-gray-500 font-bold">No Repairs Needed</span>
+                                    <span class="text-gray-500 font-bold">No Repairs</span>
                                 <?php endif; ?>
                             </td>
                             <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['inspection_date']); ?></td>
@@ -106,7 +106,6 @@ $vehicles = $stmt->fetchAll();
                                 <a href="clear_vehicle.php?id=<?php echo $vehicle['id']; ?>" class="text-green-500 hover:text-green-700">✔ Clear</a>
                                 <?php endif; ?>
                                 <button class="text-red-500 hover:text-red-700 delete-button" data-vehicle-id="${vehicle.id}" onclick="openDeleteModal()"><i class="fa-solid fa-trash-can"></i></button>
-                                <a href="delete_vehicle.php?id=<?php echo $vehicle['id']; ?>" class="text-red-500 hover:text-red-700" onclick="return confirm('Are you sure you want to delete this vehicle?')"><i class="fa-solid fa-trash-can"></i></a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -130,7 +129,7 @@ $vehicles = $stmt->fetchAll();
             <p><strong>Location:</strong> <span id="detailLocation"></span></p>
             <p><strong>Status:</strong> <span id="detailStatus"></span></p>
             <p><strong>Repair Type:</strong> <span id="detailRepair"></span></p>
-            <p><strong>Inspection Date:</strong> <span id="detailInspectionDate"></span></p>
+            <p><strong>Last inspection date:</strong> <span id="detailInspectionDate"></span></p>
             <p><strong>fixed Date:</strong> <span id="detailRepairDate"></span></p>
         </div>
 
@@ -190,23 +189,18 @@ $vehicles = $stmt->fetchAll();
                     </div>
 
                     <div>
-                        <label>Inspection Date:</label>
+                        <label>Last inspection date:</label>
                         <input type="date" name="inspection_date" required class="border p-2 w-full mb-4">
                     </div>
                     
                     <div>
                         <label>Needs Repairs:</label>
-                        <input type="checkbox" id="needsRepairs" name="needs_repairs" onclick="toggleRepairType()">
+                        <input type="checkbox" id="needsRepairs" name="needs_repairs" <?php echo $vehicle['status'] === 'Needs Repairs' ? 'checked' : ''; ?> onclick="toggleRepairType()">
                         <div id="repairTypeField" class="hidden mt-4">
                             <label>Type of Repair:</label>
                             <textarea name="repair_type" class="border p-2 w-full"></textarea>
                         </div>
                     </div>
-
-                    <!-- <div class="mb-4 col-span-2">
-                        <label for="images" class="block font-semibold">Upload Vehicle Pictures</label>
-                        <input type="file" name="images[]" id="images" onchange="previewImages()" class="border border-gray-300 p-2 w-full rounded" accept="image/*" multiple>
-                    </div> -->
 
                     <div class="relative">
                         <label title="Click to upload" for="images" class="cursor-pointer flex items-center gap-4 px-6 py-4 relative group">
@@ -231,7 +225,7 @@ $vehicles = $stmt->fetchAll();
                         <!-- Preview images will be dynamically inserted here by JavaScript -->
                     </div>
                 </div>
-                <button type="submit" name="submit" class="bg-yellow-500 text-black p-2 rounded mt-4 w-full md:w-auto">Add Vehicle</button>
+                <button type="submit" name="submit" class="bg-yellow-500 text-black p-2 rounded mt-4 w-full md:w-auto">Submit</button>
             </form>
         </div>
     </div>
@@ -271,7 +265,7 @@ $vehicles = $stmt->fetchAll();
                     <input type="text" name="location" id="location" value="<?php echo htmlspecialchars($vehicle['location']); ?>" class="border p-2 w-full mb-4">
                 </div>
                 <div>
-                    <label>Inspection Date:</label>
+                    <label>Last inspection date:</label>
                     <input type="date" name="inspection_date" id="inspection_date" value="<?php echo htmlspecialchars($vehicle['inspection_date']); ?>" class="border p-2 w-full mb-4">
                 </div>
                 <div>
@@ -331,7 +325,7 @@ $vehicles = $stmt->fetchAll();
 <div id="deleteModal" class="fixed hidden z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4 ">
     <div class="relative top-40 mx-auto shadow-xl rounded-md bg-white max-w-md">
 
-        <div class="flex justify-end p-2">
+        <!-- <div class="flex justify-end p-2">
             <button id="cancelDelete" type="button"
                 class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center">
                 <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -340,7 +334,7 @@ $vehicles = $stmt->fetchAll();
                         clip-rule="evenodd"></path>
                 </svg>
             </button>
-        </div>
+        </div> -->
 
         <div class="p-6 pt-0 text-center">
             <svg class="w-20 h-20 text-red-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -348,14 +342,13 @@ $vehicles = $stmt->fetchAll();
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            <h3 class="text-xl font-normal text-gray-500 mt-5 mb-6">Are you sure you want to delete this user?</h3>
+            <h3 class="text-xl font-normal text-gray-500 mt-5 mb-6">Are you sure you want to delete this Vehicle with Reg No: <?php echo htmlspecialchars($vehicle['reg_no']); ?></h3>
             <a href="delete_vehicle.php?id=<?php echo $vehicle['id']; ?>" id="confirmDelete" 
                 class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2">
                 Yes, I'm sure
             </a>
             <button id="cancelDelete" 
-                class="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-cyan-200 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center"
-                data-modal-toggle="delete-user-modal">
+                class="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-cyan-200 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center">
                 No, cancel
             </button>
         </div>
@@ -364,10 +357,10 @@ $vehicles = $stmt->fetchAll();
 </div>
 
     <!-- Script -->
+    <script src="https://kit.fontawesome.com/79a49acde1.js" crossorigin="anonymous"></script>
     <script src="../scripts/vehicle.js"></script>
     <script src="../scripts/editVehicle.js"></script>
     <script src="../scripts/delete.js"></script>
-    <script src="https://kit.fontawesome.com/79a49acde1.js" crossorigin="anonymous"></script>
 </body>
 
 </html>

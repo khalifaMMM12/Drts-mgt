@@ -117,26 +117,39 @@ document.getElementById('addVehicleForm').addEventListener('submit', function(ev
 function addVehicleToTable(vehicle) {
     const tbody = document.querySelector("table tbody");
     const newRow = document.createElement("tr");
+    const needsRepairsCheckbox = document.getElementById("needsRepairs");
+
+
+    let status = '';
+    if (vehicle.status === 'Fixed') {
+        status = '<span class="text-green-500 font-bold">✔ Fixed</span>';
+    } else if (vehicle.status === "Needs Repairs") {
+        needsRepairsCheckbox.checked = true; 
+        toggleRepairType(); 
+        status = '<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>';
+    } else {
+        needsRepairsCheckbox.checked = false; 
+        toggleRepairType(); 
+        status = '<span class="text-gray-500 font-bold">No Repairs</span>';
+    }
 
     newRow.innerHTML = `
         <td class="p-4 border-b">${vehicle.reg_no}</td>
         <td class="p-4 border-b">${vehicle.type}</td>
         <td class="p-4 border-b">${vehicle.make}</td>
         <td class="p-4 border-b">${vehicle.location}</td>
-        <td class="p-4 border-b">
-            ${vehicle.status === 'Fixed' ? '<span class="text-green-500 font-bold">✔ Fixed</span>' : '<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>'}
-        </td>
+        <td class="p-4 border-b">${status}</td>
         <td class="p-4 border-b">${vehicle.inspection_date}</td>
         <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
             <button onclick="showDetails(${vehicle.id})" class="text-blue-500 hover:text-blue-700">ℹ</button>
-            <button onclick="editVehicle(${vehicle.id})" class="text-yellow-500 hover:text-yellow-700">✏</button>
+            <button onclick="editVehicle(${vehicle.id})" class="text-yellow-500 hover:text-yellow-700"><i class="fa-solid fa-pen-to-square"></i></button>
             <a href="clear_vehicle.php?id=${vehicle.id}" class="text-green-500 hover:text-green-700">✔ Clear</a>
-            <button class="text-red-500 hover:text-red-700 delete-button" data-vehicle-id="${vehicle.id}"><i class="fa-solid fa-trash-can"></i></button>
-            <a href="delete_vehicle.php?id=${vehicle.id}" class="text-red-500 hover:text-red-700" onclick="return confirm('Are you sure you want to delete this vehicle?')"><i class="fa-solid fa-trash-can"></i></a>
+            <button class="text-red-500 hover:text-red-700 delete-button" data-vehicle-id="${vehicle.id}" onclick="openDeleteModal(${vehicle.id})"><i class="fa-solid fa-trash-can"></i></button>
         </td>
     `;
-    tbody.appendChild(newRow); // Append the new row to the table body
+    tbody.appendChild(newRow);
 }
+
 
 
 // Show Vehicle Details Model

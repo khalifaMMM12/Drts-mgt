@@ -26,10 +26,10 @@ function editVehicle(vehicleId) {
             document.getElementById("repair_completion_date").value = vehicle.repair_completion_date || "";
             document.getElementById("vehicleId").value = vehicle.id || "";
 
-            // Update Needs Repairs checkbox
+            
             const needsRepairsCheckbox = document.getElementById("needsRepairs");
             needsRepairsCheckbox.checked = vehicle.status === "Needs Repairs";
-            toggleRepairType(); // Ensure the repair type field is toggled based on status
+            toggleRepairType(); 
 
             // Update Repair Type
             document.getElementById("repair_type").value = vehicle.repair_type || "";

@@ -13,7 +13,11 @@ try {
         throw new Exception('Invalid request method');
     }
 
-    $status = isset($_POST['needs_repairs']) ? 'Needs Repairs' : 'No Repairs Needed';
+    if (!empty($_POST['needs_repairs'])) {
+        $status = 'Needs Repairs';
+    } elseif (!empty($_POST['fixed'])) {
+        $status = 'Fixed';
+    }
 
     // Validate required fields
     $required_fields = ['reg_no', 'type', 'make', 'location', 'inspection_date'];
@@ -31,9 +35,9 @@ try {
     $repair_type = filter_var($_POST['repair_type'], FILTER_SANITIZE_STRING);
     $inspection_date = filter_var($_POST['inspection_date'], FILTER_SANITIZE_STRING);
 
-    // Validate inspection date format
+    // Validate Last inspection date format
     if (!strtotime($inspection_date)) {
-        throw new Exception('Invalid inspection date format');
+        throw new Exception('Invalid Last inspection date format');
     }
 
     $imageNames = [];

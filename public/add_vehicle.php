@@ -12,6 +12,7 @@ try {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         throw new Exception('Invalid request method');
     }
+    $status = !empty($_POST['needs_repairs']) ? 'Needs Repairs' : 'No Repairs';
 
     $status = 'No Repairs';
     if (!empty($_POST['needs_repairs'])) {

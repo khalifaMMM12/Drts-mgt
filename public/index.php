@@ -195,7 +195,8 @@ $vehicles = $stmt->fetchAll();
                     
                     <div>
                         <label>Needs Repairs:</label>
-                        <input type="checkbox" id="needsRepairs" name="needs_repairs" <?php echo $vehicle['status'] === 'Needs Repairs' ? 'checked' : ''; ?> onclick="toggleRepairType()">
+                        <p>Status: <span id="statusDisplay">No Repairs</span></p>
+                        <input type="checkbox" id="needsRepairs" name="needs_repairs" <?php echo $vehicle['status'] === 'Needs Repairs' ? 'checked' : ''; ?> onchange="updateRepairStatus()" onclick="toggleRepairType()">
                         <div id="repairTypeField" class="hidden mt-4">
                             <label>Type of Repair:</label>
                             <textarea name="repair_type" class="border p-2 w-full"></textarea>
@@ -342,7 +343,7 @@ $vehicles = $stmt->fetchAll();
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            <h3 class="text-xl font-normal text-gray-500 mt-5 mb-6">Are you sure you want to delete this Vehicle with Reg No: <?php echo htmlspecialchars($vehicle['reg_no']); ?></h3>
+            <h3 class="text-xl font-normal text-gray-500 mt-5 mb-6" id="reg_no">Are you sure you want to delete this Vehicle with<b> Reg No: <?php echo htmlspecialchars($vehicle['reg_no']); ?> </b></h3>
             <a href="delete_vehicle.php?id=<?php echo $vehicle['id']; ?>" id="confirmDelete" 
                 class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2">
                 Yes, I'm sure

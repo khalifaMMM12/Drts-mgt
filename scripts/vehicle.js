@@ -102,6 +102,7 @@ document.getElementById('addVehicleForm').addEventListener('submit', function(ev
         if (typeof addVehicleToTable === 'function') {
             addVehicleToTable(data.vehicle);
         }
+        
 
     })
     .catch(error => {
@@ -112,31 +113,32 @@ document.getElementById('addVehicleForm').addEventListener('submit', function(ev
     });
 });
 
-// document.getElementById('vehicleModal').addEventListener('click', closeModal);
+function updateRepairStatus() {
+    const needsRepairs = document.getElementById("needsRepairs");
+    const statusDisplay = document.getElementById("statusDisplay");
+    const repairTypeField = document.getElementById("repairTypeField");
+
+    if (needsRepairs.checked) {
+        statusDisplay.textContent = "Needs Repairs";
+        repairTypeField.classList.remove("hidden");
+    } else {
+        statusDisplay.textContent = "No Repairs";
+        repairTypeField.classList.add("hidden");
+    }
+}
+
 
 function addVehicleToTable(vehicle) {
     const tbody = document.querySelector("table tbody");
     const newRow = document.createElement("tr");
-    const needsRepairsCheckbox = document.getElementById("needsRepairs");
 
-
-    let status = '';
-    if (vehicle.status === "Needs Repairs") {
-        needsRepairsCheckbox.checked = false; 
-        toggleRepairType(); 
-        status = '<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>';
-    } else {
-        needsRepairsCheckbox.checked = true; 
-        toggleRepairType(); 
-        status = '<span class="text-gray-500 font-bold">No Repairs</span>';
-    }
 
     newRow.innerHTML = `
         <td class="p-4 border-b">${vehicle.reg_no}</td>
         <td class="p-4 border-b">${vehicle.type}</td>
         <td class="p-4 border-b">${vehicle.make}</td>
         <td class="p-4 border-b">${vehicle.location}</td>
-        <td class="p-4 border-b">${status}</td>
+        <td class="p-4 border-b">${vehicle.status}</td>
         <td class="p-4 border-b">${vehicle.inspection_date}</td>
         <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
             <button onclick="showDetails(${vehicle.id})" class="text-blue-500 hover:text-blue-700">ℹ</button>
@@ -146,6 +148,7 @@ function addVehicleToTable(vehicle) {
         </td>
     `;
     tbody.appendChild(newRow);
+
 }
 
 

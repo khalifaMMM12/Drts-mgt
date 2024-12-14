@@ -13,6 +13,7 @@ try {
         throw new Exception('Invalid request method');
     }
 
+    $status = 'No Repairs';
     if (!empty($_POST['needs_repairs'])) {
         $status = 'Needs Repairs';
     } elseif (!empty($_POST['fixed'])) {
@@ -32,7 +33,7 @@ try {
     $type = filter_var($_POST['type'], FILTER_SANITIZE_STRING);
     $make = filter_var($_POST['make'], FILTER_SANITIZE_STRING);
     $location = filter_var($_POST['location'], FILTER_SANITIZE_STRING);
-    $repair_type = filter_var($_POST['repair_type'], FILTER_SANITIZE_STRING);
+    $repair_type = !empty($_POST['repair_type']) ? filter_var($_POST['repair_type'], FILTER_SANITIZE_STRING) : null;
     $inspection_date = filter_var($_POST['inspection_date'], FILTER_SANITIZE_STRING);
 
     // Validate Last inspection date format

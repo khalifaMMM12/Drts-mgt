@@ -100,7 +100,7 @@ document.getElementById('addVehicleForm').addEventListener('submit', function(ev
             closeModal();
         }
         if (typeof addVehicleToTable === 'function') {
-            addVehicleToTable(data.vehicle); // Add vehicle directly to the table
+            addVehicleToTable(data.vehicle);
         }
 
     })
@@ -121,14 +121,12 @@ function addVehicleToTable(vehicle) {
 
 
     let status = '';
-    if (vehicle.status === 'Fixed') {
-        status = '<span class="text-green-500 font-bold">✔ Fixed</span>';
-    } else if (vehicle.status === "Needs Repairs") {
-        needsRepairsCheckbox.checked = true; 
+    if (vehicle.status === "Needs Repairs") {
+        needsRepairsCheckbox.checked = false; 
         toggleRepairType(); 
         status = '<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>';
     } else {
-        needsRepairsCheckbox.checked = false; 
+        needsRepairsCheckbox.checked = true; 
         toggleRepairType(); 
         status = '<span class="text-gray-500 font-bold">No Repairs</span>';
     }

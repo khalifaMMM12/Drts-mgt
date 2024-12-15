@@ -12,7 +12,6 @@ try {
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         throw new Exception('Invalid request method');
     }
-    $status = !empty($_POST['needs_repairs']) ? 'Needs Repairs' : 'No Repairs';
 
     $status = 'No Repairs';
     if (!empty($_POST['needs_repairs'])) {
@@ -95,11 +94,11 @@ try {
     }
 
     // Insert vehicle data
-    $sql = "INSERT INTO vehicles (reg_no, type, make, location, repair_type, inspection_date, images) 
-            VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO vehicles (reg_no, type, make, location, status, repair_type, inspection_date, images) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $pdo->prepare($sql);
     
-    if (!$stmt->execute([$reg_no, $type, $make, $location, $repair_type, $inspection_date, $imagesString])) {
+    if (!$stmt->execute([$reg_no, $type, $make, $location, $status, $repair_type, $inspection_date, $imagesString])) {
         throw new Exception('Database error while adding vehicle');
     }
 
@@ -115,6 +114,7 @@ try {
             'type' => $type,
             'make' => $make,
             'location' => $location,
+            'status' => $status,
             'repair_type'=> $repair_type,
             'inspection_date' => $inspection_date,
             'images' => $imageNames

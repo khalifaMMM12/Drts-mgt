@@ -196,7 +196,7 @@ $vehicles = $stmt->fetchAll();
                     <div>
                         <label>Needs Repairs:</label>
                         <p>Status: <span id="statusDisplay">No Repairs</span></p>
-                        <input type="checkbox" id="needsRepairs" name="needs_repairs" <?php echo $vehicle['status'] === 'Needs Repairs' ? 'checked' : ''; ?> onchange="updateRepairStatus()" onclick="toggleRepairType()">
+                        <input type="checkbox" id="needsRepairs" name="needs_repairs" <?php echo $vehicle['status'] === 'Needs Repairs' ? 'checked' : ''; ?>  onchange="updateRepairStatus()" onclick="toggleRepairType()">
                         <div id="repairTypeField" class="hidden mt-4">
                             <label>Type of Repair:</label>
                             <textarea name="repair_type" class="border p-2 w-full"></textarea>

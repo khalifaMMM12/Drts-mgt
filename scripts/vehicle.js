@@ -131,14 +131,28 @@ function updateRepairStatus() {
 function addVehicleToTable(vehicle) {
     const tbody = document.querySelector("table tbody");
     const newRow = document.createElement("tr");
+    const needsRepairsCheckbox = document.getElementById("needsRepairs");
 
+    const status = needsRepairsCheckbox.checked ? "Needs Repairs" : "No Repairs";
+
+    let statusDisplay = '';
+    switch(status) {
+        case 'Needs Repairs':
+            statusDisplay = `<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>`;
+            break;
+        case 'Fixed':
+            statusDisplay = `<span class="text-green-500 font-bold">✔ Cleared</span>`;
+            break;
+        default:
+            statusDisplay = `<span class="text-gray-500 font-bold">No Repairs</span>`;
+    }
 
     newRow.innerHTML = `
         <td class="p-4 border-b">${vehicle.reg_no}</td>
         <td class="p-4 border-b">${vehicle.type}</td>
         <td class="p-4 border-b">${vehicle.make}</td>
         <td class="p-4 border-b">${vehicle.location}</td>
-        <td class="p-4 border-b">${vehicle.status}</td>
+        <td class="p-4 border-b">${statusDisplay}</td>
         <td class="p-4 border-b">${vehicle.inspection_date}</td>
         <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
             <button onclick="showDetails(${vehicle.id})" class="text-blue-500 hover:text-blue-700">ℹ</button>

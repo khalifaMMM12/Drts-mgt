@@ -1,4 +1,3 @@
-
 // Edit Vehicle Model
 function editVehicle(vehicleId) {
     console.log("Opening edit modal for vehicle ID:", vehicleId);
@@ -26,14 +25,18 @@ function editVehicle(vehicleId) {
             document.getElementById("repair_completion_date").value = vehicle.repair_completion_date || "";
             document.getElementById("vehicleId").value = vehicle.id || "";
 
-            
+            // Update needs repairs checkbox
             const needsRepairsCheckbox = document.getElementById("needsRepairs");
-            needsRepairsCheckbox.checked = vehicle.status === "Needs Repairs";
-            toggleRepairType(); 
+            if (vehicle.status === "Needs Repairs") {
+                needsRepairsCheckbox.checked = true;
+                document.getElementById("repair_type").value = vehicle.repair_type || "";
+            } else {
+                needsRepairsCheckbox.checked = false;
+            }
+            toggleRepairType(); // Adjust visibility of the repair type field
 
-            // Update Repair Type
-            document.getElementById("repair_type").value = vehicle.repair_type || "";
-
+            // Update repair type
+            
             // Update image gallery
             imageGallery.innerHTML = ""; // Clear existing images
             const imagesArray = vehicle.images ? (typeof vehicle.images === "string" ? vehicle.images.split(",") : vehicle.images) : [];
@@ -75,33 +78,16 @@ function editVehicle(vehicleId) {
                 imageGallery.appendChild(imageContainer);
             });
 
-            // Find the specific edit button
-        const editButton = document.getElementById(`editButton-${vehicle.id}`);
-        console.log("Edit button element:", editButton);
-
-        // Update edit button status based on vehicle status
-        if (editButton) {
-            if (vehicle.status === "fixed") {
-                editButton.disabled = true;
-                editButton.classList.add("cursor-not-allowed", "opacity-50");
-            } else {
-                editButton.disabled = false;
-                editButton.classList.remove("cursor-not-allowed", "opacity-50");
-            }
-        } else {
-            console.error(`Edit button not found for vehicle ID: ${vehicle.id}`);
-        }
-    })
-    .catch(error => console.error("Error loading vehicle data:", error));
+            console.log("Edit modal successfully populated.");
+        })
+        .catch(error => console.error("Error loading vehicle data:", error));
 }
-
 
 
 function closeEditModal() {
     console.log("Closing Edit Modal");
     document.getElementById("EditvehicleModal").classList.remove("active");
 }
-
 
 function uploadNewImage(vehicleId) {
     // Get the file input element
@@ -226,28 +212,67 @@ function deleteImage(vehicleId, image) {
     }
 }
 
-function submitEditForm() {
 
-    const formData = new FormData(document.getElementById("editVehicleForm"));
+function submitEditForm() {
+    const form = document.getElementById("editVehicleForm");
+    const formData = new FormData(form);
+    const vehicleId = document.getElementById("vehicleId").value;
+
+    formData.append("vehicle_id", vehicleId);
 
     fetch("edit_vehicle.php", {
         method: "POST",
-        body: formData
+        body: formData,
     })
-    .then(response => response.text())
-    .then(data => {
-        if (data.includes("Update successful")) {
+    .then(response => {
+        console.log("Response status:", response.status);
+        return response.json();
+    })
+    .then(result => {
+        console.log("Full server response:", result);
+
+        if (result.success) {
+            console.log("Updated Vehicle Data:", result.updatedVehicle);
+            
+            // Construct the vehicle object explicitly
+            const vehicleToUpdate = {
+                id: result.updatedVehicle.id,
+                reg_no: result.updatedVehicle.reg_no,
+                type: result.updatedVehicle.type,
+                make: result.updatedVehicle.make,
+                location: result.updatedVehicle.location,
+                status: result.updatedVehicle.status || 
+                        (result.updatedVehicle.needs_repairs ? "Needs Repairs" : "No Repairs"),
+                inspection_date: result.updatedVehicle.inspection_date
+            };
+
             closeEditModal();
+            
+            // Explicitly remove existing rows first
+            const existingRows = document.querySelectorAll(`tr[data-vehicle-id="${vehicleId}"]`);
+            console.log("Existing rows to remove:", existingRows.length);
+            existingRows.forEach(row => row.remove());
+
+            // Add the updated vehicle to the table
+            addVehicleToTable(vehicleToUpdate);
+
+            alert(result.message);
+            form.reset();
         } else {
-            console.error("Update failed:", data);
+            console.error("Update failed:", result.error);
+            alert("Failed to update vehicle: " + result.error);
         }
     })
-    .catch(error => console.error("Error submitting form:", error));
+    .catch(error => {
+        console.error("Error updating vehicle", error);
+        alert("An error occurred while updating the vehicle.");
+    });
 }
 
+// Add event listener for form submission
 document.getElementById("editVehicleForm").addEventListener("submit", function(event) {
     event.preventDefault();
-    
     submitEditForm();
 });
+
 

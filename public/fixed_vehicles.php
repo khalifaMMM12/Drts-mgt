@@ -26,7 +26,7 @@ $vehicles = $stmt->fetchAll();
 <body class="bg-gray-100">
     <!-- Navigation Bar -->
 <div class="bg-gray-800 text-white p-4">
-    <a href="index.php" class="mr-4">All Vehicles</a>
+    <a href="vehicle_page.php" class="mr-4">All Vehicles</a>
     <a href="fixed_vehicles.php" class="mr-4">Fixed Vehicles</a>
 </div>
 
@@ -35,7 +35,7 @@ $vehicles = $stmt->fetchAll();
 
         <div class="flex flex-col md:flex-row items-center w-full gap-4 mb-6">
             <!-- Search Form -->
-            <form method="GET" action="index.php" class="flex w-full max-w-md">
+            <form method="GET" action="vehicle_page.php" class="flex w-full max-w-md">
                 <input type="text" name="search" placeholder="Search by registration, type, or location" value="<?php echo htmlspecialchars($search); ?>"
                     class="border border-yellow-400 p-2 flex-grow rounded-l focus:border-yellow-500 focus:ring focus:ring-yellow-200 focus:ring-opacity-50">
                 <button type="submit" class="bg-yellow-500 text-black font-semibold p-2 rounded-r hover:bg-yellow-600">Search</button>

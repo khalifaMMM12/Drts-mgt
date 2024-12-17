@@ -102,6 +102,8 @@ try {
         throw new Exception('Database error while adding vehicle');
     }
 
+    $VehicleId = $pdo->lastInsertId();
+
     // Commit transaction
     $pdo->commit();
 
@@ -110,6 +112,7 @@ try {
         'status' => 'success',
         'message' => 'Vehicle added successfully',
         'vehicle' => [
+            'id' => $VehicleId,
             'reg_no' => $reg_no,
             'type' => $type,
             'make' => $make,

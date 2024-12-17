@@ -26,7 +26,7 @@
             <button id="addEquipmentButton" class="rounded bg-gradient-to-b from-yellow-500 to-yellow-600 hover:to-yellow-700 text-white px-4 py-2 shadow-lg">
                 Add Equipment
             </button>
-            <a href="index.php" class="rounded bg-gradient-to-b from-yellow-500 to-yellow-600 hover:to-yellow-700 text-white px-4 py-2 shadow-lg">
+            <a href="vehicle_page.php" class="rounded bg-gradient-to-b from-yellow-500 to-yellow-600 hover:to-yellow-700 text-white px-4 py-2 shadow-lg">
                 Vehicles
             </a>
         </div>

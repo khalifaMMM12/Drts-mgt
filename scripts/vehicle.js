@@ -71,13 +71,14 @@ document.getElementById('addVehicleForm').addEventListener('submit', function(ev
         method: 'POST',
         body: formData
     })
-        
+
+     
     .then(response => response.text()) // Fetch raw text for debugging
     .then(text => {
         console.log('Raw server response:', text); // Debug log
 
         // Parse JSON and handle HTML or other invalid responses
-        let data;
+        let data; 
         try {
             data = JSON.parse(text);
         } catch (e) {
@@ -102,7 +103,7 @@ document.getElementById('addVehicleForm').addEventListener('submit', function(ev
         if (typeof addVehicleToTable === 'function') {
             addVehicleToTable(data.vehicle);
         }
-        
+    
 
     })
     .catch(error => {
@@ -111,32 +112,21 @@ document.getElementById('addVehicleForm').addEventListener('submit', function(ev
         responseMessage.classList.remove('text-green-600');
         responseMessage.classList.add('text-red-600');
     });
+    
+
 });
-
-function updateRepairStatus() {
-    const needsRepairs = document.getElementById("needsRepairs");
-    const statusDisplay = document.getElementById("statusDisplay");
-    const repairTypeField = document.getElementById("repairTypeField");
-
-    if (needsRepairs.checked) {
-        statusDisplay.textContent = "Needs Repairs";
-        repairTypeField.classList.remove("hidden");
-    } else {
-        statusDisplay.textContent = "No Repairs";
-        repairTypeField.classList.add("hidden");
-    }
-}
 
 
 function addVehicleToTable(vehicle) {
+    // Remove any existing rows with this vehicle ID
+    const existingRows = document.querySelectorAll(`tr[data-vehicle-id="${vehicle.id}"]`);
+    existingRows.forEach(row => row.remove());
+
     const tbody = document.querySelector("table tbody");
-    const newRow = document.createElement("tr");
-    const needsRepairsCheckbox = document.getElementById("needsRepairs");
 
-    const status = needsRepairsCheckbox.checked ? "Needs Repairs" : "No Repairs";
-
+    // Determine the status display based on the vehicle's status
     let statusDisplay = '';
-    switch(status) {
+    switch (vehicle.status) {
         case 'Needs Repairs':
             statusDisplay = `<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>`;
             break;
@@ -147,6 +137,9 @@ function addVehicleToTable(vehicle) {
             statusDisplay = `<span class="text-gray-500 font-bold">No Repairs</span>`;
     }
 
+    // Create a new row
+    const newRow = document.createElement("tr");
+    newRow.setAttribute("data-vehicle-id", vehicle.id);
     newRow.innerHTML = `
         <td class="p-4 border-b">${vehicle.reg_no}</td>
         <td class="p-4 border-b">${vehicle.type}</td>
@@ -161,14 +154,15 @@ function addVehicleToTable(vehicle) {
             <button class="text-red-500 hover:text-red-700 delete-button" data-vehicle-id="${vehicle.id}" onclick="openDeleteModal(${vehicle.id})"><i class="fa-solid fa-trash-can"></i></button>
         </td>
     `;
+
+    // Append the new row to the tbody
     tbody.appendChild(newRow);
 
+    console.log("Row added for vehicle ID:", vehicle.id);
 }
 
 
-
 // Show Vehicle Details Model
-// Show details modal
 function showDetails(vehicleId) {
     const detailsModal = document.getElementById("detailsModal");
     const detailsModalContent = document.getElementById("detailsModalContent");

@@ -10,8 +10,23 @@
 function toggleRepairType() {
     const repairField = document.getElementById("repairTypeField");
     const needsRepairsCheckbox = document.getElementById("needsRepairs");
-    repairField.classList.toggle("hidden", !needsRepairsCheckbox.checked);
+    const repairTypeTextarea = document.getElementById("repair_type");
+
+    if (needsRepairsCheckbox.checked) {
+        repairField.classList.remove("hidden");
+        repairTypeTextarea.focus();
+    } else {
+        repairField.classList.add("hidden");
+        repairTypeTextarea.value = "";
+    }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    const needsRepairsCheckbox = document.getElementById("needsRepairs");
+    if (needsRepairsCheckbox) {
+        needsRepairsCheckbox.addEventListener("change", toggleRepairType);
+    }
+});
 
 
 // function showDetails(vehicleId) {

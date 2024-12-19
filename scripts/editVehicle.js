@@ -27,17 +27,24 @@ function editVehicle(vehicleId) {
 
             // Update needs repairs checkbox
             const needsRepairsCheckbox = document.getElementById("needsRepairs");
-            if (vehicle.status === "Needs Repairs") {
-                needsRepairsCheckbox.checked = true;
-                document.getElementById("repair_type").value = vehicle.repair_type || "";
-            } else {
-                needsRepairsCheckbox.checked = false;
-            }
-            toggleRepairType(); // Adjust visibility of the repair type field
+            const repairTypeField = document.getElementById("repairTypeField");
+            const repairTypeTextarea = document.getElementById("repair_type");
 
-            // Update repair type
-            
-            // Update image gallery
+            // Determine if repairs are needed with more robust checks
+            const isNeedsRepairs = 
+                vehicle.status === "Needs Repairs" || 
+                vehicle.needs_repairs === 1 || 
+                (vehicle.repair_type && vehicle.repair_type.trim() !== "") ||
+                (vehicle.status && vehicle.status.toLowerCase().includes('repair'));
+
+            // Set checkbox state and repair type field visibility
+            needsRepairsCheckbox.checked = isNeedsRepairs;
+            repairTypeField.classList.toggle("hidden", !isNeedsRepairs);
+            repairTypeTextarea.value = vehicle.repair_type || "";
+
+            console.log("Needs Repairs Status:", isNeedsRepairs);
+
+            // Rest of your existing code for image gallery...
             imageGallery.innerHTML = ""; // Clear existing images
             const imagesArray = vehicle.images ? (typeof vehicle.images === "string" ? vehicle.images.split(",") : vehicle.images) : [];
             imagesArray.forEach((image, index) => {
@@ -82,6 +89,7 @@ function editVehicle(vehicleId) {
         })
         .catch(error => console.error("Error loading vehicle data:", error));
 }
+
 
 
 function closeEditModal() {
@@ -215,10 +223,34 @@ function deleteImage(vehicleId, image) {
 
 function submitEditForm() {
     const form = document.getElementById("editVehicleForm");
-    const formData = new FormData(form);
     const vehicleId = document.getElementById("vehicleId").value;
+    
+    console.log("Submitting form for Vehicle ID:", vehicleId);
 
-    formData.append("vehicle_id", vehicleId);
+    if (!vehicleId) {
+        alert("Vehicle ID is missing. Please select a vehicle to edit.");
+        return;
+    }
+
+    const formData = new FormData(form);
+    const needsRepairsCheckbox = document.getElementById("needsRepairs");
+    const repairTypeTextarea = document.getElementById("repair_type");
+
+    // Explicitly set needs_repairs and status
+    const needsRepairs = needsRepairsCheckbox.checked ? 1 : 0;
+    const status = needsRepairs ? "Needs Repairs" : "No Repairs";
+    const repairType = needsRepairs ? repairTypeTextarea.value.trim() : "";
+
+    // Ensure vehicle_id is set
+    formData.set('vehicle_id', vehicleId);
+    formData.set('needs_repairs', needsRepairs);
+    formData.set('status', status);
+    formData.set('repair_type', repairType);
+
+    // Log form data for debugging
+    for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+    }
 
     fetch("edit_vehicle.php", {
         method: "POST",
@@ -232,47 +264,45 @@ function submitEditForm() {
         console.log("Full server response:", result);
 
         if (result.success) {
-            console.log("Updated Vehicle Data:", result.updatedVehicle);
-            
-            // Construct the vehicle object explicitly
             const vehicleToUpdate = {
-                id: result.updatedVehicle.id,
-                reg_no: result.updatedVehicle.reg_no,
-                type: result.updatedVehicle.type,
-                make: result.updatedVehicle.make,
-                location: result.updatedVehicle.location,
-                status: result.updatedVehicle.status || 
-                        (result.updatedVehicle.needs_repairs ? "Needs Repairs" : "No Repairs"),
-                inspection_date: result.updatedVehicle.inspection_date
+                id: vehicleId,
+                reg_no: formData.get('reg_no'),
+                type: formData.get('type'),
+                make: formData.get('make'),
+                location: formData.get('location'),
+                status: status,
+                repair_type: repairType,
+                inspection_date: formData.get('inspection_date')
             };
 
             closeEditModal();
             
-            // Explicitly remove existing rows first
+            // Remove existing rows
             const existingRows = document.querySelectorAll(`tr[data-vehicle-id="${vehicleId}"]`);
-            console.log("Existing rows to remove:", existingRows.length);
             existingRows.forEach(row => row.remove());
 
-            // Add the updated vehicle to the table
+            // Add updated vehicle to table
             addVehicleToTable(vehicleToUpdate);
 
             alert(result.message);
             form.reset();
         } else {
-            console.error("Update failed:", result.error);
-            alert("Failed to update vehicle: " + result.error);
+            console.error("Update failed:", result);
+            alert(`Failed to update vehicle: ${result.error || 'Unknown error'}`);
         }
     })
     .catch(error => {
-        console.error("Error updating vehicle", error);
+        console.error("Fetch error:", error);
         alert("An error occurred while updating the vehicle.");
     });
 }
 
-// Add event listener for form submission
-document.getElementById("editVehicleForm").addEventListener("submit", function(event) {
-    event.preventDefault();
-    submitEditForm();
+// Ensure the event listener is attached
+document.addEventListener('DOMContentLoaded', () => {
+    const needsRepairsCheckbox = document.getElementById("needsRepairs");
+    if (needsRepairsCheckbox) {
+        needsRepairsCheckbox.addEventListener("change", toggleRepairType);
+    }
 });
 
 

@@ -19,9 +19,7 @@ $vehicles = $stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <title>Vehicle Inspection Status</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="style.css" rel="stylesheet">
-</head>
+<link href="../style/style.css" rel="stylesheet"></head>
 
 <body class="bg-gray-100 mt-8">
 
@@ -270,7 +268,7 @@ $vehicles = $stmt->fetchAll();
                 </div>
                 <div>
                     <label>Needs Repairs:</label>
-                    <input type="checkbox" id="needsRepairs" name="needs_repairs" <?php echo ($vehicle['status'] === 'Needs Repairs' || $vehicle['needs_repairs'] == 1) ? 'checked' : ''; ?> onclick="toggleRepairType()">
+                    <input type="checkbox" id="needsRepairs" name="needs_repairs" <?php echo ($vehicle['status'] === 'Needs Repairs' || $vehicle['needs_repairs'] == 1) ? 'checked' : ''; ?>> onclick="toggleRepairType()">
                     <div id="repairTypeField" class="mt-4 <?php echo $vehicle['status'] !== 'Needs Repairs' ? 'hidden' : ''; ?>">
                         <label>Type of Repair:</label>
                         <textarea name="repair_type" id="repair_type" class="border p-2 w-full"><?php echo htmlspecialchars($vehicle['repair_type']); ?></textarea>

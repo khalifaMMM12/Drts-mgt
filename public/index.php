@@ -1,11 +1,15 @@
+<?php
+session_start();
+$error = isset($_SESSION['error']) ? $_SESSION['error'] : '';
+unset($_SESSION['error']); 
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"> -->
-<link href="../style/style.css" rel="stylesheet">    
-<link href="../style/output.css" rel="stylesheet">    
+    <link href="../style/style.css" rel="stylesheet">    
+    <link href="../style/output.css" rel="stylesheet">    
 <title>SignUp</title>
 </head>
 <body>
@@ -16,15 +20,20 @@
             <h2 class="mb-2 text-center text-3xl font-bold tracking-tight text-gray-900">Directorate of Road Traffic Services</h2>
             <p class="">Login with the assigned username and password</p>
         </header>   
-        <form>
+        <form method="POST" action="login.php">
             <div>
-            <label class="block mb-2 font-bold text-black-500" for="username">Username</label>
-            <input class="w-full p-2 mb-6 text-black-700 border-b-4 border-amber-500 outline-none focus:bg-gray-300" type="text" name="username">
+                <label class="block mb-2 font-bold text-black-500" for="username">Username</label>
+                <input class="w-full p-2 mb-6 text-black-700 border-b-4 border-amber-500 outline-none focus:bg-gray-300" id="username" type="text" name="username">
             </div>
             <div>
-            <label class="block mb-2 font-bold text-black-500" for="password">Password</label>
-            <input class="w-full p-2 mb-6 text-black-700 border-b-4 border-amber-500 outline-none focus:bg-gray-300" type="password" name="password">
+                <label class="block mb-2 font-bold text-black-500" for="password">Password</label>
+                <input class="w-full p-2 mb-6 text-black-700 border-b-4 border-amber-500 outline-none focus:bg-gray-300" id="password" type="password" name="password">
             </div>
+            <?php if (isset($error)): ?>
+                <div class="bg-red-200 p-4 mb-6 rounded-sm">
+                    <p class="text-red-500 text-center"><?php echo $error; ?></p>
+                </div>
+            <?php endif; ?>
             <div>          
             <button class="w-full bg-neutral-600 hover:bg-neutral-500 text-white font-bold py-2 px-4 mb-6 rounded" type="submit">Login</button>
             </div>       

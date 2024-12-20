@@ -19,8 +19,9 @@ $vehicles = $stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <title>Vehicle Inspection Status</title>
-<link href="../style/style.css" rel="stylesheet"></head>
-
+    <link href="../style/style.css" rel="stylesheet">
+    <link href="../style/output.css" rel="stylesheet">
+</head>
 <body class="bg-gray-100 mt-8">
 
     <!-- Navigation Bar
@@ -113,7 +114,7 @@ $vehicles = $stmt->fetchAll();
     </div>
 
   <!-- Vehicle Details Modal -->
-<div id="detailsModal" class="modal-overlay hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
+<div id="detailsModal" class="modal-overlay fixed inset-0 bg-gray-500 bg-opacity-75 hidden flex items-center justify-center p-4">
     <div id="detailsModalContent" class="modal-content relative bg-white p-8 rounded-lg shadow-2xl border-4 border-yellow-400 w-full max-w-lg md:max-w-2xl lg:max-w-3xl">
         <!-- Close Button -->
         <button onclick="closeDetailsModal()" id="closeDetails" class="absolute top-4 right-4 text-gray-600 text-3xl font-bold hover:text-gray-800">&times;</button>

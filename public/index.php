@@ -20,7 +20,7 @@ unset($_SESSION['error']);
             <h2 class="mb-2 text-center text-3xl font-bold tracking-tight text-gray-900">Directorate of Road Traffic Services</h2>
             <p class="">Login with the assigned username and password</p>
         </header>   
-        <form method="POST" action="login.php">
+        <form method="POST" action="login.php" id="loginForm">
             <div>
                 <label class="block mb-2 font-bold text-black-500" for="username">Username</label>
                 <input class="w-full p-2 mb-6 text-black-700 border-b-4 border-amber-500 outline-none focus:bg-gray-300" id="username" type="text" name="username">
@@ -30,8 +30,8 @@ unset($_SESSION['error']);
                 <input class="w-full p-2 mb-6 text-black-700 border-b-4 border-amber-500 outline-none focus:bg-gray-300" id="password" type="password" name="password">
             </div>
             <?php if (isset($error)): ?>
-                <div class="bg-red-200 p-4 mb-6 rounded-sm">
-                    <p class="text-red-500 text-center"><?php echo $error; ?></p>
+                <div id="errorDiv" class="bg-red-200 p-4 mb-6 rounded-sm opacity-100">
+                    <p class="text-red-500 text-center"><?php echo htmlspecialchars($error); ?></p>
                 </div>
             <?php endif; ?>
             <div>          
@@ -44,5 +44,7 @@ unset($_SESSION['error']);
         </footer>    -->
         </div>
     </div>
+
+    <script src="../scripts/login.js"></script>
 </body>
 </html>

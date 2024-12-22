@@ -1,16 +1,19 @@
 <?php
+session_start();
+
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header("Location: index.php");
+    exit;
+}
+
 include '../config/db.php';
 
-// Search logic
 $search = isset($_GET['search']) ? $_GET['search'] : '';
 
 $sql = "SELECT * FROM vehicles WHERE reg_no LIKE :search OR type LIKE :search OR location LIKE :search";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([':search' => '%' . $search . '%']);
 $vehicles = $stmt->fetchAll();
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -47,6 +50,18 @@ $vehicles = $stmt->fetchAll();
 
             <button onclick="openModal()" class="rounded bg-gradient-to-b from-yellow-500 to-yellow-600 hover:to-yellow-700 text-white px-4 py-2 shadow-lg">Add Vehicles</button>
             <a  href="equipment.php" class="rounded bg-gradient-to-b from-yellow-500 to-yellow-600 hover:to-yellow-700 text-white px-4 py-2 shadow-lg">Office Equipments</a>
+            <button onclick="openLogoutModal()" href="logout.php" class="rounded bg-gradient-to-b from-yellow-500 to-yellow-600 hover:to-yellow-700 text-white px-4 py-2 shadow-lg">Logout</button>
+        </div>
+
+        <div id="logoutModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center">
+            <div class="bg-white p-8 rounded-lg shadow-xl">
+                <h2 class="text-xl font-bold mb-4">Confirm Logout</h2>
+                <p class="mb-6">Are you sure you want to logout?</p>
+                <div class="flex justify-end gap-4">
+                    <button onclick="closeLogoutModal()" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">Cancel</button>
+                    <a href="logout.php" class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600">Logout</a>
+                </div>
+            </div>
         </div>
 
         <!-- Vehicle List Table -->

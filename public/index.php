@@ -1,7 +1,12 @@
 <?php
 session_start();
-$error = isset($_SESSION['error']) ? $_SESSION['error'] : '';
-unset($_SESSION['error']); 
+// $error = '';
+if (isset($_SESSION['error'])) {
+    $error = $_SESSION['error'];
+    unset($_SESSION['error']);
+}
+$temp_username = $_SESSION['temp_username'] ?? '';
+unset($_SESSION['temp_username']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -13,7 +18,7 @@ unset($_SESSION['error']);
 <title>SignUp</title>
 </head>
 <body>
-    <div class="flex h-screen bg-amber-400">
+    <div class="flex h-screen bg-yellow-300">
     <div class="w-full max-w-md shadow-2xl m-auto border-8 border-gray-900 bg-amber-300 rounded-md p-5">   
         <header class="mb-5">
             <img class="w-28 mx-auto" src="../img/DRTS_logo.png" />
@@ -23,15 +28,18 @@ unset($_SESSION['error']);
         <form method="POST" action="login.php" id="loginForm">
             <div>
                 <label class="block mb-2 font-bold text-black-500" for="username">Username</label>
-                <input class="w-full p-2 mb-6 text-black-700 border-b-4 border-amber-500 outline-none focus:bg-gray-300" id="username" type="text" name="username">
+                <input class="w-full p-2 mb-6 text-black-700 border-b-4 border-amber-500 outline-none focus:bg-gray-300" value="<?php echo htmlspecialchars($temp_username); ?>" id="username" type="text" name="username">
             </div>
             <div>
                 <label class="block mb-2 font-bold text-black-500" for="password">Password</label>
-                <input class="w-full p-2 mb-6 text-black-700 border-b-4 border-amber-500 outline-none focus:bg-gray-300" id="password" type="password" name="password">
+                <div class="relative">
+                    <input class="w-full p-2 mb-6 text-black-700 border-b-4 border-amber-500 outline-none focus:bg-gray-300" id="password" type="password" name="password">
+                    <i class="fas fa-eye absolute right-3 top-3 cursor-pointer" id="togglePassword"></i>
+                </div>
             </div>
             <?php if (isset($error)): ?>
                 <div id="errorDiv" class="bg-red-200 p-4 mb-6 rounded-sm opacity-100">
-                    <p class="text-red-500 text-center"><?php echo htmlspecialchars($error); ?></p>
+                    <p class="text-red-600 text-center font-bold"><?php echo ($error); ?></p>
                 </div>
             <?php endif; ?>
             <div>          
@@ -46,5 +54,6 @@ unset($_SESSION['error']);
     </div>
 
     <script src="../scripts/login.js"></script>
+    <script src="https://kit.fontawesome.com/79a49acde1.js" crossorigin="anonymous"></script>
 </body>
 </html>

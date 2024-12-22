@@ -1,11 +1,12 @@
-// function openModal() {
-//     document.getElementById("vehicleModal").classList.remove("hidden");
-// }
+function openLogoutModal() {
+    document.getElementById('logoutModal').classList.remove('hidden');
+    document.getElementById('logoutModal').classList.add('flex');
+}
 
-// function closeModal() {
-//     document.getElementById("vehicleModal").classList.add("hidden");
-// }
-
+function closeLogoutModal() {
+    document.getElementById('logoutModal').classList.add('hidden');
+    document.getElementById('logoutModal').classList.remove('flex');
+}
 
 function toggleRepairType() {
     const repairField = document.getElementById("repairTypeField");

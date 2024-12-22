@@ -29,14 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-
-// function showDetails(vehicleId) {
-//     // Fetch and display vehicle details (AJAX implementation can be added later for dynamic fetching)
-//     alert("Display details for vehicle ID: " + vehicleId);
-//     // Logic for opening and populating modal with vehicle info will go here
-// }
-
-
 function openModal() {
     const modal = document.getElementById("vehicleModal");
     const modalContent = document.getElementById("vehicleModalContent");
@@ -178,62 +170,70 @@ function addVehicleToTable(vehicle) {
 }
 
 
-// Show Vehicle Details Model
 function showDetails(vehicleId) {
+    console.log('Showing details for vehicle:', vehicleId);
+
     const detailsModal = document.getElementById("detailsModal");
     const detailsModalContent = document.getElementById("detailsModalContent");
-
-    // Remove "hide" class to trigger slide-up animation
-    detailsModalContent.classList.remove("hide");
-    detailsModal.classList.add("active"); // Show modal overlay
-
+    
     fetch(`get_vehicle_details.php?id=${vehicleId}`)
-        .then(response => response.json())
-        .then(data => {
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(vehicle => {
+            console.log('Vehicle data:', vehicle);
+            
+            // Update text content
+            document.getElementById("detailRegNo").textContent = vehicle.reg_no || 'N/A';
+            document.getElementById("detailType").textContent = vehicle.type || 'N/A';
+            document.getElementById("detailMake").textContent = vehicle.make || 'N/A';
+            document.getElementById("detailLocation").textContent = vehicle.location || 'N/A';
+            document.getElementById("detailStatus").textContent = vehicle.status || 'N/A';
+            document.getElementById("detailRepair").textContent = vehicle.repair_type || 'N/A';
+            document.getElementById("detailInspectionDate").textContent = vehicle.inspection_date || 'N/A';
+            document.getElementById("detailRepairDate").textContent = vehicle.repair_completion_date || 'Not fixed';
+
+            // Handle images
             const imageGallery = document.getElementById("imageGallery");
+            imageGallery.innerHTML = '';
 
-            // Populate vehicle details
-            document.getElementById("detailRegNo").textContent = data.reg_no || "N/A";
-            document.getElementById("detailType").textContent = data.type || "N/A";
-            document.getElementById("detailMake").textContent = data.make || "N/A";
-            document.getElementById("detailLocation").textContent = data.location || "N/A";
-            document.getElementById("detailStatus").textContent = data.status;
-            document.getElementById("detailRepair").textContent = data.repair_type;
-            document.getElementById("detailInspectionDate").textContent = data.inspection_date || "N/A";
-            document.getElementById("detailRepairDate").textContent = data.repair_completion_date || "Not fixed";
+            if (vehicle.images) {
+                const imagesArray = typeof vehicle.images === 'string' 
+                    ? vehicle.images.split(',').filter(img => img.trim())
+                    : Array.isArray(vehicle.images) ? vehicle.images : [];
 
-            // Process images
-            const imagesArray = (typeof data.images === 'string' && data.images.trim()) 
-                ? data.images.split(',').map(img => img.trim())
-                : [];
-
-            imageGallery.innerHTML = ''; // Clear existing content
-            images.length = 0; // Clear previous images
-            images.push(...imagesArray); // Populate the global images array for carousel navigation
-
-            if (imagesArray.length > 0) {
-                imageGallery.style.display = "grid"; // Show gallery if images exist
-
-                // Populate image gallery with thumbnails
-                imagesArray.forEach((images, index) => {
-                    const imgElement = document.createElement("img");
-                    imgElement.src = `../assets/vehicles/${images}`;
-                    imgElement.classList.add("cursor-pointer", "rounded", "shadow-lg");
-                    imgElement.onclick = () => openCarousel(index); // Open carousel at specific image
-                    imageGallery.appendChild(imgElement);
-                });
-            } else {
-                imageGallery.style.display = "none";
+                if (imagesArray.length > 0) {
+                    imagesArray.forEach((image, index) => {
+                        const imgContainer = document.createElement("div");
+                        imgContainer.className = "relative group";
+                        
+                        const img = document.createElement("img");
+                        img.src = `../assets/vehicles/${image.trim()}`;
+                        img.className = "w-full h-32 object-cover rounded cursor-pointer";
+                        img.onclick = () => {
+                            document.getElementById("carouselModal").classList.remove("hidden");
+                            document.getElementById("enlargedImg").src = img.src;
+                            currentIndex = index;
+                        };
+                        
+                        imgContainer.appendChild(img);
+                        imageGallery.appendChild(imgContainer);
+                    });
+                }
             }
 
+            // Show modal
             detailsModal.classList.remove("hidden");
+            detailsModal.classList.add("active");
+            detailsModalContent.classList.remove("hide");
         })
         .catch(error => {
-            alert("Failed to load vehicle details");
-            console.error(error);
+            console.error('Error fetching vehicle details:', error);
         });
 }
-
 
 function closeDetailsModal() {
     const detailsModal = document.getElementById("detailsModal");
@@ -347,4 +347,77 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('closeCarousel').addEventListener('click', closeCarousel);
     document.getElementById('prevImage').addEventListener('click', showPrevImage);
     document.getElementById('nextImage').addEventListener('click', showNextImage);
+});
+
+function updateDetailsModal(vehicle) {
+    // Update text content
+    document.getElementById("detailRegNo").textContent = vehicle.reg_no || "N/A";
+    document.getElementById("detailType").textContent = vehicle.type || "N/A";
+    document.getElementById("detailMake").textContent = vehicle.make || "N/A";
+    document.getElementById("detailLocation").textContent = vehicle.location || "N/A";
+    document.getElementById("detailStatus").textContent = vehicle.status || "N/A";
+    document.getElementById("detailRepair").textContent = vehicle.repair_type || "N/A";
+    document.getElementById("detailInspectionDate").textContent = vehicle.inspection_date || "N/A";
+    document.getElementById("detailRepairDate").textContent = vehicle.repair_completion_date || "Not fixed";
+
+    // Update images
+    const imageGallery = document.getElementById("imageGallery");
+    imageGallery.innerHTML = '';
+    
+    const imagesArray = vehicle.images ? vehicle.images.split(',').filter(img => img.trim()) : [];
+    images = imagesArray; // Update global images array for carousel
+
+    if (imagesArray.length > 0) {
+        imageGallery.style.display = "grid";
+        imagesArray.forEach((image, index) => {
+            const imgElement = document.createElement("img");
+            imgElement.src = `../assets/vehicles/${image}`;
+            imgElement.classList.add("cursor-pointer", "rounded", "shadow-lg");
+            imgElement.onclick = () => openCarousel(index);
+            imageGallery.appendChild(imgElement);
+        });
+    } else {
+        imageGallery.style.display = "none";
+    }
+}
+
+function closeDetailsModal() {
+    const detailsModal = document.getElementById("detailsModal");
+    const detailsModalContent = document.getElementById("detailsModalContent");
+    
+    detailsModalContent.classList.add("hide");
+    detailsModalContent.addEventListener('animationend', () => {
+        detailsModal.classList.remove("active");
+    }, { once: true });
+}
+
+// Add event listeners
+document.addEventListener('DOMContentLoaded', () => {
+    const detailsModal = document.getElementById("detailsModal");
+    const editModal = document.getElementById("EditvehicleModal");
+    const vehicleModal = document.getElementById("vehicleModal");
+
+    vehicleModal.addEventListener('click', (e) => {
+        if (e.target === vehicleModal) {
+            closeModal();
+        }
+    });
+
+    editModal.addEventListener('click', (e) => {
+        if (e.target === editModal) {
+            closeEditModal();
+        }
+    });
+    
+    detailsModal.addEventListener('click', (e) => {
+        if (e.target === detailsModal) {
+            closeDetailsModal();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && detailsModal.classList.contains('active')) {
+            closeDetailsModal();
+        }
+    });
 });

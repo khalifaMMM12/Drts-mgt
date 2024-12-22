@@ -25,7 +25,7 @@ $vehicles = $stmt->fetchAll();
     <link href="../style/style.css" rel="stylesheet">
     <link href="../style/output.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 mt-8">
+<body class="bg-yellow-300 mt-8">
 
     <!-- Navigation Bar
     <div class="bg-black text-yellow-400 p-4 flex flex-wrap justify-between items-center">
@@ -37,7 +37,7 @@ $vehicles = $stmt->fetchAll();
 
     <!-- Main Content Container -->
     <div class="container mx-auto p-4 md:p-6 lg:px-8">
-        <h1 class="text-3xl font-bold text-yellow-500 mb-6">Vehicle Inspection Status</h1>
+        <h1 class="text-3xl font-bold tracking-tight text-gray-900 mb-6">Vehicle Inspection Status</h1>
 
         <!-- Search Bar and Add Vehicle Button -->
         <div class="flex flex-col md:flex-row items-center w-full gap-4 mb-6">
@@ -48,9 +48,9 @@ $vehicles = $stmt->fetchAll();
                 <button type="submit" class="bg-yellow-500 text-black font-semibold p-2 rounded-r hover:bg-yellow-600">Search</button>
             </form>
 
-            <button onclick="openModal()" class="rounded bg-gradient-to-b from-yellow-500 to-yellow-600 hover:to-yellow-700 text-white px-4 py-2 shadow-lg">Add Vehicles</button>
-            <a  href="equipment.php" class="rounded bg-gradient-to-b from-yellow-500 to-yellow-600 hover:to-yellow-700 text-white px-4 py-2 shadow-lg">Office Equipments</a>
-            <button onclick="openLogoutModal()" href="logout.php" class="rounded bg-gradient-to-b from-yellow-500 to-yellow-600 hover:to-yellow-700 text-white px-4 py-2 shadow-lg">Logout</button>
+            <button onclick="openModal()" class="rounded bg-gradient-to-b from-yellow-500 to-yellow-600 hover:to-yellow-700 text-black px-4 py-2 shadow-lg">Add Vehicles</button>
+            <a  href="equipment.php" class="rounded bg-gradient-to-b from-yellow-500 to-yellow-600 hover:to-yellow-700 text-black px-4 py-2 shadow-lg">Office Equipments</a>
+            <button onclick="openLogoutModal()" href="logout.php" class="rounded bg-gradient-to-b from-yellow-500 to-yellow-600 hover:to-yellow-700 text-black px-4 py-2 shadow-lg">Logout</button>
         </div>
 
         <div id="logoutModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center">
@@ -131,7 +131,6 @@ $vehicles = $stmt->fetchAll();
   <!-- Vehicle Details Modal -->
 <div id="detailsModal" class="modal-overlay fixed inset-0 bg-gray-500 bg-opacity-75 hidden flex items-center justify-center p-4">
     <div id="detailsModalContent" class="modal-content relative bg-white p-8 rounded-lg shadow-2xl border-4 border-yellow-400 w-full max-w-lg md:max-w-2xl lg:max-w-3xl">
-        <!-- Close Button -->
         <button onclick="closeDetailsModal()" id="closeDetails" class="absolute top-4 right-4 text-gray-600 text-3xl font-bold hover:text-gray-800">&times;</button>
         
         <h2 class="text-2xl mb-6 text-gray-800 font-semibold border-b-2 border-gray-200 pb-2">Vehicle Details</h2>
@@ -284,7 +283,7 @@ $vehicles = $stmt->fetchAll();
                 </div>
                 <div>
                     <label>Needs Repairs:</label>
-                    <input type="checkbox" id="needsRepairs" name="needs_repairs" <?php echo ($vehicle['status'] === 'Needs Repairs' || $vehicle['needs_repairs'] == 1) ? 'checked' : ''; ?>> onclick="toggleRepairType()">
+                    <input type="checkbox" id="needsRepairs" name="needs_repairs" <?php echo ($vehicle['status'] === 'Needs Repairs' || $vehicle['needs_repairs'] == 1) ? 'checked' : ''; ?>>
                     <div id="repairTypeField" class="mt-4 <?php echo $vehicle['status'] !== 'Needs Repairs' ? 'hidden' : ''; ?>">
                         <label>Type of Repair:</label>
                         <textarea name="repair_type" id="repair_type" class="border p-2 w-full"><?php echo htmlspecialchars($vehicle['repair_type']); ?></textarea>

@@ -1,101 +1,80 @@
 <?php 
 include '../config/db.php';  
-
 header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Add more robust error logging at the start
-    error_log("Edit Vehicle POST Data: " . json_encode($_POST));
+try {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        throw new Exception('Invalid request method');
+    }
 
-    $vehicleId = $_POST['vehicle_id'] ?? $_POST['id'] ?? $_POST['vehicleId'] ?? null;
-    $needs_repairs = isset($_POST['needs_repairs']) ? intval($_POST['needs_repairs']) : 0;
-    
-    // Determine status, giving priority to explicit status sent from client
-    $status = $_POST['status'] ?? ($needs_repairs ? 'Needs Repairs' : 'No Repairs');
-    
-    // Ensure repair_type is cleared if no repairs are needed
+    $vehicleId = $_POST['id'] ?? null;
+    if (!$vehicleId) {
+        throw new Exception('Vehicle ID is required');
+    }
+
+    // Handle status and repairs
+    $needs_repairs = isset($_POST['needs_repairs']) ? 1 : 0;
+    $status = $needs_repairs ? 'Needs Repairs' : 'No Repairs';
     $repair_type = $needs_repairs ? ($_POST['repair_type'] ?? '') : '';
 
-    if (!$vehicleId) {
-        error_log("No vehicle ID provided");
-        echo json_encode([
-            'success' => false, 
-            'error' => 'No vehicle ID provided',
+    // Handle file uploads
+    $images = [];
+    if (!empty($_FILES['new_images']['name'][0])) {
+        foreach ($_FILES['new_images']['tmp_name'] as $key => $tmp_name) {
+            $filename = uniqid() . '_' . $_FILES['new_images']['name'][$key];
+            move_uploaded_file($tmp_name, "../assets/vehicles/" . $filename);
+            $images[] = $filename;
+        }
+    }
+
+    // Update vehicle data
+    $stmt = $pdo->prepare("
+        UPDATE vehicles 
+        SET reg_no = ?, type = ?, make = ?, location = ?, 
+            status = ?, repair_type = ?, inspection_date = ?,
+            images = CASE 
+                WHEN ? != '' THEN CONCAT(COALESCE(images, ''), ',', ?)
+                ELSE images 
+            END
+        WHERE id = ?
+    ");
+
+    $newImages = !empty($images) ? implode(',', $images) : '';
+    
+    $stmt->execute([
+        $_POST['reg_no'],
+        $_POST['type'],
+        $_POST['make'],
+        $_POST['location'],
+        $status,
+        $repair_type,
+        $_POST['inspection_date'],
+        $newImages,
+        $newImages,
+        $vehicleId
+    ]);
+
+    // Fetch updated vehicle data
+    $stmt = $pdo->prepare("SELECT * FROM vehicles WHERE id = ?");
+    $stmt->execute([$vehicleId]);
+    $vehicle = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    echo json_encode([
+        'success' => true,
+        'message' => 'Vehicle updated successfully',
+        'vehicle' => $vehicle
+    ]);
+
+} catch (Exception $e) {
+    error_log("Error updating vehicle: " . $e->getMessage());
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'error' => $e->getMessage(),
+        'details' => [
+            'vehicleId' => $vehicleId,
             'postData' => $_POST
-        ]);
-        exit;
-    }
-
-    try {
-        // First, update the vehicle in the database
-        $updateStmt = $pdo->prepare("UPDATE vehicles 
-                               SET reg_no = :reg_no, 
-                                   type = :type, 
-                                   make = :make, 
-                                   location = :location, 
-                                   inspection_date = :inspection_date, 
-                                   repair_type = :repair_type, 
-                                   needs_repairs = :needs_repairs,
-                                   status = :status,
-                                   repair_completion_date = :repair_completion_date
-                               WHERE id = :id");
-        $updateResult = $updateStmt->execute([
-            ':reg_no' => $_POST['reg_no'],
-            ':type' => $_POST['type'],
-            ':make' => $_POST['make'],
-            ':location' => $_POST['location'],
-            ':inspection_date' => $_POST['inspection_date'],
-            ':repair_type' => $repair_type,
-            ':needs_repairs' => $needs_repairs,
-            ':status' => $status,
-            ':repair_completion_date' => $_POST['repair_completion_date'] ?? null,
-            ':id' => $vehicleId
-        ]);
-
-        // Check if update was successful
-        if (!$updateResult) {
-            throw new Exception("Failed to update vehicle");
-        }
-
-        // Fetch the updated vehicle data
-        $stmt = $pdo->prepare("SELECT * FROM vehicles WHERE id = :id");
-        $stmt->execute([':id' => $vehicleId]);
-        $updatedVehicle = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        // Additional debugging
-        if (!$updatedVehicle) {
-            // Log additional information
-            error_log("No vehicle found with ID: " . $vehicleId);
-            
-            // Return more detailed error
-            echo json_encode([
-                'success' => false, 
-                'error' => 'No vehicle found after update',
-                'vehicleId' => $vehicleId,
-                'updateResult' => $updateResult
-            ]);
-            exit;
-        }
-
-        echo json_encode([
-            'success' => true, 
-            'message' => 'Vehicle updated successfully', 
-            'updatedVehicle' => $updatedVehicle
-        ]);
-    } catch (Exception $e) {
-        error_log("Error updating vehicle: " . $e->getMessage());
-        http_response_code(500);
-        echo json_encode([
-            'success' => false, 
-            'error' => $e->getMessage(),
-            'details' => [
-                'vehicleId' => $vehicleId,
-                'postData' => $_POST
-            ]
-        ]);
-    }
-} else {
-    http_response_code(400);
-    echo json_encode(['success' => false, 'error' => 'Invalid request method']);
+        ]
+    ]);
 }
 ?>

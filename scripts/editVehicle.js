@@ -22,7 +22,6 @@ function editVehicle(vehicleId) {
             document.getElementById("make").value = vehicle.make || "";
             document.getElementById("location").value = vehicle.location || "";
             document.getElementById("inspection_date").value = vehicle.inspection_date || "";
-            document.getElementById("repair_completion_date").value = vehicle.repair_completion_date || "";
             document.getElementById("vehicleId").value = vehicle.id || "";
 
             // Update needs repairs checkbox
@@ -90,7 +89,35 @@ function editVehicle(vehicleId) {
         .catch(error => console.error("Error loading vehicle data:", error));
 }
 
+function updateImageGallery(images, vehicleId) {
+    const imageGallery = document.getElementById("editImagePreview");
+    imageGallery.innerHTML = "";
 
+    const imagesArray = typeof images === "string" ? images.split(",") : images;
+    
+    imagesArray.forEach((image, index) => {
+        const imageContainer = createImageContainer(image, index, vehicleId);
+        imageGallery.appendChild(imageContainer);
+    });
+}
+
+function createImageContainer(image, index, vehicleId) {
+    const container = document.createElement("div");
+    container.className = "relative group";
+
+    const img = document.createElement("img");
+    img.src = `../assets/vehicles/${image}`;
+    img.className = "cursor-pointer rounded shadow-lg";
+    img.onclick = () => openCarousel(index);
+
+    const deleteButton = document.createElement("button");
+    deleteButton.className = "absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100";
+    deleteButton.onclick = () => deleteImage(vehicleId, image);
+
+    container.appendChild(img);
+    container.appendChild(deleteButton);
+    return container;
+}
 
 function closeEditModal() {
     console.log("Closing Edit Modal");
@@ -205,21 +232,19 @@ function uploadNewImage(vehicleId) {
 
 
 function deleteImage(vehicleId, image) {
-    if (confirm("Are you sure you want to delete this image?")) {
-        fetch(`delete_image.php?vehicle_id=${vehicleId}&image=${image}`, { method: 'GET' })
-            .then(response => response.json())
-            .then(result => {
-            if (result.success) {
-                alert("Image deleted successfully!");
-                editVehicle(vehicleId); 
-            } else {
-                alert("Failed to delete the image.");
+    if (confirm('Are you sure you want to delete this image?')) {
+        fetch(`delete_image.php?vehicle_id=${vehicleId}&image=${image}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Remove image from UI
+                document.querySelector(`[data-image="${image}"]`).remove();
+                // Update details modal if open
+                updateDetailsModal(data.vehicle);
             }
-        })
-        .catch(error => console.error('Error deleting image:', error));
+        });
     }
 }
-
 
 function submitEditForm() {
     const form = document.getElementById("editVehicleForm");
@@ -305,4 +330,49 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+document.getElementById('editVehicleForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
 
+    fetch('edit_vehicle.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            updateTableRow(data.vehicle);
+
+            updateDetailsModal(data.vehicle);
+            
+            closeEditModal();
+        } else {
+            console.error('Update failed:', data.error);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+});
+
+function updateTableRow(vehicle) {
+    const row = document.querySelector(`tr[data-vehicle-id="${vehicle.id}"]`);
+    if (row) {
+        row.innerHTML = `
+            <td class="p-4 border-b">${vehicle.reg_no}</td>
+            <td class="p-4 border-b">${vehicle.type}</td>
+            <td class="p-4 border-b">${vehicle.make}</td>
+            <td class="p-4 border-b">${vehicle.location}</td>
+            <td class="p-4 border-b">
+                ${vehicle.status === 'Needs Repairs' 
+                    ? '<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>'
+                    : '<span class="text-gray-500 font-bold">No Repairs</span>'}
+            </td>
+            <td class="p-4 border-b">${vehicle.inspection_date}</td>
+            <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
+                <button onclick="showDetails(${vehicle.id})" class="text-blue-500 hover:text-blue-700">ℹ</button>
+                <button onclick="editVehicle(${vehicle.id})" class="text-yellow-500 hover:text-yellow-700"><i class="fa-solid fa-pen-to-square"></i></button>
+                <a href="clear_vehicle.php?id=${vehicle.id}" class="text-green-500 hover:text-green-700">✔ Clear</a>
+                <button class="text-red-500 hover:text-red-700 delete-button" data-vehicle-id="${vehicle.id}" onclick="openDeleteModal(${vehicle.id})"><i class="fa-solid fa-trash-can"></i></button>
+            </td>
+        `;
+    }
+}

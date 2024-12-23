@@ -137,7 +137,7 @@ button:disabled {
 }
 
 /* Modal styles */
-#deleteModal {
+.deleteModal{
   z-index: 1000;
   transition: opacity 0.3s ease-in-out;
 }

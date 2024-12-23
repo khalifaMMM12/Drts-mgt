@@ -68,24 +68,11 @@ $vehicles = $stmt->fetchAll();
                 </div>
             </div>
         </div>
-
     </div>
 
     <!-- Main Content Container -->
     <div class="container mx-auto p-4 md:p-6 lg:px-8">
         <h1 class="text-3xl font-bold tracking-tight text-gray-900 mb-6">Vehicle Inspection Status</h1>
-
-        <!-- <div class="flex flex-col md:flex-row items-center w-full gap-4 mb-6">
-            <form method="GET" action="vehicle_page.php" class="flex w-full max-w-md">
-                <input type="text" name="search" placeholder="Search by registration, type, or location" value="<?php echo htmlspecialchars($search); ?>"
-                    class="border border-yellow-400 p-2 flex-grow rounded-l focus:border-yellow-500 focus:ring focus:ring-yellow-200 focus:ring-opacity-50">
-                <button type="submit" class="bg-yellow-500 text-black font-semibold p-2 rounded-r hover:bg-yellow-600">Search</button>
-            </form>
-
-            <button onclick="openModal()" class="rounded bg-gradient-to-b from-yellow-500 to-yellow-600 hover:to-yellow-700 text-black px-4 py-2 shadow-lg">Add Vehicles</button>
-            <a  href="equipment.php" class="rounded bg-gradient-to-b from-yellow-500 to-yellow-600 hover:to-yellow-700 text-black px-4 py-2 shadow-lg">Office Equipments</a>
-            <button onclick="openLogoutModal()" href="logout.php" class="rounded bg-gradient-to-b from-yellow-500 to-yellow-600 hover:to-yellow-700 text-black px-4 py-2 shadow-lg">Logout</button>
-        </div> -->
 
         <div id="logoutModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center">
             <div class="bg-white p-8 rounded-lg shadow-xl">
@@ -95,6 +82,30 @@ $vehicles = $stmt->fetchAll();
                     <button onclick="closeLogoutModal()" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">Cancel</button>
                     <a href="logout.php" class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600">Logout</a>
                 </div>
+            </div>
+        </div>
+
+        <!-- Delete Model  -->
+        <div id="deleteModal" class="hidden deleteModal fixed z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4">
+            <div class="relative top-40 mx-auto shadow-xl rounded-md bg-white max-w-md">
+            <div class="p-6 pt-0 text-center">
+                <svg class="w-20 h-20 text-red-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <h3 class="text-xl font-normal text-gray-500 mt-5 mb-6">Are you sure you want to delete vehicle with registration number: 
+                    <span id="deleteVehicleRegNo" class="font-bold"></span>
+                </h3>
+                <a href="#" id="confirmDelete" 
+                class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2">
+                Yes, I'm sure
+                </a>
+                <button onclick="closeDeleteModal()" id="cancelDelete"
+                class="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-cyan-200 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center">
+                No, cancel
+                </button>
+            </div>
             </div>
         </div>
 
@@ -153,7 +164,9 @@ $vehicles = $stmt->fetchAll();
                                 </button>   
                                 <a href="clear_vehicle.php?id=<?php echo $vehicle['id']; ?>" class="text-green-500 hover:text-green-700">✔ Clear</a>
                                 <?php endif; ?>
-                                <button class="text-red-500 hover:text-red-700 delete-button" data-vehicle-id="<?php echo $vehicle['id']; ?>"  onclick="openDeleteModal(<?php echo $vehicle['id']; ?>)"><i class="fa-solid fa-trash-can"></i></button>
+                                <button class="text-red-500 hover:text-red-700 delete-button" data-vehicle-id="<?php echo $vehicle['id']; ?>" data-vehicle-regno="<?php echo $vehicle['reg_no']; ?>" onclick="openDeleteModal(<?php echo $vehicle['id']; ?>, '<?php echo $vehicle['reg_no']; ?>')">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>                            
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -365,28 +378,6 @@ $vehicles = $stmt->fetchAll();
 
             <button type="submit" name="submit" class="bg-yellow-500 text-black p-2 rounded mt-4 w-full md:w-auto">Update Vehicle</button>
         </form>
-    </div>
-</div>
-
-<!-- Delete Model  -->
-<div id="deleteModal" class="fixed z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4 hidden">
-    <div class="relative top-40 mx-auto shadow-xl rounded-md bg-white max-w-md">
-        <div class="p-6 pt-0 text-center">
-            <svg class="w-20 h-20 text-red-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <h3 class="text-xl font-normal text-gray-500 mt-5 mb-6">Are you sure you want to delete this Vehicle?</h3>
-            <a href="#" id="confirmDelete" 
-                class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2">
-                Yes, I'm sure
-            </a>
-            <button onclick="closeDeleteModal()" 
-                class="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-cyan-200 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center">
-                No, cancel
-            </button>
-        </div>
     </div>
 </div>
 

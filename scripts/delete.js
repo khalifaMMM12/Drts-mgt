@@ -1,21 +1,20 @@
-// Variables to hold the modal and its buttons
 const deleteModal = document.getElementById("deleteModal");
 const confirmDelete = document.getElementById("confirmDelete");
 const cancelDelete = document.getElementById("cancelDelete");
 
-// Store the ID of the vehicle to delete
 let vehicleToDelete = null;
 
-// Open the modal
 function openDeleteModal(vehicleId) {
-    vehicleToDelete = vehicleId; // Store the vehicle ID
+    console.log("delete btn clicked");
+    vehicleToDelete = vehicleId;
     deleteModal.classList.remove("hidden");
+    deleteModal.classList.add("active");
+    
 }
 
-// Close the modal
 function closeDeleteModal() {
     deleteModal.classList.add("hidden");
-    vehicleToDelete = null; // Reset the vehicle ID
+    vehicleToDelete = null; 
 }
 
 // Handle delete confirmation
@@ -35,11 +34,8 @@ confirmDelete.addEventListener("click", () => {
     }
 });
 
-// Handle cancel button
-cancelDelete.addEventListener("click", closeDeleteModal);
+// cancelDelete.addEventListener("click", closeDeleteModal);
 
-// Attach the openDeleteModal function to your delete buttons
-// Example for dynamically added rows:
 document.addEventListener("click", (e) => {
     if (e.target.matches(".delete-button")) {
         const vehicleId = e.target.dataset.vehicleId;

@@ -24,24 +24,58 @@ $vehicles = $stmt->fetchAll();
     <title>Vehicle Inspection Status</title>
     <link href="../style/style.css" rel="stylesheet">
     <link href="../style/output.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-yellow-300 mt-8">
+<body class="bg-gray-100">
 
-    <!-- Navigation Bar
-    <div class="bg-black text-yellow-400 p-4 flex flex-wrap justify-between items-center">
-        <div class="flex items-center space-x-4">
-            <a href="vehicle_page.php" class="hover:text-white">All Vehicles</a>
-            <a href="equipment.php" class="hover:text-white">Office e</a>
+    <!-- Navigation Bar -->
+    <div class="grid xl:grid-cols-1 grid-cols-1">
+        <div class="p-5">
+            <div class="py-3 px-3 rounded-xl border-yellow-400 border-8 w-full bg-black">
+                <div class="flex flex-col md:flex-row items-center justify-between w-full gap-4">
+                    <div class="flex items-center gap-4 w-full md:w-auto">
+                        <h2 class="font-bold text-3xl text-white whitespace-nowrap">DRTS</h2>
+                        
+                        <div class="w-full md:w-96">
+                            <form method="GET" action="vehicle_page.php" class="flex">
+                                <input type="text" 
+                                    name="search" 
+                                    placeholder="Search by registration, type, or location" 
+                                    value="<?php echo htmlspecialchars($search); ?>"
+                                    class="border border-yellow-400 p-2 w-full rounded-l focus:border-yellow-500 focus:ring focus:ring-yellow-200 focus:ring-opacity-50">
+                                <button type="submit" 
+                                    class="bg-yellow-500 text-black font-semibold px-4 py-2 rounded-r hover:bg-yellow-600">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap md:flex-nowrap gap-2 md:gap-4">
+                        <button onclick="openModal()" 
+                            class="rounded bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 shadow-lg flex items-center gap-2">
+                            <i class="fas fa-plus"></i> Add Vehicle
+                        </button>
+                        <a href="equipment.php" 
+                            class="rounded bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 shadow-lg flex items-center gap-2">
+                            <i class="fas fa-tools"></i> Equipment
+                        </a>
+                        <button onclick="openLogoutModal()" 
+                            class="rounded bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 shadow-lg flex items-center gap-2">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div> -->
+
+    </div>
 
     <!-- Main Content Container -->
     <div class="container mx-auto p-4 md:p-6 lg:px-8">
         <h1 class="text-3xl font-bold tracking-tight text-gray-900 mb-6">Vehicle Inspection Status</h1>
 
-        <!-- Search Bar and Add Vehicle Button -->
-        <div class="flex flex-col md:flex-row items-center w-full gap-4 mb-6">
-            <!-- Search Form -->
+        <!-- <div class="flex flex-col md:flex-row items-center w-full gap-4 mb-6">
             <form method="GET" action="vehicle_page.php" class="flex w-full max-w-md">
                 <input type="text" name="search" placeholder="Search by registration, type, or location" value="<?php echo htmlspecialchars($search); ?>"
                     class="border border-yellow-400 p-2 flex-grow rounded-l focus:border-yellow-500 focus:ring focus:ring-yellow-200 focus:ring-opacity-50">
@@ -51,7 +85,7 @@ $vehicles = $stmt->fetchAll();
             <button onclick="openModal()" class="rounded bg-gradient-to-b from-yellow-500 to-yellow-600 hover:to-yellow-700 text-black px-4 py-2 shadow-lg">Add Vehicles</button>
             <a  href="equipment.php" class="rounded bg-gradient-to-b from-yellow-500 to-yellow-600 hover:to-yellow-700 text-black px-4 py-2 shadow-lg">Office Equipments</a>
             <button onclick="openLogoutModal()" href="logout.php" class="rounded bg-gradient-to-b from-yellow-500 to-yellow-600 hover:to-yellow-700 text-black px-4 py-2 shadow-lg">Logout</button>
-        </div>
+        </div> -->
 
         <div id="logoutModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center">
             <div class="bg-white p-8 rounded-lg shadow-xl">
@@ -65,7 +99,7 @@ $vehicles = $stmt->fetchAll();
         </div>
 
         <!-- Vehicle List Table -->
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto border-gray-500">
             <table class="w-full bg-white shadow-lg rounded overflow-hidden text-sm md:text-base">
                 <thead class="bg-yellow-500 text-black">
                     <tr>
@@ -309,14 +343,25 @@ $vehicles = $stmt->fetchAll();
                         <span class="absolute inset-0 border-dashed border-2 border-gray-400/60 rounded-3xl group-hover:border-gray-300 z-0"></span>
                         <span class="absolute inset-0 bg-gray-100 rounded-3xl transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:scale-105 active:scale-95 z-0"></span>
                     </label>
-                    <input hidden="" type="file" name="new_images[]" id="new_images" onclick="uploadNewImage(vehicleId)" accept="image/*" multiple>
+                    <input hidden="" type="file" name="new_images[]" id="new_images" onchange="uploadNewImage(document.getElementById('vehicleId').value)" accept="image/*" multiple>
                 </div>
 
                 <!-- Image Preview Section -->
-                <div id="editImagePreview" class="col-span-2 grid grid-cols-2 gap-2 md:grid-cols-4 rounded-3xl">
-                   
+                <div id="editImagePreview" class="col-span-2 grid grid-cols-2 gap-4 md:grid-cols-4 rounded-3xl">
+                    <?php if (!empty($vehicle['images'])): ?>
+                        <?php foreach (explode(',', $vehicle['images']) as $index => $image): ?>
+                            <div class="relative group">
+                                <img src="../assets/vehicles/<?php echo htmlspecialchars(trim($image)); ?>" 
+                                    class="w-32 h-32 object-cover rounded-lg shadow-lg">
+                                <button type="button" 
+                                        onclick="deleteImage(<?php echo $vehicle['id']; ?>, '<?php echo htmlspecialchars(trim($image)); ?>')"
+                                        class="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+                                    delete image <i class="fas fa-times text-xs"></i>
+                                </button>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
-            </div>
 
             <button type="submit" name="submit" class="bg-yellow-500 text-black p-2 rounded mt-4 w-full md:w-auto">Update Vehicle</button>
         </form>
@@ -324,48 +369,24 @@ $vehicles = $stmt->fetchAll();
 </div>
 
 <!-- Delete Model  -->
-<!-- <div id="deleteModal" class="fixed inset-0 bg-gray-800 bg-opacity-50 hidden flex items-center justify-center">
-    <div class="bg-white p-6 rounded shadow-lg w-80">
-        <h2 class="text-lg font-semibold text-center mb-4">Confirm Deletion of <?php echo htmlspecialchars($vehicle['reg_no']); ?> </h2>
-        <p class="text-gray-600 text-center mb-6">Are you sure you want to delete this vehicle?</p>
-        <div class="flex justify-center space-x-4">
-            <button id="confirmDelete" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"><a href="delete_vehicle.php?id=<?php echo $vehicle['id']; ?>">Delete</a></button>
-            <button id="cancelDelete" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Cancel</button>
-        </div>
-    </div>
-</div> -->
-
-<div id="deleteModal" class="fixed hidden z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4 ">
+<div id="deleteModal" class="fixed z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4 hidden">
     <div class="relative top-40 mx-auto shadow-xl rounded-md bg-white max-w-md">
-
-        <!-- <div class="flex justify-end p-2">
-            <button id="cancelDelete" type="button"
-                class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd"
-                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                        clip-rule="evenodd"></path>
-                </svg>
-            </button>
-        </div> -->
-
         <div class="p-6 pt-0 text-center">
             <svg class="w-20 h-20 text-red-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                 xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
-            <h3 class="text-xl font-normal text-gray-500 mt-5 mb-6" id="reg_no">Are you sure you want to delete this Vehicle with<b> Reg No: <?php echo htmlspecialchars($vehicle['reg_no']); ?> </b></h3>
-            <a href="delete_vehicle.php?id=<?php echo $vehicle['id']; ?>" id="confirmDelete" 
+            <h3 class="text-xl font-normal text-gray-500 mt-5 mb-6">Are you sure you want to delete this Vehicle?</h3>
+            <a href="#" id="confirmDelete" 
                 class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2">
                 Yes, I'm sure
             </a>
-            <button id="cancelDelete" 
+            <button onclick="closeDeleteModal()" 
                 class="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-cyan-200 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center">
                 No, cancel
             </button>
         </div>
-
     </div>
 </div>
 

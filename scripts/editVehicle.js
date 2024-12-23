@@ -95,24 +95,37 @@ function updateImageGallery(images, vehicleId) {
 
     const imagesArray = typeof images === "string" ? images.split(",") : images;
     
-    imagesArray.forEach((image, index) => {
-        const imageContainer = createImageContainer(image, index, vehicleId);
-        imageGallery.appendChild(imageContainer);
-    });
+    if (imagesArray) {
+        imagesArray.forEach((image, index) => {
+            if (image.trim()) {
+                const imageContainer = createImageContainer(image.trim(), index, vehicleId);
+                imageGallery.appendChild(imageContainer);
+            }
+        });
+    }
 }
 
 function createImageContainer(image, index, vehicleId) {
     const container = document.createElement("div");
     container.className = "relative group";
+    container.setAttribute('data-image', image);
 
     const img = document.createElement("img");
     img.src = `../assets/vehicles/${image}`;
-    img.className = "cursor-pointer rounded shadow-lg";
-    img.onclick = () => openCarousel(index);
+    img.className = "w-32 h-32 object-cover rounded-lg shadow-lg";
 
     const deleteButton = document.createElement("button");
-    deleteButton.className = "absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100";
-    deleteButton.onclick = () => deleteImage(vehicleId, image);
+    deleteButton.className = "absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10";
+    deleteButton.innerHTML = '<i class="fas fa-times text-xs"></i>';
+    deleteButton.type = "button";
+    
+    deleteButton.onclick = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (confirm('Are you sure you want to delete this image?')) {
+            deleteImage(vehicleId, image);
+        }
+    };
 
     container.appendChild(img);
     container.appendChild(deleteButton);
@@ -230,20 +243,20 @@ function uploadNewImage(vehicleId) {
 }
 
 
-
 function deleteImage(vehicleId, image) {
-    if (confirm('Are you sure you want to delete this image?')) {
-        fetch(`delete_image.php?vehicle_id=${vehicleId}&image=${image}`)
+    fetch(`delete_image.php?vehicle_id=${vehicleId}&image=${image}`)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                // Remove image from UI
-                document.querySelector(`[data-image="${image}"]`).remove();
-                // Update details modal if open
-                updateDetailsModal(data.vehicle);
+                const imageElement = document.querySelector(`[data-image="${image}"]`);
+                if (imageElement) {
+                    imageElement.remove();
+                }
+            } else {
+                alert('Failed to delete image');
             }
-        });
-    }
+        })
+        .catch(error => console.error('Error:', error));
 }
 
 function submitEditForm() {

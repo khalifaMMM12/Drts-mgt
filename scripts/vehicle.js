@@ -286,18 +286,22 @@ let images = [];
 let currentIndex = 0;
 
 function openCarousel(index = 0) {
-    if (!Array.isArray(images) || images.length === 0) {
+    const imageGallery = document.getElementById("editImagePreview");
+    const images = Array.from(imageGallery.querySelectorAll('img')).map(img => {
+        return img.src.split('/').pop(); // Get filename from src
+    });
+
+    if (!images || images.length === 0) {
         console.error('No images available');
         return;
     }
 
     const carousel = document.getElementById('carouselModal');
-    carousel.classList.remove('hidden'); 
-
-    // Ensure index is within bounds
+    const enlargedImg = document.getElementById('enlargedImg');
+    
+    carousel.classList.remove('hidden');
     currentIndex = Math.min(Math.max(index, 0), images.length - 1);
-
-    updateCarouselImage(); 
+    enlargedImg.src = `../assets/vehicles/${images[currentIndex]}`;
 }
 
 function updateCarouselImage() {
@@ -311,23 +315,28 @@ function updateCarouselImage() {
     }
 }
 
-
-
-function showPrevImage() {
-    if (images.length <= 0) return;
-    currentIndex = (currentIndex - 1 + images.length) % images.length;  // Loop to previous image
-    updateCarouselImage();
+function showNextImage() {
+    const images = Array.from(document.getElementById("editImagePreview").querySelectorAll('img'))
+        .map(img => img.src.split('/').pop());
+    
+    if (images.length > 0) {
+        currentIndex = (currentIndex + 1) % images.length;
+        document.getElementById('enlargedImg').src = `../assets/vehicles/${images[currentIndex]}`;
+    }
 }
 
-function showNextImage() {
-    if (images.length <= 0) return;
-    currentIndex = (currentIndex + 1) % images.length;  // Loop to next image
-    updateCarouselImage();
+function showPrevImage() {
+    const images = Array.from(document.getElementById("editImagePreview").querySelectorAll('img'))
+        .map(img => img.src.split('/').pop());
+    
+    if (images.length > 0) {
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        document.getElementById('enlargedImg').src = `../assets/vehicles/${images[currentIndex]}`;
+    }
 }
 
 function closeCarousel() {
-    const carousel = document.getElementById('carouselModal');
-    carousel.classList.add('hidden'); 
+    document.getElementById('carouselModal').classList.add('hidden');
 }
 
 // Attach the image array from the details modal to the carousel

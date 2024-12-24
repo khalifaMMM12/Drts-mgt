@@ -8,6 +8,15 @@ function closeLogoutModal() {
     document.getElementById('logoutModal').classList.remove('flex');
 }
 
+// Mobile menu toggle
+document.getElementById('mobile-menu-button').addEventListener('click', () => {
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.querySelector('.flex-1');
+    
+    sidebar.classList.toggle('-translate-x-full');
+    mainContent.classList.toggle('md:ml-64');
+});
+
 function toggleRepairType() {
     const repairField = document.getElementById("repairTypeField");
     const needsRepairsCheckbox = document.getElementById("needsRepairs");

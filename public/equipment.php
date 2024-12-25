@@ -16,9 +16,82 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     <!-- <link href="../public/style.css" rel="stylesheet"> -->
     <title>Office Equipment Status</title>
 </head>
-<body class="bg-gray-100 mt-8">
+<body class="bg-gray-100 ">
+    <button id="mobile-menu-button" class="md:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-yellow-500 text-black">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+        </svg>
+    </button>
+
+<div class="flex h-screen">
+
+<div class="hidden md:flex flex-col w-64 bg-gray-800">
+        <div id="sidebar" class="fixed left-0 top-0 w-64 h-screen rounded-xl shadow-lg bg-yellow-500 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out z-40">
+            <div class="flex flex-col flex-1 overflow-y-auto">
+                <nav class="flex flex-col flex-1 overflow-y-auto bg-yellow-500 px-2 py-4 gap-10">
+                    <div>
+                        <a href="#" class="flex items-center text-gray-100 hover:bg-gray-700">
+                            <img class="w-20" src="../img/DRTS_logo.png" alt="DRTS Logo">
+                            <h2 class="font-bold text-black text-lg">Directorate of Road Traffic Services</h2>
+                        </a>
+                    </div>
+                    <div class="flex flex-col flex-1 gap-3">
+                        <a href="equipment.php" class="hover:bg-opacity-25 rounded-2xl bg-gray-900  hover:bg-gray-400 text-white px-4 py-2 flex items-center">
+                            <i class="fas fa-tools mr-2"></i> Equipment
+                        </a>
+                        <a href="#" class="flex items-center px-4 py-2 mt-2 text-gray-100 bg-gray-900 hover:bg-gray-500 rounded-2xl">
+                            <i class="fa-solid fa-user-plus mr-2"></i>
+                            Add Users
+                        </a>
+                        <a href="#" class="flex items-center px-4 py-2 mt-2 text-gray-100 bg-gray-900 hover:bg-gray-500 rounded-2xl">
+                            <i class="fa-solid fa-id-badge mr-2"></i>
+                            Profile
+                        </a>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex flex-col flex-1 overflow-y-auto">
+    <div class="flex-1 transition-margin duration-300 ease-in-out">
+
+    <div class="grid xl:grid-cols-1 grid-cols-1">
+        <div class="p-2 md:p-5">
+            <div class="py-2 md:py-3 px-2 md:px-3 rounded-xl border-yellow-400 border-4 md:border-8 bg-gray-900">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4">
+                    <div class="flex items-center gap-2 md:gap-4 w-full md:w-auto">
+                        <!-- <h2 class="font-bold text-xl md:text-3xl text-white">DRTS</h2> -->
+                        
+                        <div class="flex items-center gap-4">
+                            <select id="equipmentSelect" class="p-2 border rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent bg-white">
+                                <option value="solar">Solar</option>
+                                <option value="airConditioners">Air Conditioners</option>
+                                <option value="fireExtinguishers">Fire Extinguishers</option>
+                                <option value="borehole">Borehole</option>
+                                <option value="generator">Generators</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap md:flex-nowrap gap-2 md:gap-4">
+                        <button id="addEquipmentButton" 
+                            class="rounded bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 shadow-lg flex items-center gap-2">
+                            <i class="fas fa-plus"></i> Add Equipment
+                        </button>
+                        
+                        <button onclick="openLogoutModal()" 
+                            class="rounded bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 shadow-lg flex items-center gap-2">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container mx-auto p-4 md:p-6 lg:px-8">
-        <h1 class="text-3xl font-bold text-yellow-500 mb-6">Office Equipments Status</h1>
+        <h1 class="text-3xl font-bold text-black mb-6">Office Equipments Status</h1>
 
         <!-- Dropdown for Selecting Equipment -->
         <div class="flex flex-col md:flex-row items-center w-full gap-4 mb-6">
@@ -140,7 +213,9 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
             </form>
         </div>
     </div>
-
+</div>
+</div>
+</div>
     <script src="../scripts/Equipments.js"></script>
     <script src="https://kit.fontawesome.com/79a49acde1.js" crossorigin="anonymous"></script>
 </body>

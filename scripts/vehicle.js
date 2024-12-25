@@ -11,10 +11,7 @@ function closeLogoutModal() {
 // Mobile menu toggle
 document.getElementById('mobile-menu-button').addEventListener('click', () => {
     const sidebar = document.getElementById('sidebar');
-    const mainContent = document.querySelector('.flex-1');
-    
     sidebar.classList.toggle('-translate-x-full');
-    mainContent.classList.toggle('md:ml-64');
 });
 
 function toggleRepairType() {

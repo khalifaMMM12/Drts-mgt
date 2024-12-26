@@ -1,3 +1,13 @@
+function openLogoutModal() {
+    document.getElementById('logoutModal').classList.remove('hidden');
+    document.getElementById('logoutModal').classList.add('flex');
+}
+
+function closeLogoutModal() {
+    document.getElementById('logoutModal').classList.add('hidden');
+    document.getElementById('logoutModal').classList.remove('flex');
+}
+
 // Wait for the DOM to load
 document.addEventListener("DOMContentLoaded", function () {
     const equipmentSelect = document.getElementById("equipmentSelect");
@@ -54,6 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
         modalTitle.textContent = `Add ${formatTitle(selectedType)} Details`;
         populateFormFields(selectedType);
         addEquipmentModal.classList.remove("hidden");
+        console.log("Equipment BTN clicked");
     });
 
     // Hide modal when Cancel is clicked
@@ -267,7 +278,7 @@ function loadTableData(type) {
             tableBody.innerHTML = "";
 
             if (data.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="7" class="text-center p-4 text-yellow-500">No equipment found</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="7" class="text-center p-4 text-yellow-500 font-bold">No Equipments Found</td></tr>`;
                 return;
             }
 

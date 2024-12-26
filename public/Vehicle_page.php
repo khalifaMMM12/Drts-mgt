@@ -35,10 +35,10 @@ $vehicles = $stmt->fetchAll();
 
 <div class="flex h-screen">
     <!-- Side Bar -->
-     <div class="hidden md:flex flex-col w-64 bg-gray-800">
-        <div id="sidebar" class="fixed left-0 top-0 w-64 h-screen rounded-xl shadow-lg bg-yellow-500 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out z-40">
+     <div class="hidden md:flex flex-col w-64 rounded-r-2xl shadow-2xl bg-yellow-500">
+        <div id="sidebar" class="fixed left-0 top-0 w-64 h-screen rounded-2xl shadow-2xl transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out z-40">
             <div class="flex flex-col flex-1 overflow-y-auto">
-                <nav class="flex flex-col flex-1 overflow-y-auto bg-yellow-500 px-2 py-4 gap-10">
+                <nav class="flex flex-col flex-1 overflow-y-auto px-2 py-4 gap-10">
                     <div>
                         <a href="#" class="flex items-center text-gray-100 hover:bg-gray-700">
                             <img class="w-20" src="../img/DRTS_logo.png" alt="DRTS Logo">
@@ -65,8 +65,7 @@ $vehicles = $stmt->fetchAll();
 
     <!-- Main Content -->
 
-    <div class="flex flex-col flex-1 overflow-y-auto">
-    <div class="flex-1 transition-margin duration-300 ease-in-out">
+    <div class="flex flex-col flex-1 overflow-y-auto transition-margin duration-300 ease-in-out">
         
     <!-- Navigation Bar -->
     <div class="grid xl:grid-cols-1 grid-cols-1">
@@ -131,7 +130,7 @@ $vehicles = $stmt->fetchAll();
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                     d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
-              147  <h3 class="text-xl font-normal text-gray-500 mt-5 mb-6">Are you sure you want to delete vehicle with registration number: 
+                    <h3 class="text-xl font-normal text-gray-500 mt-5 mb-6">Are you sure you want to delete vehicle with registration number: 
                     <span id="deleteVehicleRegNo" class="font-bold"></span>
                 </h3>
                 <a href="#" id="confirmDelete" 
@@ -419,6 +418,7 @@ $vehicles = $stmt->fetchAll();
 </div>
 </div>
 </div>
+<
 
     <!-- Script -->
     <script src="https://kit.fontawesome.com/79a49acde1.js" crossorigin="anonymous"></script>

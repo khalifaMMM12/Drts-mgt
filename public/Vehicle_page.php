@@ -18,7 +18,7 @@ $vehicles = $stmt->fetchAll();
 
 <!DOCTYPE html>
 <html lang="en">
-
+     
 <head>
     <meta charset="UTF-8">
     <title>Vehicle Inspection Status</title>
@@ -35,10 +35,10 @@ $vehicles = $stmt->fetchAll();
 
 <div class="flex h-screen">
     <!-- Side Bar -->
-     <div class="hidden md:flex flex-col w-64 rounded-r-2xl shadow-2xl bg-yellow-500">
-        <div id="sidebar" class="fixed left-0 top-0 w-64 h-screen rounded-2xl shadow-2xl transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out z-40">
-            <div class="flex flex-col flex-1 overflow-y-auto">
-                <nav class="flex flex-col flex-1 overflow-y-auto px-2 py-4 gap-10">
+     <div class="hidden md:flex flex-col w-64  rounded-r-2xl shadow-2xl bg-yellow-500">
+        <div id="sidebar" class="fixed left-0 top-0 w-64 h-screen rounded-2xl shadow-2xl transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+            <div class="flex flex-col flex-1">
+                <nav class="flex flex-col flex-1 px-2 py-4 gap-10">
                     <div>
                         <a href="#" class="flex items-center text-gray-100 hover:bg-gray-700">
                             <img class="w-20" src="../img/DRTS_logo.png" alt="DRTS Logo">
@@ -89,6 +89,33 @@ $vehicles = $stmt->fetchAll();
                             </form>
                         </div>
                     </div>
+                    
+                    <div class="flex items-center gap-2">
+                        <div class="flex items-center p-2 rounded bg-gray-800">
+                            <div class="relative flex items-center space-x-2">
+                                <!-- Normal View -->
+                                <input type="radio" id="normalView" name="vehicleFilter" value="normal" class="sr-only peer" checked>
+                                <label for="normalView" class="px-3 py-1 text-sm cursor-pointer rounded peer-checked:bg-yellow-500 peer-checked:text-black text-white">
+                                    All Vehicles
+                                </label>
+                                
+                                <!-- Cleared View -->
+                                <input type="radio" id="clearedView" name="vehicleFilter" value="cleared" class="sr-only peer">
+                                <label for="clearedView" class="px-3 py-1 text-sm cursor-pointer rounded peer-checked:bg-yellow-500 peer-checked:text-black text-white">
+                                    Cleared
+                                </label>
+                                
+                                <!-- Repairs View -->
+                                <input type="radio" id="repairsView" name="vehicleFilter" value="repairs" class="sr-only peer">
+                                <label for="repairsView" class="px-3 py-1 text-sm cursor-pointer rounded peer-checked:bg-yellow-500 peer-checked:text-black text-white">
+                                    Needs Repairs
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+<div class="flex flex-wrap md:flex-nowrap gap-2 md:gap-4">
+    <!-- ... rest of the buttons ... -->
 
                     <div class="flex flex-wrap md:flex-nowrap gap-2 md:gap-4">
                         <button onclick="openModal()" 
@@ -418,7 +445,6 @@ $vehicles = $stmt->fetchAll();
 </div>
 </div>
 </div>
-<
 
     <!-- Script -->
     <script src="https://kit.fontawesome.com/79a49acde1.js" crossorigin="anonymous"></script>

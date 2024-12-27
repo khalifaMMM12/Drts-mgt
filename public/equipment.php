@@ -27,9 +27,9 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 <div class="flex h-screen">
 
     <div class="hidden md:flex flex-col w-64 rounded-r-2xl shadow-2xl bg-yellow-500">
-        <div id="sidebar" class="fixed left-0 top-0 w-64 h-screen rounded-xl shadow-lg transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out z-40">
-            <div class="flex flex-col flex-1 overflow-y-auto">
-                <nav class="flex flex-col flex-1 overflow-y-auto px-2 py-4 gap-10">
+        <div id="sidebar" class="fixed left-0 top-0 w-64 h-screen rounded-xl shadow-lg transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+            <div class="flex flex-col flex-1">
+                <nav class="flex flex-col flex-1 px-2 py-4 gap-10">
                     <div>
                         <a href="#" class="flex items-center text-gray-100 hover:bg-gray-700">
                             <img class="w-20" src="../img/DRTS_logo.png" alt="DRTS Logo">
@@ -94,7 +94,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
         <h1 class="text-3xl font-bold text-black mb-6">DRTS Equipments</h1>
 
         <!-- Modal -->
-        <div id="addEquipmentModal" class="modal-overlay fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
+        <div id="addEquipmentModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
             <div class="modal-content relative bg-white p-6 rounded-lg shadow-lg border-2 border-yellow-400 w-full max-w-lg md:max-w-2xl lg:max-w-3xl overflow-y-auto max-h-full">
                 <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-700 text-4xl">&times;</button>
                 <h2 id="modalTitle" class="text-xl font-bold mb-4"></h2>

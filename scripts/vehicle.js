@@ -14,6 +14,44 @@ document.getElementById('mobile-menu-button').addEventListener('click', () => {
     sidebar.classList.toggle('-translate-x-full');
 });
 
+// Toggle vehicle status filter
+document.addEventListener('DOMContentLoaded', function() {
+    const radioButtons = document.querySelectorAll('input[name="vehicleFilter"]');
+    const tbody = document.querySelector('#vehiclesTable tbody');
+    console.log(radioButtons);
+    console.log("Clickling btns");
+
+    async function updateVehicles(filter) {
+        try {
+            const response = await fetch(`filter_vehicles.php?filter=${filter}`);
+            const result = await response.json();
+            
+            if (result.status === 'success') {
+                tbody.innerHTML = result.data.map(vehicle => `
+                    <tr>
+                        <td>${vehicle.registration_number}</td>
+                        <td>${vehicle.vehicle_type}</td>
+                        <td>${vehicle.location}</td>
+                        <td>${vehicle.vehicle_status}</td>
+                        <td>
+                            <a href="view_vehicle.php?id=${vehicle.id}" class="text-blue-500">View</a>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }
+
+    radioButtons.forEach(radio => {
+        radio.addEventListener('change', (e) => updateVehicles(e.target.value));
+    });
+
+    // Initial load
+    updateVehicles('all');
+});
+
 function toggleRepairType() {
     const repairField = document.getElementById("repairTypeField");
     const needsRepairsCheckbox = document.getElementById("needsRepairs");

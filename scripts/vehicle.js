@@ -17,30 +17,75 @@ document.getElementById('mobile-menu-button').addEventListener('click', () => {
 // Toggle vehicle status filter
 document.addEventListener('DOMContentLoaded', function() {
     const radioButtons = document.querySelectorAll('input[name="vehicleFilter"]');
-    const tbody = document.querySelector('#vehiclesTable tbody');
-    console.log(radioButtons);
-    console.log("Clickling btns");
+    const tbody = document.querySelector('table tbody');
+    
+    function getStatusBadge(status) {
+        const badges = {
+            'Fixed': `<span class="text-green-500 font-bold">✔ Cleared</span>`,
+            'Needs Repairs': `<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>`
+        };
+        return badges[status] || `<span class="text-gray-500 font-bold"> ${status}</span>`;
+    }
 
     async function updateVehicles(filter) {
         try {
-            const response = await fetch(`filter_vehicles.php?filter=${filter}`);
-            const result = await response.json();
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="7" class="text-center p-4">
+                        <i class="fas fa-spinner fa-spin"></i> Loading...
+                    </td>
+                </tr>
+            `;
             
-            if (result.status === 'success') {
-                tbody.innerHTML = result.data.map(vehicle => `
-                    <tr>
-                        <td>${vehicle.registration_number}</td>
-                        <td>${vehicle.vehicle_type}</td>
-                        <td>${vehicle.location}</td>
-                        <td>${vehicle.vehicle_status}</td>
-                        <td>
-                            <a href="view_vehicle.php?id=${vehicle.id}" class="text-blue-500">View</a>
-                        </td>
-                    </tr>
-                `).join('');
+            const response = await fetch(`api/filter_vehicles.php?filter=${filter}`);
+            const data = await response.json();
+            
+            if (!response.ok || data.status === 'error') {
+                throw new Error(data.message || 'Server error occurred');
             }
+    
+            if (data.data.length === 0) {
+                const messages = {
+                    'cleared': 'No cleared vehicles found',
+                    'repairs': 'No vehicles needing repairs found',
+                    'normal': 'No vehicles found'
+                };
+                
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center p-4">${messages[filter] || 'No vehicles found'}</td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = data.data.map(vehicle => `
+                <tr class="hover:bg-gray-50">
+                    <td class="p-4 border-b">${vehicle.reg_no}</td>
+                    <td class="p-4 border-b">${vehicle.type}</td>
+                    <td class="p-4 border-b">${vehicle.make}</td>
+                    <td class="p-4 border-b">${vehicle.location}</td>
+                    <td class="p-4 border-b">${getStatusBadge(vehicle.status)}</td>
+                    <td class="p-4 border-b">${vehicle.inspection_date || 'N/A'}</td>
+                    <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
+                        <button onclick="showDetails(${vehicle.id})" class="text-blue-500 hover:text-blue-700">ℹ</button>
+                        <button onclick="editVehicle(${vehicle.id})" class="text-yellow-500 hover:text-yellow-700"><i class="fa-solid fa-pen-to-square"></i></button>
+                        <a href="clear_vehicle.php?id=${vehicle.id}" class="text-green-500 hover:text-green-700">✔ Clear</a>
+                        <button class="text-red-500 hover:text-red-700 delete-button" data-vehicle-id="${vehicle.id}" onclick="openDeleteModal(${vehicle.id})"><i class="fa-solid fa-trash-can"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+            
         } catch (error) {
             console.error('Error:', error);
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="7" class="text-center p-4 text-red-500">
+                        <i class="fas fa-exclamation-circle mr-1"></i>
+                        Error loading vehicles: ${error.message}
+                    </td>
+                </tr>
+            `;
         }
     }
 
@@ -154,6 +199,7 @@ document.getElementById('addVehicleForm').addEventListener('submit', function(ev
         }
         if (typeof addVehicleToTable === 'function') {
             addVehicleToTable(data.vehicle);
+            updateVehicles(data.vehicle);
         }
     
 
@@ -202,7 +248,7 @@ function addVehicleToTable(vehicle) {
         <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
             <button onclick="showDetails(${vehicle.id})" class="text-blue-500 hover:text-blue-700">ℹ</button>
             <button onclick="editVehicle(${vehicle.id})" class="text-yellow-500 hover:text-yellow-700"><i class="fa-solid fa-pen-to-square"></i></button>
-            <a href="clear_vehicle.php?id=${vehicle.id}" class="text-green-500 hover:text-green-700">✔ Clear</a>
+            <a href="_vehicle.php?id=${vehicle.id}" class="text-green-500 hover:text-green-700">✔ Clear</a>
             <button class="text-red-500 hover:text-red-700 delete-button" data-vehicle-id="${vehicle.id}" onclick="openDeleteModal(${vehicle.id})"><i class="fa-solid fa-trash-can"></i></button>
         </td>
     `;

@@ -74,7 +74,6 @@ $vehicles = $stmt->fetchAll();
                 <div class="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4">
                     <div class="flex items-center gap-2 md:gap-4 w-full md:w-auto">
                         <h2 class="font-bold text-xl md:text-3xl text-white">DRTS</h2>
-                        
                         <div class="w-full md:w-96">
                             <form method="GET" action="vehicle_page.php" class="flex">
                                 <input type="text" 
@@ -89,44 +88,20 @@ $vehicles = $stmt->fetchAll();
                             </form>
                         </div>
                     </div>
-                    
-                    <div class="flex items-center gap-2">
-                        <div class="flex items-center p-2 rounded bg-gray-800">
-                            <div class="relative flex items-center space-x-2">
-                                <!-- Normal View -->
-                                <input type="radio" id="normalView" name="vehicleFilter" value="normal" class="sr-only peer" checked>
-                                <label for="normalView" class="px-3 py-1 text-sm cursor-pointer rounded peer-checked:bg-yellow-500 peer-checked:text-black text-white">
-                                    All Vehicles
-                                </label>
-                                
-                                <!-- Cleared View -->
-                                <input type="radio" id="clearedView" name="vehicleFilter" value="cleared" class="sr-only peer">
-                                <label for="clearedView" class="px-3 py-1 text-sm cursor-pointer rounded peer-checked:bg-yellow-500 peer-checked:text-black text-white">
-                                    Cleared
-                                </label>
-                                
-                                <!-- Repairs View -->
-                                <input type="radio" id="repairsView" name="vehicleFilter" value="repairs" class="sr-only peer">
-                                <label for="repairsView" class="px-3 py-1 text-sm cursor-pointer rounded peer-checked:bg-yellow-500 peer-checked:text-black text-white">
-                                    Needs Repairs
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-<div class="flex flex-wrap md:flex-nowrap gap-2 md:gap-4">
-    <!-- ... rest of the buttons ... -->
 
                     <div class="flex flex-wrap md:flex-nowrap gap-2 md:gap-4">
-                        <button onclick="openModal()" 
-                            class="rounded bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 shadow-lg flex items-center gap-2">
-                            <i class="fas fa-plus"></i> Add Vehicle
-                        </button>
-                        
-                        <button onclick="openLogoutModal()" 
-                            class="rounded bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 shadow-lg flex items-center gap-2">
-                            <i class="fas fa-sign-out-alt"></i> Logout
-                        </button>
+
+                        <div class="flex flex-wrap md:flex-nowrap gap-2 md:gap-4">
+                            <button onclick="openModal()" 
+                                class="rounded bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 shadow-lg flex items-center gap-2">
+                                <i class="fas fa-plus"></i> Add Vehicle
+                            </button>
+                            
+                            <button onclick="openLogoutModal()" 
+                                class="rounded bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 shadow-lg flex items-center gap-2">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -135,7 +110,28 @@ $vehicles = $stmt->fetchAll();
 
     <!-- Main Content Container -->
     <div class="container mx-auto md:p-6 lg:px-8">
-        <h1 class="text-3xl font-bold tracking-tight text-gray-900 mb-6">Vehicle Inspection Status</h1>
+        <div class="flex items-center gap-2">
+            <h1 class="text-3xl font-bold tracking-tight text-gray-900 mb-6">Vehicle Inspection Status</h1>
+    
+            <div class="flex items-center p-2 rounded bg-gray-800">
+                <div class="relative flex items-center space-x-2">
+                    <input type="radio" id="normalView" name="vehicleFilter" value="normal" class="sr-only peer" checked>
+                    <label for="normalView" class="px-3 py-1 text-sm cursor-pointer rounded peer-checked:bg-yellow-500 peer-checked:text-black text-white">
+                        All Vehicles
+                    </label>
+                                
+                    <input type="radio" id="clearedView" name="vehicleFilter" value="cleared" class="sr-only peer">
+                    <label for="clearedView" class="px-3 py-1 text-sm cursor-pointer rounded peer-checked:bg-yellow-500 peer-checked:text-black text-white">
+                        Cleared
+                    </label>
+        
+                    <input type="radio" id="repairsView" name="vehicleFilter" value="repairs" class="sr-only peer">
+                    <label for="repairsView" class="px-3 py-1 text-sm cursor-pointer rounded peer-checked:bg-yellow-500 peer-checked:text-black text-white">
+                        Needs Repairs
+                    </label>
+                </div>
+            </div>
+        </div>
 
         <div id="logoutModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center">
             <div class="bg-white p-8 rounded-lg shadow-xl">

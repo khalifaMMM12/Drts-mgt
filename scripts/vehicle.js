@@ -18,6 +18,7 @@ document.getElementById('mobile-menu-button').addEventListener('click', () => {
 document.addEventListener('DOMContentLoaded', function() {
     const radioButtons = document.querySelectorAll('input[name="vehicleFilter"]');
     const tbody = document.querySelector('table tbody');
+    let currentFilter = null;
     
     function getStatusBadge(status) {
         const badges = {
@@ -45,17 +46,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
     
             if (data.data.length === 0) {
-                const messages = {
-                    'cleared': 'No cleared vehicles found',
-                    'repairs': 'No vehicles needing repairs found',
-                    'normal': 'No vehicles found'
-                };
-                
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="7" class="text-center p-4">${messages[filter] || 'No vehicles found'}</td>
-                    </tr>
-                `;
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center p-4">
+                    ${filter === 'cleared' ? 'No cleared vehicles found' : 
+                      filter === 'repairs' ? 'No vehicles needing repairs found' : 
+                      filter === 'no_repairs' ? 'No vehicles without repairs found' : 
+                      'No vehicles found'}</td></tr>`;
                 return;
             }
             
@@ -68,11 +63,28 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td class="p-4 border-b">${getStatusBadge(vehicle.status)}</td>
                     <td class="p-4 border-b">${vehicle.inspection_date || 'N/A'}</td>
                     <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
-                        <button onclick="showDetails(${vehicle.id})" class="text-blue-500 hover:text-blue-700">ℹ</button>
-                        <button onclick="editVehicle(${vehicle.id})" class="text-yellow-500 hover:text-yellow-700"><i class="fa-solid fa-pen-to-square"></i></button>
-                        <a href="clear_vehicle.php?id=${vehicle.id}" class="text-green-500 hover:text-green-700">✔ Clear</a>
-                        <button class="text-red-500 hover:text-red-700 delete-button" data-vehicle-id="${vehicle.id}" onclick="openDeleteModal(${vehicle.id})"><i class="fa-solid fa-trash-can"></i></button>
-                    </td>
+                    <button onclick="showDetails(${vehicle.id})" 
+                            class="text-blue-500 hover:text-blue-700">ℹ</button>
+                    ${vehicle.status === 'Fixed' ? `
+                        <button class="text-yellow-500 opacity-50 cursor-not-allowed" 
+                                disabled title="This vehicle is fixed and cannot be edited">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button class="text-green-500 opacity-50 cursor-not-allowed" 
+                                disabled title="This vehicle is already cleared">✔ Clear</button>
+                    ` : `
+                        <button onclick="editVehicle(${vehicle.id})" 
+                                class="text-yellow-500 hover:text-yellow-700">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <a href="clear_vehicle.php?id=${vehicle.id}" 
+                           class="text-green-500 hover:text-green-700">✔ Clear</a>
+                    `}
+                    <button onclick="openDeleteModal(${vehicle.id}, '${vehicle.reg_no}')"
+                            class="text-red-500 hover:text-red-700">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </td>
                 </tr>
             `).join('');
             
@@ -89,11 +101,36 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function handleFilterClick(e) {
+        const clickedFilter = e.target;
+        const filterValue = clickedFilter.value;
+        
+        if (currentFilter === filterValue) {
+            clickedFilter.checked = false;
+            currentFilter = null;
+            updateVehicles('all');
+            
+            document.querySelectorAll('input[name="vehicleFilter"] + label').forEach(label => {
+                label.classList.remove('bg-yellow-500');
+                label.classList.add('bg-gray-700');
+            });
+        } else {
+            currentFilter = filterValue;
+            updateVehicles(filterValue);
+            
+            document.querySelectorAll('input[name="vehicleFilter"] + label').forEach(label => {
+                label.classList.remove('bg-yellow-500');
+                label.classList.add('bg-gray-700');
+            });
+            clickedFilter.nextElementSibling.classList.remove('bg-gray-700');
+            clickedFilter.nextElementSibling.classList.add('bg-yellow-500');
+        }
+    }
+
     radioButtons.forEach(radio => {
-        radio.addEventListener('change', (e) => updateVehicles(e.target.value));
+        radio.addEventListener('click', handleFilterClick);
     });
 
-    // Initial load
     updateVehicles('all');
 });
 
@@ -216,13 +253,11 @@ document.getElementById('addVehicleForm').addEventListener('submit', function(ev
 
 
 function addVehicleToTable(vehicle) {
-    // Remove any existing rows with this vehicle ID
     const existingRows = document.querySelectorAll(`tr[data-vehicle-id="${vehicle.id}"]`);
     existingRows.forEach(row => row.remove());
 
     const tbody = document.querySelector("table tbody");
 
-    // Determine the status display based on the vehicle's status
     let statusDisplay = '';
     switch (vehicle.status) {
         case 'Needs Repairs':
@@ -253,7 +288,6 @@ function addVehicleToTable(vehicle) {
         </td>
     `;
 
-    // Append the new row to the tbody
     tbody.appendChild(newRow);
 
     console.log("Row added for vehicle ID:", vehicle.id);

@@ -346,6 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
 document.getElementById('editVehicleForm').addEventListener('submit', function(e) {
     e.preventDefault();
     const formData = new FormData(this);
+    const vehicleId = formData.get('vehicle_id');
 
     fetch('edit_vehicle.php', {
         method: 'POST',
@@ -353,39 +354,82 @@ document.getElementById('editVehicleForm').addEventListener('submit', function(e
     })
     .then(response => response.json())
     .then(data => {
-        if (data.success) {
-            updateTableRow(data.vehicle);
-
-            updateDetailsModal(data.vehicle);
+        if (data.status === 'success') {
+            const vehicle = {
+                id: vehicleId,
+                reg_no: formData.get('reg_no'),
+                type: formData.get('type'),
+                make: formData.get('make'),
+                location: formData.get('location'),
+                status: formData.get('needs_repairs') === 'on' ? 'Needs Repairs' : 'No Repairs',
+                inspection_date: formData.get('inspection_date')
+            };
             
+            updateTableRow(vehicle);
             closeEditModal();
+            showAlert('Vehicle updated successfully', 'success');
         } else {
-            console.error('Update failed:', data.error);
+            showAlert(data.message || 'Error updating vehicle', 'error');
         }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('Error updating vehicle', 'error');
+    });
 });
+
+function showAlert(message, type = 'success') {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg ${
+        type === 'success' ? 'bg-green-500' : 'bg-red-500'
+    } text-white`;
+    alertDiv.textContent = message;
+    document.body.appendChild(alertDiv);
+    
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 3000);
+}
 
 function updateTableRow(vehicle) {
     const row = document.querySelector(`tr[data-vehicle-id="${vehicle.id}"]`);
-    if (row) {
-        row.innerHTML = `
-            <td class="p-4 border-b">${vehicle.reg_no}</td>
-            <td class="p-4 border-b">${vehicle.type}</td>
-            <td class="p-4 border-b">${vehicle.make}</td>
-            <td class="p-4 border-b">${vehicle.location}</td>
-            <td class="p-4 border-b">
-                ${vehicle.status === 'Needs Repairs' 
-                    ? '<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>'
-                    : '<span class="text-gray-500 font-bold">No Repairs</span>'}
-            </td>
-            <td class="p-4 border-b">${vehicle.inspection_date}</td>
-            <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
-                <button onclick="showDetails(${vehicle.id})" class="text-blue-500 hover:text-blue-700">ℹ</button>
-                <button onclick="editVehicle(${vehicle.id})" class="text-yellow-500 hover:text-yellow-700"><i class="fa-solid fa-pen-to-square"></i></button>
-                <a href="clear_vehicle.php?id=${vehicle.id}" class="text-green-500 hover:text-green-700">✔ Clear</a>
-                <button class="text-red-500 hover:text-red-700 delete-button" data-vehicle-id="${vehicle.id}" onclick="openDeleteModal(${vehicle.id})"><i class="fa-solid fa-trash-can"></i></button>
-            </td>
-        `;
-    }
+    if (!row) return;
+
+    const getStatusBadge = (status) => {
+        const badges = {
+            'Fixed': `<span class="text-green-500 font-bold">✔ Cleared</span>`,
+            'Needs Repairs': `<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>`
+        };
+        return badges[status] || `<span class="text-gray-500 font-bold">No Repairs</span>`;
+    };
+
+    row.innerHTML = `
+        <td class="p-4 border-b">${vehicle.reg_no}</td>
+        <td class="p-4 border-b">${vehicle.type}</td>
+        <td class="p-4 border-b">${vehicle.make}</td>
+        <td class="p-4 border-b">${vehicle.location}</td>
+        <td class="p-4 border-b">${getStatusBadge(vehicle.status)}</td>
+        <td class="p-4 border-b">${vehicle.inspection_date || 'N/A'}</td>
+        <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
+            <button onclick="showDetails(${vehicle.id})" 
+                    class="text-blue-500 hover:text-blue-700">ℹ</button>
+            ${vehicle.status === 'Fixed' ? `
+                <button class="text-yellow-500 opacity-50 cursor-not-allowed" disabled>
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button class="text-green-500 opacity-50 cursor-not-allowed" disabled>✔</button>
+            ` : `
+                <button onclick="editVehicle(${vehicle.id})" 
+                        class="text-yellow-500 hover:text-yellow-700">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <a href="clear_vehicle.php?id=${vehicle.id}" 
+                   class="text-green-500 hover:text-green-700">✔</a>
+            `}
+            <button onclick="openDeleteModal(${vehicle.id}, '${vehicle.reg_no}')"
+                    class="text-red-500 hover:text-red-700">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+        </td>
+    `;
 }

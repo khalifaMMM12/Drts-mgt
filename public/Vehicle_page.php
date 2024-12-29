@@ -111,26 +111,39 @@ $vehicles = $stmt->fetchAll();
     <!-- Main Content Container -->
     <div class="container mx-auto md:p-6 lg:px-8">
         <div class="flex items-center gap-2">
-            <h1 class="text-3xl font-bold tracking-tight text-gray-900 mb-6">Vehicle Inspection Status</h1>
+            <h1 class="text-3xl font-bold tracking-tight text-gray-900 mr-4 mb-6">Vehicle Inspection Status</h1>
     
-            <div class="flex items-center p-2 rounded bg-gray-800">
+            <div class="flex items-center p-2 rounded bg-gray-800 mb-6">
                 <div class="relative flex items-center space-x-2">
-                    <input type="radio" id="normalView" name="vehicleFilter" value="normal" class="sr-only peer" checked>
-                    <label for="normalView" class="px-3 py-1 text-sm cursor-pointer rounded peer-checked:bg-yellow-500 peer-checked:text-black text-white">
-                        All Vehicles
-                    </label>
-                                
-                    <input type="radio" id="clearedView" name="vehicleFilter" value="cleared" class="sr-only peer">
-                    <label for="clearedView" class="px-3 py-1 text-sm cursor-pointer rounded peer-checked:bg-yellow-500 peer-checked:text-black text-white">
-                        Cleared
-                    </label>
-        
-                    <input type="radio" id="repairsView" name="vehicleFilter" value="repairs" class="sr-only peer">
-                    <label for="repairsView" class="px-3 py-1 text-sm cursor-pointer rounded peer-checked:bg-yellow-500 peer-checked:text-black text-white">
-                        Needs Repairs
-                    </label>
+                    <div class="relative">
+                        <input type="radio" id="noRepairs" name="vehicleFilter" value="no_repairs" class="hidden">
+                        <label for="noRepairs" class="px-3 py-1 text-sm cursor-pointer rounded bg-gray-700 hover:bg-yellow-500 text-white transition-colors inline-block">
+                            No Repairs
+                        </label>
+                    </div>
+                    
+                    <div class="relative">
+                        <input type="radio" id="clearedView" name="vehicleFilter" value="cleared" class="hidden">
+                        <label for="clearedView" class="px-3 py-1 text-sm cursor-pointer rounded bg-gray-700 hover:bg-yellow-500 text-white transition-colors inline-block">
+                            Cleared
+                        </label>
+                    </div>
+                    
+                    <div class="relative">
+                        <input type="radio" id="repairsView" name="vehicleFilter" value="repairs" class="hidden">
+                        <label for="repairsView" class="px-3 py-1 text-sm cursor-pointer rounded bg-gray-700 hover:bg-yellow-500 text-white transition-colors inline-block">
+                            Needs Repairs
+                        </label>
+                    </div>
                 </div>
             </div>
+
+            <style>
+                input[type="radio"]:checked + label {
+                    background-color: #F59E0B;
+                    color: black;
+                }
+            </style>
         </div>
 
         <div id="logoutModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center">

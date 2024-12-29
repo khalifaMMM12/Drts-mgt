@@ -1,35 +1,33 @@
 <?php
 header('Content-Type: application/json');
-error_reporting(E_ALL);
-ini_set('display_errors', 0);
-
 require_once '../../config/db.php';
 
 try {
-    $filter = isset($_GET['filter']) ? $_GET['filter'] : 'normal';
+    $filter = $_GET['filter'] ?? 'all';
     
-    $sql = "SELECT * FROM vehicles WHERE 1=1";
+    $sql = "SELECT * FROM vehicles";
     
     switch($filter) {
         case 'cleared':
-            $sql .= " AND status = 'Fixed'";
+            $sql .= " WHERE status = 'Fixed'";
             break;
         case 'repairs':
-            $sql .= " AND status = 'Needs Repairs'";
+            $sql .= " WHERE status = 'Needs Repairs'";
             break;
-        case 'normal':
-            // Show all vehicles
+        case 'no_repairs':
+            $sql .= " WHERE status = 'No Repairs'";
+            break;
+        case 'all':
+            // No WHERE clause - show all vehicles
             break;
     }
     
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
-    $vehicles = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     echo json_encode([
         'status' => 'success',
-        'filter' => $filter,
-        'data' => $vehicles
+        'data' => $stmt->fetchAll(PDO::FETCH_ASSOC)
     ]);
 
 } catch (PDOException $e) {

@@ -402,10 +402,16 @@ $vehicles = $stmt->fetchAll();
                 </div>
                 <div>
                     <label>Needs Repairs:</label>
-                    <input type="checkbox" id="needsRepairs" name="needs_repairs" <?php echo ($vehicle['status'] === 'Needs Repairs' || $vehicle['needs_repairs'] == 1) ? 'checked' : ''; ?>>
-                    <div id="repairTypeField" class="mt-4 <?php echo $vehicle['status'] !== 'Needs Repairs' ? 'hidden' : ''; ?>">
+                    <input type="checkbox" 
+                        id="needsRepairs" 
+                        name="needs_repairs" 
+                        <?php echo ($vehicle['needs_repairs'] === '1') ? 'checked' : ''; ?>>
+                    <div id="repairTypeField" 
+                        style="display: <?php echo ($vehicle['needs_repairs'] === '1') ? 'block' : 'none'; ?>;">
                         <label>Type of Repair:</label>
-                        <textarea name="repair_type" id="repair_type" class="border p-2 w-full"><?php echo htmlspecialchars($vehicle['repair_type']); ?></textarea>
+                        <textarea name="repair_type" 
+                                id="repair_type" 
+                                class="border p-2 w-full"><?php echo htmlspecialchars($vehicle['repair_type'] ?? ''); ?></textarea>
                     </div>
                 </div>
                 <input type="hidden" name="id" id="vehicleId" value="<?php echo htmlspecialchars($vehicle['id']); ?>">

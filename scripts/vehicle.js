@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     ${vehicle.status === 'Fixed' ? `
                         <button class="text-yellow-500 opacity-50 cursor-not-allowed" 
                                 disabled title="This vehicle is fixed and cannot be edited">
-                            <i class="fa-solid fa-pen-to-square"></i>
+                            <i class="fa-solid fa-pen-to-squar</button>e"></i>
                         </button>
                         <button class="text-green-500 opacity-50 cursor-not-allowed" 
                                 disabled title="This vehicle is already cleared">✔ Clear</button>
@@ -139,21 +139,18 @@ function toggleRepairType() {
     const needsRepairsCheckbox = document.getElementById("needsRepairs");
     const repairTypeTextarea = document.getElementById("repair_type");
 
-    if (needsRepairsCheckbox.checked) {
-        repairField.classList.remove("hidden");
-        repairTypeTextarea.focus();
-    } else {
-        repairField.classList.add("hidden");
+    if (!repairField || !needsRepairsCheckbox || !repairTypeTextarea) {
+        console.error('Required elements not found');
+        return;
+    }
+
+    console.log('Checkbox state:', needsRepairsCheckbox.checked);
+    repairField.style.display = needsRepairsCheckbox.checked ? "block" : "none";
+    
+    if (!needsRepairsCheckbox.checked) {
         repairTypeTextarea.value = "";
     }
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    const needsRepairsCheckbox = document.getElementById("needsRepairs");
-    if (needsRepairsCheckbox) {
-        needsRepairsCheckbox.addEventListener("change", toggleRepairType);
-    }
-});
 
 function openModal() {
     const modal = document.getElementById("vehicleModal");
@@ -173,6 +170,24 @@ function openModal() {
     }, { once: true });
 }
 
+function closeEditModal() {
+    console.log("Closing Edit Modal");
+    document.getElementById("EditvehicleModal").classList.remove("active");
+}
+
+function showAlert(message, type = 'success') {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg ${
+        type === 'success' ? 'bg-green-500' : 'bg-red-500'
+    } text-white`;
+    alertDiv.textContent = message;
+    document.body.appendChild(alertDiv);
+    
+    // Remove alert after 3 seconds
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 3000);
+}
 
 const createResponseElement = () => {
     let responseMessage = document.getElementById('responseMessage');
@@ -236,7 +251,6 @@ document.getElementById('addVehicleForm').addEventListener('submit', function(ev
         }
         if (typeof addVehicleToTable === 'function') {
             addVehicleToTable(data.vehicle);
-            updateVehicles(data.vehicle);
         }
     
 

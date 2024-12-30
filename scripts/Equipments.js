@@ -358,6 +358,10 @@ function loadTableData(type) {
 
 loadTableData('solar');
 
+function deleteModal(){
+    
+}
+
 function deleteEquipment(equipmentId, equipmentType) {
     if (!confirm('Are you sure you want to delete this equipment?')) {
         return;

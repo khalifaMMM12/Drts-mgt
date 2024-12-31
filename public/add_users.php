@@ -10,8 +10,28 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['role'] !== 'admin') {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validate inputs
-    if (empty($_POST['username']) || empty($_POST['password']) || empty($_POST['email'])) {
-        $_SESSION['error_message'] = "All fields are required";
+    if (empty($_POST['username']) || empty($_POST['password'])) {
+        $_SESSION['error_message'] = "Username and password are required";
+        header('Location: add_UsersPage.php');
+        exit();
+    }
+
+    // Check for at least one permission
+    $permissions = [
+        'delete_vehicle', 'edit_vehicle', 'add_vehicle',
+        'delete_equipment', 'edit_equipment', 'add_equipment'
+    ];
+    
+    $has_permission = false;
+    foreach ($permissions as $permission) {
+        if (isset($_POST[$permission])) {
+            $has_permission = true;
+            break;
+        }
+    }
+
+    if (!$has_permission) {
+        $_SESSION['error_message'] = "At least one permission is required";
         header('Location: add_UsersPage.php');
         exit();
     }

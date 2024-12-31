@@ -55,7 +55,7 @@ $vehicles = $stmt->fetchAll();
                                 <i class="fas fa-user-plus mr-2"></i> Add User
                             </a>
                         <?php endif; ?>
-                        <a href="#" class="flex items-center px-4 py-2 mt-2 text-gray-100 bg-gray-900 hover:bg-gray-500 rounded-2xl">
+                        <a href="#" class="flex items-center px-4 py-2 text-gray-100 bg-gray-900 hover:bg-gray-500 rounded-2xl">
                             <i class="fa-solid fa-id-badge mr-2"></i>
                             Profile
                         </a>

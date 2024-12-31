@@ -39,7 +39,7 @@ unset($_SESSION['error_message']);
             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4"><?php echo $error_message; ?></div>
         <?php endif; ?>
 
-        <form method="POST" action="add_users.php" class="max-w-lg">
+        <form method="POST" action="add_users.php" class="max-w-lg" onsubmit="return validateForm()">
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="username">Username:</label>
                 <input type="text" name="username" id="username" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
@@ -47,27 +47,38 @@ unset($_SESSION['error_message']);
 
             <div class="mb-4">
                 <label class="block text-gray-700 text-sm font-bold mb-2" for="password">Password:</label>
-                <input type="password" name="password"  id="password" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
+                <input type="password" name="password" id="password" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700">
             </div>
 
             <div class="mb-6">
                 <h3 class="text-lg font-bold mb-3">Permissions</h3>
-                
                 <div class="mb-4">
                     <h4 class="font-bold mb-2">Vehicle Permissions</h4>
                     <div class="space-y-2">
-                        <label class="flex items-center"><input type="checkbox" name="delete_vehicle" class="mr-2"> Can Delete Vehicles</label>
-                        <label class="flex items-center"><input type="checkbox" name="edit_vehicle" class="mr-2"> Can Edit Vehicles</label>
-                        <label class="flex items-center"><input type="checkbox" name="add_vehicle" class="mr-2"> Can Add Vehicles</label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="delete_vehicle" id="delete_vehicle" class="mr-2"> Can Delete Vehicles
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="edit_vehicle" id="edit_vehicle" class="mr-2"> Can Edit Vehicles
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="add_vehicle" id="add_vehicle" class="mr-2"> Can Add Vehicles
+                        </label>
                     </div>
                 </div>
 
                 <div class="mb-4">
                     <h4 class="font-bold mb-2">Equipment Permissions</h4>
                     <div class="space-y-2">
-                        <label class="flex items-center"><input type="checkbox" name="delete_equipment" class="mr-2"> Can Delete Equipment</label>
-                        <label class="flex items-center"><input type="checkbox" name="edit_equipment" class="mr-2"> Can Edit Equipment</label>
-                        <label class="flex items-center"><input type="checkbox" name="add_equipment" class="mr-2"> Can Add Equipment</label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="delete_equipment" id="delete_equipment" class="mr-2"> Can Delete Equipment
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="edit_equipment" id="edit_equipment" class="mr-2"> Can Edit Equipment
+                        </label>
+                        <label class="flex items-center">
+                            <input type="checkbox" name="add_equipment" id="add_equipment" class="mr-2"> Can Add Equipment
+                        </label>
                     </div>
                 </div>
             </div>
@@ -77,5 +88,7 @@ unset($_SESSION['error_message']);
             </button>
         </form>
     </div>
+
+    <script src="../scripts/adduser.js"></script>
 </body>
 </html>

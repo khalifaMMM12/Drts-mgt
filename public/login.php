@@ -12,28 +12,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 
-   try {
-        $stmt = $pdo->prepare("SELECT * FROM login WHERE username = ?");
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM admin WHERE username = ?");
         $stmt->execute([$username]);
-        $username = $stmt->fetch();
+        $user = $stmt->fetch();
 
-        if (!$username) {
+        if (!$user) {
             $_SESSION['error'] = "Invalid username";
             header("Location: index.php");
             exit;
         }
         
-        if (!password_verify($password, $username['password'])) {
+        if (!password_verify($password, $user['password'])) {
             $_SESSION['error'] = "Invalid password";
             $_SESSION['temp_username'] = $_POST['username'];
             header("Location: index.php");
             exit;
         }
 
-            $_SESSION['loggedin'] = true;
-            $_SESSION['username'] = $username['username'];
-            header("Location: vehicle_page.php");
-            exit;
+        $_SESSION['loggedin'] = true;
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['role'] = 'admin'; 
+        header("Location: vehicle_page.php");
+        exit;
         
     } catch(PDOException $e) {
         $_SESSION['error'] = "Login error occurred";

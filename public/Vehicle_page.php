@@ -49,10 +49,12 @@ $vehicles = $stmt->fetchAll();
                         <a href="equipment.php" class="hover:bg-opacity-25 rounded-2xl bg-gray-900  hover:bg-gray-400 text-white px-4 py-2 flex items-center">
                             <i class="fas fa-tools mr-2"></i> Equipment
                         </a>
-                        <a href="#" class="flex items-center px-4 py-2 mt-2 text-gray-100 bg-gray-900 hover:bg-gray-500 rounded-2xl">
-                            <i class="fa-solid fa-user-plus mr-2"></i>
-                            Add Users
-                        </a>
+                        <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                            <a href="add_UsersPage.php" 
+                                class="hover:bg-opacity-25 rounded-2xl bg-gray-900  hover:bg-gray-400 text-white px-4 py-2 flex items-center">
+                                <i class="fas fa-user-plus mr-2"></i> Add User
+                            </a>
+                        <?php endif; ?>
                         <a href="#" class="flex items-center px-4 py-2 mt-2 text-gray-100 bg-gray-900 hover:bg-gray-500 rounded-2xl">
                             <i class="fa-solid fa-id-badge mr-2"></i>
                             Profile

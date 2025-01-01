@@ -16,7 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    // Check for at least one permission
     $permissions = [
         'delete_vehicle', 'edit_vehicle', 'add_vehicle',
         'delete_equipment', 'edit_equipment', 'add_equipment'
@@ -38,7 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $username = trim($_POST['username']);
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $email = trim($_POST['email']);
     $role = 'user';
     
     // Permissions
@@ -50,12 +48,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $can_add_equipment = isset($_POST['add_equipment']) ? 1 : 0;
 
     try {
-        $stmt = $pdo->prepare("INSERT INTO users (username, password, email, role, 
+        $stmt = $pdo->prepare("INSERT INTO users (username, password, role, 
             can_delete_vehicle, can_edit_vehicle, can_add_vehicle, 
             can_delete_equipment, can_edit_equipment, can_add_equipment) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
         
-        $stmt->execute([$username, $password, $email, $role, 
+        $stmt->execute([$username, $password, $role, 
             $can_delete_vehicle, $can_edit_vehicle, $can_add_vehicle,
             $can_delete_equipment, $can_edit_equipment, $can_add_equipment]);
 
@@ -64,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     } catch (PDOException $e) {
         $_SESSION['error_message'] = $e->getCode() == 23000 ? 
-            "Username or email already exists" : "Error creating user";
+            "Username already exists" : "Error creating user";
         header('Location: add_UsersPage.php');
         exit();
     }

@@ -15,25 +15,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
         $stmt = $pdo->prepare("SELECT * FROM admin WHERE username = ?");
         $stmt->execute([$username]);
+        $admin = $stmt->fetch();
+
+        if ($admin && password_verify($password, $admin['password'])) {
+            $_SESSION['loggedin'] = true;
+            $_SESSION['username'] = $admin['username'];
+            $_SESSION['role'] = 'admin';
+            header("Location: vehicle_page.php");
+            exit;
+        }
+
+        // If not admin, check users table
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
+        $stmt->execute([$username]);
         $user = $stmt->fetch();
 
-        if (!$user) {
-            $_SESSION['error'] = "Invalid username";
-            header("Location: index.php");
-            exit;
-        }
-        
-        if (!password_verify($password, $user['password'])) {
-            $_SESSION['error'] = "Invalid password";
-            $_SESSION['temp_username'] = $_POST['username'];
-            header("Location: index.php");
+        if ($user && password_verify($password, $user['password'])) {
+            $_SESSION['loggedin'] = true;
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['role'] = 'user';
+            $_SESSION['permissions'] = [
+                'delete_vehicle' => $user['can_delete_vehicle'],
+                'edit_vehicle' => $user['can_edit_vehicle'],
+                'add_vehicle' => $user['can_add_vehicle'],
+                'delete_equipment' => $user['can_delete_equipment'],
+                'edit_equipment' => $user['can_edit_equipment'],
+                'add_equipment' => $user['can_add_equipment']
+            ];
+            header("Location: vehicle_page.php");
             exit;
         }
 
-        $_SESSION['loggedin'] = true;
-        $_SESSION['username'] = $user['username'];
-        $_SESSION['role'] = 'admin'; 
-        header("Location: vehicle_page.php");
+        // If no match found
+        $_SESSION['error'] = "Invalid username or password";
+        header("Location: index.php");
         exit;
         
     } catch(PDOException $e) {
@@ -43,6 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
+// Redirect if accessed directly
 header("Location: index.php");
 exit;
 ?>

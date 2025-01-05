@@ -29,6 +29,11 @@ unset($_SESSION['error_message']);
     <link href="../style/output.css" rel="stylesheet">
 </head>
 <body class="bg-gray-200">
+    <button id="mobile-menu-button" class="md:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-yellow-500 text-black">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+        </svg>
+    </button>
 
 <div class="flex h-screen">
     <div class="hidden md:flex flex-col w-64  rounded-r-2xl shadow-2xl bg-yellow-500">
@@ -90,7 +95,7 @@ unset($_SESSION['error_message']);
         </div>
     </div>
 
-        <div id="logoutModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center">
+        <div id="logoutModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 z-50 hidden items-center justify-center">
             <div class="bg-white p-8 rounded-lg shadow-xl">
                 <h2 class="text-xl font-bold mb-4">Confirm Logout</h2>
                 <p class="mb-6">Are you sure you want to logout?</p>
@@ -118,24 +123,27 @@ unset($_SESSION['error_message']);
         <form method="POST" action="add_users.php" class="w-full" onsubmit="return validateForm()">
             <div class="grid md:grid-cols-2 gap-8">
                 <!-- Left Column - User Details -->
-                <div class="border-r pr-8">
+                <div class="border-r pr-8 mr-2">
                     <h3 class="text-xl font-bold mb-6 pb-2 border-b">User Details</h3>
                     <div class="space-y-6">
                         <div>
-                            <label class="block text-gray-700 text-sm font-bold mb-2" for="username">Username:</label>
+                            <label class="block font-bold text-black-500" for="username">Username:</label>
                             <input type="text" name="username" id="username" required 
-                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:border-yellow-500">
+                                class="w-full p-2 mb-6 text-black-700 border-b-4 border-amber-500 outline-none focus:bg-gray-300">
                         </div>
                         <div>
-                            <label class="block text-gray-700 text-sm font-bold mb-2" for="password">Password:</label>
+                            <label class="block font-bold text-black-500" for="password">Password:</label>
+                            <div class="relative">
                             <input type="password" name="password" id="password" required 
-                                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:border-yellow-500">
+                                    class="w-full p-2 mb-6 text-black-700 border-b-4 border-amber-500 outline-none focus:bg-gray-300">
+                                   <i class="fas fa-eye absolute right-3 top-3 cursor-pointer z-10" id="togglePassword"></i>
+                            </div>       
                         </div>
                     </div>
                 </div>
 
                 <!-- Right Column - Permissions -->
-                <div>
+                <div class="">
                     <h3 class="text-xl font-bold mb-6 pb-2 border-b">Permissions</h3>
                     <!-- Vehicle Permissions -->
                     <div class="mb-8">
@@ -190,7 +198,7 @@ unset($_SESSION['error_message']);
     </div>
     </div>
 
-    <script src="../scripts/vehicle.js"></script>
+    <!-- <script src="../scripts/vehicle.js"></script> -->
     <script src="https://kit.fontawesome.com/79a49acde1.js" crossorigin="anonymous"></script>
     <script src="../scripts/adduser.js"></script>
 </body>

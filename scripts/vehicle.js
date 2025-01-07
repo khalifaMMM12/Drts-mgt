@@ -67,25 +67,27 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
                     <button onclick="showDetails(${vehicle.id})" 
                             class="text-blue-500 hover:text-blue-700">ℹ</button>
-                    ${vehicle.status === 'Fixed' ? `
+                    ${(hasPermission('edit_vehicle') || isAdmin) && vehicle.status !== 'Fixed' ? `
                         <button class="text-yellow-500 opacity-50 cursor-not-allowed" 
                                 disabled title="This vehicle is fixed and cannot be edited">
                             <i class="fa-solid fa-pen-to-squar</button>e"></i>
                         </button>
                         <button class="text-green-500 opacity-50 cursor-not-allowed" 
                                 disabled title="This vehicle is already cleared">✔ Clear</button>
-                    ` : hasPermission('edit_vehicle') ? `
+                    ` : hasPermission('edit_vehicle') ?`
                         <button onclick="editVehicle(${vehicle.id})" 
                                 class="text-yellow-500 hover:text-yellow-700">
                             <i class="fa-solid fa-pen-to-square"></i>
                         </button>
                         <a href="clear_vehicle.php?id=${vehicle.id}" 
                            class="text-green-500 hover:text-green-700">✔ Clear</a>
-                    `}
+                    `: ''}
+                    ${hasPermission('delete_vehicle') ? `
                     <button onclick="openDeleteModal(${vehicle.id}, '${vehicle.reg_no}')"
                             class="text-red-500 hover:text-red-700">
                         <i class="fa-solid fa-trash-can"></i>
                     </button>
+                    ` : ''}
                 </td>
                 </tr>
             `).join('');
@@ -156,13 +158,17 @@ function toggleRepairType() {
 
 function hasPermission(permission) {
     
-    if (typeof isAdmin !== 'undefined' && isAdmin) {
+    if (window.isAdmin === true) {
         return true;
     }
-    if (typeof userPermissions === 'undefined') {
-        return false;
+    
+    // Check if permissions exist and are properly structured
+    if (typeof window.userPermissions === 'object' && window.userPermissions !== null) {
+        return Boolean(window.userPermissions[permission]);
     }
-    return userPermissions[permission] === 1;
+    
+    console.warn('Permissions not properly initialized');
+    return false;
 }
 
 function openModal() {
@@ -171,7 +177,7 @@ function openModal() {
     console.log("add vehicle modal")
 
     if (!hasPermission('add_vehicle')) {
-        alert('You do not have permission to add vehicles');
+        showAlert('You do not have permission to add vehicles');
         return;
     }
 

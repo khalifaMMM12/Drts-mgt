@@ -220,10 +220,12 @@ $vehicles = $stmt->fetchAll();
                                 
                                 <?php if ($vehicle['status'] === 'Fixed'): ?>
                                     <!-- Disabled edit button for fixed vehicles -->
-                                    <button 
-                                        class="text-yellow-500 opacity-50 cursor-not-allowed" disabled title="This vehicle is fixed and cannot be edited">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
+                                    <?php if (hasPermission('edit_vehicle') || isAdmin()): ?>
+                                        <button 
+                                            class="text-yellow-500 opacity-50 cursor-not-allowed" disabled title="This vehicle is fixed and cannot be edited">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                    <?php endif; ?>
                                     <button 
                                         class="text-green-500 opacity-50 cursor-not-allowed" 
                                         disabled 
@@ -471,14 +473,18 @@ $vehicles = $stmt->fetchAll();
 </div>
 
     <!-- Script -->
+    <script>
+         window.userPermissions = <?php 
+            echo json_encode($_SESSION['permissions'] ?? [], JSON_FORCE_OBJECT); 
+        ?>;
+        window.isAdmin = <?php 
+            echo isset($_SESSION['role']) && $_SESSION['role'] === 'admin' ? 'true' : 'false'; 
+        ?>;
+    </script>
     <script src="https://kit.fontawesome.com/79a49acde1.js" crossorigin="anonymous"></script>
     <script src="../scripts/vehicle.js"></script>
     <script src="../scripts/editVehicle.js"></script>
     <script src="../scripts/delete.js"></script>
 
-    <script>
-        const userPermissions = <?php echo json_encode($_SESSION['permissions'] ?? []); ?>;
-        const isAdmin = <?php echo isset($_SESSION['role']) && $_SESSION['role'] === 'admin' ? 'true' : 'false'; ?>;
-    </script>
 </body>
 </html>

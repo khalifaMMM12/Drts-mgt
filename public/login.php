@@ -34,14 +34,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['loggedin'] = true;
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = 'user';
-            $_SESSION['permissions'] = [
-                'delete_vehicle' => $user['can_delete_vehicle'],
-                'edit_vehicle' => $user['can_edit_vehicle'],
-                'add_vehicle' => $user['can_add_vehicle'],
-                'delete_equipment' => $user['can_delete_equipment'],
-                'edit_equipment' => $user['can_edit_equipment'],
-                'add_equipment' => $user['can_add_equipment']
-            ];
+            $_SESSION['permissions'] = array(
+                'delete_vehicle' => (int)$user['can_delete_vehicle'],
+                'edit_vehicle' => (int)$user['can_edit_vehicle'],
+                'add_vehicle' => (int)$user['can_add_vehicle'],
+                'delete_equipment' => (int)$user['can_delete_equipment'],
+                'edit_equipment' => (int)$user['can_edit_equipment'],
+                'add_equipment' => (int)$user['can_add_equipment']
+            );
             header("Location: vehicle_page.php");
             exit;
         }

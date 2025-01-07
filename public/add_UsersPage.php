@@ -129,13 +129,13 @@ unset($_SESSION['error_message']);
                         <div>
                             <label class="block font-bold text-black-500" for="username">Username:</label>
                             <input type="text" name="username" id="username" required 
-                                class="w-full p-2 mb-6 text-black-700 border-b-4 border-amber-500 outline-none focus:bg-gray-300">
+                                class="w-full p-2 mb-6 shadow-lg text-black-700 border-b-4 border-amber-500 outline-none focus:bg-gray-300">
                         </div>
                         <div>
                             <label class="block font-bold text-black-500" for="password">Password:</label>
                             <div class="relative">
                             <input type="password" name="password" id="password" required 
-                                    class="w-full p-2 mb-6 text-black-700 border-b-4 border-amber-500 outline-none focus:bg-gray-300">
+                                    class="w-full p-2 mb-6 shadow-lg text-black-700 border-b-4 border-amber-500 outline-none focus:bg-gray-300">
                                    <i class="fas fa-eye absolute right-3 top-3 cursor-pointer z-10" id="togglePassword"></i>
                             </div>       
                         </div>

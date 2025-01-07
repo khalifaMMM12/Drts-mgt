@@ -6,6 +6,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     exit;
 }
 
+require_once '../includes/auth_functions.php';
 include '../config/db.php';
 
 $search = isset($_GET['search']) ? $_GET['search'] : '';
@@ -78,10 +79,12 @@ $vehicles = $stmt->fetchAll();
 
                     <div class="flex flex-wrap md:flex-nowrap gap-2 md:gap-4">
                         <div class="flex flex-wrap md:flex-nowrap gap-2 md:gap-4">
-                            <button onclick="openModal()" 
-                                class="rounded bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 shadow-lg flex items-center gap-2">
-                                <i class="fas fa-plus"></i> Add Vehicle
-                            </button>
+                            <?php if (hasPermission('add_vehicle') || isAdmin()): ?>
+                                <button onclick="openModal()" 
+                                    class="rounded bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 shadow-lg flex items-center gap-2">
+                                    <i class="fas fa-plus"></i> Add Vehicle
+                                </button>
+                            <?php endif; ?>
                             
                             <button onclick="openLogoutModal()" 
                                 class="rounded bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 shadow-lg flex items-center gap-2">
@@ -228,17 +231,23 @@ $vehicles = $stmt->fetchAll();
                                     </button>
                                 <?php else: ?>
                                     <!-- Active edit button for non-fixed vehicles -->
-                                <button 
-                                    id="editButton-<?php echo $vehicle['id']; ?>" 
-                                    onclick="editVehicle(<?php echo $vehicle['id']; ?>)" 
-                                    class="text-yellow-500 hover:text-yellow-700 <?php echo $vehicle['status'] === 'fixed' ? 'cursor-not-allowed opacity-50' : ''; ?>" 
-                                    <?php echo $vehicle['status'] === 'fixed' ? 'disabled' : ''; ?>><i class="fa-solid fa-pen-to-square"></i>
-                                </button>   
+                                <?php if (hasPermission('edit_vehicle') || isAdmin()): ?>
+                                    <button 
+                                        id="editButton-<?php echo $vehicle['id']; ?>" 
+                                        onclick="editVehicle(<?php echo $vehicle['id']; ?>)" 
+                                        class="text-yellow-500 hover:text-yellow-700 <?php echo $vehicle['status'] === 'fixed' ? 'cursor-not-allowed opacity-50' : ''; ?>" 
+                                        <?php echo $vehicle['status'] === 'fixed' ? 'disabled' : ''; ?>><i class="fa-solid fa-pen-to-square"></i>
+                                    </button>  
+                                <?php endif; ?>
+
                                 <a href="clear_vehicle.php?id=<?php echo $vehicle['id']; ?>" class="text-green-500 hover:text-green-700">✔ Clear</a>
                                 <?php endif; ?>
-                                <button class="text-red-500 hover:text-red-700 delete-button" data-vehicle-id="<?php echo $vehicle['id']; ?>" data-vehicle-regno="<?php echo $vehicle['reg_no']; ?>" onclick="openDeleteModal(<?php echo $vehicle['id']; ?>, '<?php echo $vehicle['reg_no']; ?>')">
-                                    <i class="fa-solid fa-trash-can"></i>
-                                </button>                            
+                                
+                                <?php if (hasPermission('delete_vehicle') || isAdmin()): ?>
+                                    <button class="text-red-500 hover:text-red-700 delete-button" data-vehicle-id="<?php echo $vehicle['id']; ?>" data-vehicle-regno="<?php echo $vehicle['reg_no']; ?>" onclick="openDeleteModal(<?php echo $vehicle['id']; ?>, '<?php echo $vehicle['reg_no']; ?>')">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button> 
+                                <?php endif; ?>                           
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -466,5 +475,10 @@ $vehicles = $stmt->fetchAll();
     <script src="../scripts/vehicle.js"></script>
     <script src="../scripts/editVehicle.js"></script>
     <script src="../scripts/delete.js"></script>
+
+    <script>
+        const userPermissions = <?php echo json_encode($_SESSION['permissions'] ?? []); ?>;
+        const isAdmin = <?php echo isset($_SESSION['role']) && $_SESSION['role'] === 'admin' ? 'true' : 'false'; ?>;
+    </script>
 </body>
 </html>

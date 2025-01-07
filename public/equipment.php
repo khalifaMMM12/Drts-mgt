@@ -6,6 +6,9 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header("Location: index.php");
     exit;
 }
+
+require_once '../includes/auth_functions.php';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -77,11 +80,13 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                     </div>
 
                     <div class="flex flex-wrap md:flex-nowrap gap-2 md:gap-4">
-                        <button id="addEquipmentButton" 
-                            class="rounded bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 shadow-lg flex items-center gap-2">
-                            <i class="fas fa-plus"></i> Add Equipment
-                        </button>
-                        
+                        <?php if (hasPermission('add_equipment')): ?>
+                            <button id="addEquipmentButton" 
+                                class="rounded bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 shadow-lg flex items-center gap-2">
+                                <i class="fas fa-plus"></i> Add Equipment
+                            </button>
+                        <?php endif ?>
+
                         <button onclick="openLogoutModal()" 
                             class="rounded bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 shadow-lg flex items-center gap-2">
                             <i class="fas fa-sign-out-alt"></i> Logout
@@ -111,7 +116,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                             Cancel
                         </button>
                         <button type="submit" class="bg-yellow-500 text-white py-2 px-4 rounded-lg shadow hover:bg-yellow-600">
-                            Add Equipment
+                            Submit
                         </button>
                     </div>
                 </form>

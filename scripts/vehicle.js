@@ -1,3 +1,5 @@
+
+
 function openLogoutModal() {
     document.getElementById('logoutModal').classList.remove('hidden');
     document.getElementById('logoutModal').classList.add('flex');
@@ -72,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </button>
                         <button class="text-green-500 opacity-50 cursor-not-allowed" 
                                 disabled title="This vehicle is already cleared">✔ Clear</button>
-                    ` : `
+                    ` : hasPermission('edit_vehicle') ? `
                         <button onclick="editVehicle(${vehicle.id})" 
                                 class="text-yellow-500 hover:text-yellow-700">
                             <i class="fa-solid fa-pen-to-square"></i>
@@ -152,10 +154,27 @@ function toggleRepairType() {
     }
 }
 
+function hasPermission(permission) {
+    
+    if (typeof isAdmin !== 'undefined' && isAdmin) {
+        return true;
+    }
+    if (typeof userPermissions === 'undefined') {
+        return false;
+    }
+    return userPermissions[permission] === 1;
+}
+
 function openModal() {
     const modal = document.getElementById("vehicleModal");
     const modalContent = document.getElementById("vehicleModalContent");
-  
+    console.log("add vehicle modal")
+
+    if (!hasPermission('add_vehicle')) {
+        alert('You do not have permission to add vehicles');
+        return;
+    }
+
     modal.classList.add("active");
     modalContent.classList.remove("hide");
 }

@@ -2,6 +2,11 @@
 function editVehicle(vehicleId) {
     console.log("Opening edit modal for vehicle ID:", vehicleId);
 
+    if (!hasPermission('edit_vehicle')) {
+        alert('You do not have permission to edit vehicles');
+        return;
+    }
+    
     const modal = document.getElementById("EditvehicleModal");
     const imageGallery = document.getElementById("editImagePreview");
     modal.classList.add("active");

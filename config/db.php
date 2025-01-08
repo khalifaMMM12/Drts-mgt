@@ -1,6 +1,6 @@
 <?php
 $host = 'localhost';
-$db = 'vehicleinspection_db';
+$db = 'drtsgovn_assets_db';
 $user = 'root';
 $pass = '';
 

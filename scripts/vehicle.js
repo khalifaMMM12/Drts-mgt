@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             tbody.innerHTML = data.data.map(vehicle => `
-                <tr class="hover:bg-gray-50">
+                <tr class="hover:bg-gray-300" data-vehicle-id="<?php echo $vehicle['id']; ?>">
                     <td class="p-4 border-b">${vehicle.reg_no}</td>
                     <td class="p-4 border-b">${vehicle.type}</td>
                     <td class="p-4 border-b">${vehicle.make}</td>
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
                     <button onclick="showDetails(${vehicle.id})" 
                             class="text-blue-500 hover:text-blue-700">ℹ</button>
-                    ${(hasPermission('edit_vehicle') || isAdmin) && vehicle.status !== 'Fixed' ? `
+                    ${vehicle.status === 'Fixed' ? `
                         <button class="text-yellow-500 opacity-50 cursor-not-allowed" 
                                 disabled title="This vehicle is fixed and cannot be edited">
                             <i class="fa-solid fa-pen-to-squar</button>e"></i>
@@ -323,7 +323,7 @@ function addVehicleToTable(vehicle) {
             <button onclick="showDetails(${vehicle.id})" class="text-blue-500 hover:text-blue-700">ℹ</button>
             <button onclick="editVehicle(${vehicle.id})" class="text-yellow-500 hover:text-yellow-700"><i class="fa-solid fa-pen-to-square"></i></button>
             <a href="_vehicle.php?id=${vehicle.id}" class="text-green-500 hover:text-green-700">✔ Clear</a>
-            <button class="text-red-500 hover:text-red-700 delete-button" data-vehicle-id="${vehicle.id}" onclick="openDeleteModal(${vehicle.id})"><i class="fa-solid fa-trash-can"></i></button>
+            <button class="text-red-500 hover:text-red-700 delete-button" data-vehicle-id="${vehicle.id}" data-vehicle-reg-no="${vehicle.reg_no}"><i class="fa-solid fa-trash-can"></i></button>
         </td>
     `;
 

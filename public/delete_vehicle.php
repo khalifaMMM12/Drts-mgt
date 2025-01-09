@@ -3,6 +3,7 @@
 
 // Database connection
 include '../config/db.php';
+header('Content-Type: application/json');
 
 if (isset($_GET['id'])) {
     $vehicleId = $_GET['id'];
@@ -12,12 +13,23 @@ if (isset($_GET['id'])) {
         $stmt = $pdo->prepare("DELETE FROM vehicles WHERE id = ?");
         $stmt->execute([$vehicleId]);
 
-        // Redirect back to the main page
-        header("Location: vehicle_page.php");
+        echo json_encode([
+            'success' => true,
+            'message' => 'Vehicle deleted successfully'
+        ]);
         exit();
     } catch (PDOException $e) {
-        die("Error deleting vehicle: " . $e->getMessage());
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Error deleting vehicle'
+        ]);
+        exit();
     }
 } else {
-    echo "Vehicle ID not specified.";
+    http_response_code(400);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Vehicle ID not specified'
+    ]);
 }

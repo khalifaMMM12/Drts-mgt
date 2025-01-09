@@ -200,7 +200,7 @@ $vehicles = $stmt->fetchAll();
                 </thead>
                 <tbody>
                     <?php foreach ($vehicles as $vehicle): ?>
-                        <tr data-vehicle-id="<?php echo $vehicle['id']; ?>">
+                        <tr class="hover:bg-gray-500" data-vehicle-id="<?php echo $vehicle['id']; ?>">
                             <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['reg_no']); ?></td>
                             <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['type']); ?></td>
                             <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['make']); ?></td>
@@ -219,20 +219,16 @@ $vehicles = $stmt->fetchAll();
                                 <button onclick="showDetails(<?php echo $vehicle['id']; ?>)" class="text-blue-500 hover:text-blue-700">ℹ</button>
                                 
                                 <?php if ($vehicle['status'] === 'Fixed'): ?>
-                                    <!-- Disabled edit button for fixed vehicles -->
-                                    <?php if (hasPermission('edit_vehicle') || isAdmin()): ?>
                                         <button 
                                             class="text-yellow-500 opacity-50 cursor-not-allowed" disabled title="This vehicle is fixed and cannot be edited">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </button>
-                                    <?php endif; ?>
                                     <button 
                                         class="text-green-500 opacity-50 cursor-not-allowed" 
                                         disabled 
                                         title="This vehicle is already cleared">✔ Clear
                                     </button>
                                 <?php else: ?>
-                                    <!-- Active edit button for non-fixed vehicles -->
                                 <?php if (hasPermission('edit_vehicle') || isAdmin()): ?>
                                     <button 
                                         id="editButton-<?php echo $vehicle['id']; ?>" 
@@ -338,7 +334,7 @@ $vehicles = $stmt->fetchAll();
                     
                     <div>
                         <label>Needs Repairs:</label>
-                        <input type="checkbox" id="needsRepairs" name="needs_repairs" <?php echo $vehicle['status'] === 'Needs Repairs' ? 'checked' : ''; ?> onclick="toggleRepairType()">
+                        <input type="checkbox" id="needsRepairs" name="needs_repairs" onclick="toggleRepairType()">
                         <div id="repairTypeField" class="hidden mt-4">
                             <label>Type of Repair:</label>
                             <textarea name="repair_type" class="border p-2 w-full"></textarea>

@@ -4,26 +4,26 @@ require_once '../../config/db.php';
 
 try {
     $filter = $_GET['filter'] ?? 'all';
-    
-    $sql = "SELECT * FROM vehicles";
+    $search = isset($_GET['search']) ? $_GET['search'] : '';
+
+    $sql = "SELECT * FROM vehicles WHERE (reg_no LIKE :search OR type LIKE :search OR location LIKE :search)";
     
     switch($filter) {
         case 'cleared':
-            $sql .= " WHERE status = 'Fixed'";
+            $sql .= " AND status = 'Fixed'";
             break;
         case 'repairs':
-            $sql .= " WHERE status = 'Needs Repairs'";
+            $sql .= " AND status = 'Needs Repairs'";
             break;
         case 'no_repairs':
-            $sql .= " WHERE status = 'No Repairs'";
+            $sql .= " AND status = 'No Repairs'";
             break;
         case 'all':
-            // No WHERE clause - show all vehicles
             break;
     }
     
     $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    $stmt->execute([':search' => '%' . $search . '%']);
     
     echo json_encode([
         'status' => 'success',

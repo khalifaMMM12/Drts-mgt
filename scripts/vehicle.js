@@ -20,6 +20,7 @@ document.getElementById('mobile-menu-button').addEventListener('click', () => {
 document.addEventListener('DOMContentLoaded', function() {
     const radioButtons = document.querySelectorAll('input[name="vehicleFilter"]');
     const tbody = document.querySelector('table tbody');
+    const searchInput = document.getElementById('searchInput');
     let currentFilter = null;
     
     function getStatusBadge(status) {
@@ -30,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return badges[status] || `<span class="text-gray-500 font-bold"> ${status}</span>`;
     }
 
-    async function updateVehicles(filter) {
+    async function updateVehicles(filter, search= "") {
         try {
             tbody.innerHTML = `
                 <tr>
@@ -40,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </tr>
             `;
             
-            const response = await fetch(`api/filter_vehicles.php?filter=${filter}`);
+            const response = await fetch(`api/filter_vehicles.php?filter=${filter}&search=${search}`);
             const data = await response.json();
             
             if (!response.ok || data.status === 'error') {
@@ -57,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             tbody.innerHTML = data.data.map(vehicle => `
-                <tr class="hover:bg-gray-300" data-vehicle-id="<?php echo $vehicle['id']; ?>">
+                <tr class="hover:bg-gray-300" data-vehicle-id="${vehicle.id}">
                     <td class="p-4 border-b">${vehicle.reg_no}</td>
                     <td class="p-4 border-b">${vehicle.type}</td>
                     <td class="p-4 border-b">${vehicle.make}</td>
@@ -112,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (currentFilter === filterValue) {
             clickedFilter.checked = false;
             currentFilter = null;
-            updateVehicles('all');
+            updateVehicles('all', searchInput.value);
             
             document.querySelectorAll('input[name="vehicleFilter"] + label').forEach(label => {
                 label.classList.remove('bg-yellow-500');
@@ -120,7 +121,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         } else {
             currentFilter = filterValue;
-            updateVehicles(filterValue);
+            updateVehicles(filterValue, searchInput.value);
             
             document.querySelectorAll('input[name="vehicleFilter"] + label').forEach(label => {
                 label.classList.remove('bg-yellow-500');
@@ -133,6 +134,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     radioButtons.forEach(radio => {
         radio.addEventListener('click', handleFilterClick);
+    });
+
+    searchInput.addEventListener('input', () => {
+        updateVehicles(currentFilter || 'all', searchInput.value);
     });
 
     updateVehicles('all');

@@ -107,6 +107,7 @@ $vehicles = $stmt->fetchAll();
                     <form method="GET" action="vehicle_page.php" class="flex">
                         <input type="text" 
                             name="search" 
+                            id="searchInput"
                             placeholder="Search by registration, type, or location" 
                             value="<?php echo htmlspecialchars($search); ?>"
                             class="border border-yellow-400 p-2 w-full rounded-l focus:border-yellow-500 focus:ring focus:ring-yellow-200 focus:ring-opacity-50">

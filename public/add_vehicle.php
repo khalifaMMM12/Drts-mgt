@@ -1,11 +1,9 @@
 <?php
 include '../config/db.php';
 
-// Disable error display in production
 error_reporting(0);
 ini_set('display_errors', 0);
 
-// Set response header to JSON
 header('Content-Type: application/json');
 
 try {
@@ -54,7 +52,11 @@ try {
     // Handle image uploads
     if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-        $maxFileSize = 5 * 1024 * 1024; // 5MB
+        $maxFileSize = 5 * 1024 * 1024;
+
+        if (count($_FILES['images']['name']) > 2) {
+            throw new Exception('You can upload a maximum of 2 images');
+        }
 
         foreach ($_FILES['images']['tmp_name'] as $key => $tmp_name) {
             if (empty($tmp_name)) continue;

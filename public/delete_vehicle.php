@@ -1,7 +1,4 @@
 <?php
-// delete_vehicle.php
-
-// Database connection
 include '../config/db.php';
 header('Content-Type: application/json');
 
@@ -9,10 +6,23 @@ if (isset($_GET['id'])) {
     $vehicleId = $_GET['id'];
 
     try {
-        // Prepare and execute the delete statement
+        $stmt = $pdo->prepare("SELECT images FROM vehicles WHERE id = ?");
+        $stmt->execute([$vehicleId]);
+        $vehicle = $stmt->fetch(PDO::FETCH_ASSOC);
+        $imageNames = explode(',', $vehicle['images']);
+
         $stmt = $pdo->prepare("DELETE FROM vehicles WHERE id = ?");
         $stmt->execute([$vehicleId]);
 
+        foreach ($imageNames as $imageName) {
+            if ($imageName) {
+                $filePath = "../assets/vehicles/" . $imageName;
+                if (file_exists($filePath)) {
+                    unlink($filePath);
+                }
+            }
+        }
+        
         echo json_encode([
             'success' => true,
             'message' => 'Vehicle deleted successfully'

@@ -351,7 +351,7 @@ $vehicles = $stmt->fetchAll();
                                 <span class="block text-base font-semibold relative text-blue-900 group-hover:text-blue-500">
                                     Upload Images
                                 </span>
-                                <span class="mt-0.5 block text-sm text-gray-500">Max 2 MB</span>
+                                <span class="mt-0.5 block text-sm text-gray-500">Max 2 Images</span>
                             </div>
                             <span class="absolute inset-0 border-dashed border-2 border-gray-400/60 rounded-3xl group-hover:border-gray-300 z-0"></span>
                             <span class="absolute inset-0 bg-gray-100 rounded-3xl transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:scale-105 active:scale-95 z-0"></span>

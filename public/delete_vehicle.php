@@ -26,7 +26,7 @@ if (isset($_GET['id'])) {
         echo json_encode([
             'success' => true,
             'message' => 'Vehicle deleted successfully'
-        ]);
+        ]); 
         exit();
     } catch (PDOException $e) {
         http_response_code(500);

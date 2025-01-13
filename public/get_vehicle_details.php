@@ -7,7 +7,6 @@ if (isset($_GET['id']) && !empty(trim($_GET['id']))) {
     $vehicleId = trim($_GET['id']);  
 
     try {
-        // Validate that ID is numeric (if applicable)
         if (!is_numeric($vehicleId)) {
             http_response_code(400);
             echo json_encode(['error' => 'Invalid vehicle ID format']);
@@ -30,14 +29,13 @@ if (isset($_GET['id']) && !empty(trim($_GET['id']))) {
                 'type' => $vehicle['type'],
                 'make' => $vehicle['make'],
                 'location' => $vehicle['location'],
-                'status' => $vehicle['status'] ?? 'Unknown', // Fallback if status is null
-                'repair_type' => $vehicle['repair_type'] ?? '', // Fallback for repair_type
-                'needs_repairs' => $vehicle['needs_repairs'] ?? 0, // Add needs_repairs
+                'status' => $vehicle['status'] ?? 'Unknown', 
+                'repair_type' => $vehicle['repair_type'] ?? '', 
+                'needs_repairs' => (int)($vehicle['needs_repairs'] ?? 0), 
                 'inspection_date' => $vehicle['inspection_date'],
-                'images' => $images // Return images as an array
+                'images' => $images 
             ]);
         } else {
-            // Vehicle not found
             http_response_code(404);
             echo json_encode(['error' => 'Vehicle not found']);
         }

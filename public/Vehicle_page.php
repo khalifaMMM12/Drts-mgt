@@ -335,7 +335,7 @@ $vehicles = $stmt->fetchAll();
                     
                     <div>
                         <label>Needs Repairs:</label>
-                        <input type="checkbox" id="needsRepairs" name="needs_repairs" onclick="toggleRepairType()">
+                        <input type="checkbox" id="needsRepairs" name="needs_repairs" value= 1 onclick="toggleRepairType()">
                         <div id="repairTypeField" class="hidden mt-4">
                             <label>Type of Repair:</label>
                             <textarea name="repair_type" class="border p-2 w-full"></textarea>
@@ -409,17 +409,11 @@ $vehicles = $stmt->fetchAll();
                     <input type="date" name="inspection_date" id="inspection_date" value="<?php echo htmlspecialchars($vehicle['inspection_date']); ?>" class="border p-2 w-full mb-4">
                 </div>
                 <div>
-                    <label>Needs Repairs:</label>
-                    <input type="checkbox" 
-                        id="needsRepairs" 
-                        name="needs_repairs" 
-                        <?php echo ($vehicle['needs_repairs'] === '1') ? 'checked' : ''; ?>>
-                    <div id="repairTypeField" 
-                        style="display: <?php echo ($vehicle['needs_repairs'] === '1') ? 'block' : 'none'; ?>;">
-                        <label>Type of Repair:</label>
-                        <textarea name="repair_type" 
-                                id="repair_type" 
-                                class="border p-2 w-full"><?php echo htmlspecialchars($vehicle['repair_type'] ?? ''); ?></textarea>
+                    <label class="block">Needs Repairs:</label>
+                    <input type="checkbox" id="needsRepairs" name="needs_repairs" onclick="toggleRepairType()" <?php echo ($vehicle['needs_repairs'] === "1") ? 'checked' : ''; ?>>
+                    <div id="repairTypeField" class="mt-4" style="display: <?php echo ($vehicle['needs_repairs'] === "1") ? 'block' : 'none'; ?>;">
+                        <label class="block">Type of Repair:</label>
+                        <textarea name="repair_type" id="repair_type" class="border p-2 w-full"><?php echo htmlspecialchars($vehicle['repair_type']); ?></textarea>
                     </div>
                 </div>
                 <input type="hidden" name="id" id="vehicleId" value="<?php echo htmlspecialchars($vehicle['id']); ?>">

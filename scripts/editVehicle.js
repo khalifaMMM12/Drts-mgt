@@ -23,24 +23,25 @@ function editVehicle(vehicleId) {
             document.getElementById("location").value = vehicle.location || "";
             document.getElementById("inspection_date").value = vehicle.inspection_date || "";
             document.getElementById("vehicleId").value = vehicle.id || "";
+            document.getElementById("repair_completion_date").value = vehicle.repair_completion_date || "";
 
             // Update needs repairs checkbox
             const needsRepairsCheckbox = document.getElementById("needsRepairs");
             const repairTypeField = document.getElementById("repairTypeField");
             const repairTypeTextarea = document.getElementById("repair_type");
 
-            needsRepairsCheckbox.checked = vehicle.needs_repairs === "1";
-            repairTypeTextarea.value = vehicle.repair_type || "";
+            needsRepairsCheckbox.checked = vehicle.needs_repairs === 1;
             repairTypeField.style.display = needsRepairsCheckbox.checked ? "block" : "none";
+            repairTypeTextarea.value = vehicle.repair_type || "";
 
-            needsRepairsCheckbox.addEventListener("change", function() {
+            needsRepairsCheckbox.removeEventListener("change", toggleRepairType);
+            needsRepairsCheckbox.addEventListener("change", toggleRepairType);
+
+            function toggleRepairType() {
                 repairTypeField.style.display = this.checked ? "block" : "none";
-                if (!this.checked) {
-                    repairTypeTextarea.value = "";
-                }
-            });
+                
+            }
 
-            // Rest of your existing code for image gallery...
             imageGallery.innerHTML = ""; // Clear existing images
             const imagesArray = vehicle.images ? (typeof vehicle.images === "string" ? vehicle.images.split(",") : vehicle.images) : [];
             imagesArray.forEach((image, index) => {
@@ -85,6 +86,16 @@ function editVehicle(vehicleId) {
         })
         .catch(error => console.error("Error loading vehicle data:", error));
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    const needsRepairsCheckbox = document.getElementById("needsRepairs");
+
+    if (needsRepairsCheckbox) {
+        needsRepairsCheckbox.addEventListener("change", toggleRepairType);
+    } else {
+        console.error("Needs Repairs checkbox not found in DOM!");
+    }
+});
 
 function updateImageGallery(images, vehicleId) {
     const imageGallery = document.getElementById("editImagePreview");

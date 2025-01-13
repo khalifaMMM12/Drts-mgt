@@ -11,14 +11,15 @@ try {
         throw new Exception('Invalid request method');
     }
 
-    $status = 'No Repairs';
-    if (!empty($_POST['needs_repairs'])) {
+    $needs_repairs = 0;
+    if (!empty($_POST['needs_repairs']) && $_POST['needs_repairs'] === "1") {
+        $needs_repairs = 1;
         $status = 'Needs Repairs';
-    } elseif (!empty($_POST['fixed'])) {
+        $repair_type = !empty($_POST['repair_type']) ? filter_var($_POST['repair_type'], FILTER_SANITIZE_STRING) : null;
+    } elseif (!empty($_POST['fixed']) && $_POST['fixed'] === "1") {
         $status = 'Fixed';
     }
 
-    // Validate required fields
     $required_fields = ['reg_no', 'type', 'make', 'location', 'inspection_date'];
     foreach ($required_fields as $field) {
         if (empty($_POST[$field])) {
@@ -26,7 +27,6 @@ try {
         }
     }
 
-    // Sanitize input
     $reg_no = filter_var($_POST['reg_no'], FILTER_SANITIZE_STRING);
     $type = filter_var($_POST['type'], FILTER_SANITIZE_STRING);
     $make = filter_var($_POST['make'], FILTER_SANITIZE_STRING);
@@ -51,7 +51,7 @@ try {
 
     // Handle image uploads
     if (isset($_FILES['images']) && !empty($_FILES['images']['name'][0])) {
-        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $allowedTypes = ['image/jpeg', 'image/png'];
         $maxFileSize = 5 * 1024 * 1024;
 
         if (count($_FILES['images']['name']) > 2) {
@@ -96,11 +96,11 @@ try {
     }
 
     // Insert vehicle data
-    $sql = "INSERT INTO vehicles (reg_no, type, make, location, status, repair_type, inspection_date, images) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO vehicles (reg_no, type, make, location, status, repair_type, inspection_date, images, needs_repairs) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $pdo->prepare($sql);
     
-    if (!$stmt->execute([$reg_no, $type, $make, $location, $status, $repair_type, $inspection_date, $imagesString])) {
+    if (!$stmt->execute([$reg_no, $type, $make, $location, $status, $repair_type, $inspection_date, $imagesString, $needs_repairs])) {
         throw new Exception('Database error while adding vehicle');
     }
 

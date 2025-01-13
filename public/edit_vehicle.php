@@ -15,7 +15,7 @@ try {
     // Handle status and repairs
     $needs_repairs = isset($_POST['needs_repairs']) ? 1 : 0;
     $status = $needs_repairs ? 'Needs Repairs' : 'No Repairs';
-    $repair_type = $needs_repairs ? ($_POST['repair_type'] ?? '') : '';
+    $repair_type = $_POST['repair_type'] ?? '';
 
     // Handle file uploads
     $images = [];

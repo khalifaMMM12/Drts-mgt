@@ -144,22 +144,28 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function toggleRepairType() {
-    const repairField = document.getElementById("repairTypeField");
     const needsRepairsCheckbox = document.getElementById("needsRepairs");
-    const repairTypeTextarea = document.getElementById("repair_type");
+    const repairTypeField = document.getElementById("repairTypeField");
 
-    if (!repairField || !needsRepairsCheckbox || !repairTypeTextarea) {
-        console.error('Required elements not found');
+    if (!needsRepairsCheckbox || !repairTypeField) {
+        console.error("Checkbox or repair type field not found!");
         return;
     }
 
-    console.log('Checkbox state:', needsRepairsCheckbox.checked);
-    repairField.style.display = needsRepairsCheckbox.checked ? "block" : "none";
+    repairTypeField.style.display = needsRepairsCheckbox.checked ? "block" : "none";
     
     if (!needsRepairsCheckbox.checked) {
-        repairTypeTextarea.value = "";
+        const repairTypeTextarea = document.getElementById("repair_type");
+        if (repairTypeTextarea) {
+            repairTypeTextarea.value = "";
+        }
     }
+
+    console.log("Checkbox checked:", needsRepairsCheckbox.checked);
+    console.log("Repair type field display:", repairTypeField.style.display);
 }
+
+
 
 function hasPermission(permission) {
     
@@ -167,7 +173,6 @@ function hasPermission(permission) {
         return true;
     }
     
-    // Check if permissions exist and are properly structured
     if (typeof window.userPermissions === 'object' && window.userPermissions !== null) {
         return Boolean(window.userPermissions[permission]);
     }
@@ -244,7 +249,7 @@ document.getElementById('addVehicleForm').addEventListener('submit', function(ev
     // Log the FormData contents for debugging (optional)
     for (let pair of formData.entries()) {
         console.log(`${pair[0]}: ${pair[1]}`);
-    }
+    }  
 
     fetch('add_vehicle.php', {
         method: 'POST',
@@ -252,17 +257,16 @@ document.getElementById('addVehicleForm').addEventListener('submit', function(ev
     })
 
      
-    .then(response => response.text()) // Fetch raw text for debugging
-    .then(text => {
-        console.log('Raw server response:', text); // Debug log
+    .then((response) => response.text())
+    .then((text) => {
+        console.log('Raw server response:', text); 
 
-        // Parse JSON and handle HTML or other invalid responses
         let data; 
         try {
             data = JSON.parse(text);
         } catch (e) {
-            // Provide a clear message if the response isn’t valid JSON
-            throw new Error(`Server error: ${text.replace(/<[^>]*>/g, '')}`);
+            console.error('JSON Parse Error:', e);
+            throw new Error(`Server response was not valid JSON: ${text.replace(/<[^>]*>/g, '')}`);
         }
         
         // Check if the server returned an error status
@@ -270,19 +274,16 @@ document.getElementById('addVehicleForm').addEventListener('submit', function(ev
             throw new Error(data.message || 'Server error occurred');
         }
 
-        // Success handling
         responseMessage.classList.remove('text-red-600');
         responseMessage.textContent = data.message;
         responseMessage.classList.add('text-green-600');
-        
-        // Close modal and refresh vehicle list if functions exist
+
         if (typeof closeModal === 'function') {
             closeModal();
         }
         if (typeof addVehicleToTable === 'function') {
             addVehicleToTable(data.vehicle);
         }
-    
 
     })
     .catch(error => {
@@ -291,7 +292,6 @@ document.getElementById('addVehicleForm').addEventListener('submit', function(ev
         responseMessage.classList.remove('text-green-600');
         responseMessage.classList.add('text-red-600');
     });
-    
 
 });
 

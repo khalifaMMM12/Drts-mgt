@@ -206,7 +206,7 @@ $vehicles = $stmt->fetchAll();
                             <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['type']); ?></td>
                             <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['make']); ?></td>
                             <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['location']); ?></td>
-                            <td class="p-4 border-b">
+                            <td class="p-4 border-b" id="status-<?php echo $vehicle['id']; ?>">
                                 <?php if ($vehicle['status'] === 'Fixed'): ?>
                                     <span class="text-green-500 font-bold">✔ Cleared</span>
                                 <?php elseif ($vehicle['status'] === 'Needs Repairs'): ?>
@@ -410,8 +410,8 @@ $vehicles = $stmt->fetchAll();
                 </div>
                 <div>
                     <label class="block">Needs Repairs:</label>
-                    <input type="checkbox" id="needsRepairs" name="needs_repairs" onclick="toggleRepairType()" <?php echo ($vehicle['needs_repairs'] === "1") ? 'checked' : ''; ?>>
-                    <div id="repairTypeField" class="mt-4" style="display: <?php echo ($vehicle['needs_repairs'] === "1") ? 'block' : 'none'; ?>;">
+                    <input type="checkbox" id="needsRepairs" name="needs_repairs" onclick="toggleRepairType()" <?php echo ($vehicle['status'] === 'Needs Repairs') ? 'checked' : ''; ?>>
+                    <div id="repairTypeField" class="mt-4" style="display: <?php echo ($vehicle['needs_repairs'] === 1) ? 'block' : 'none'; ?>;">
                         <label class="block">Type of Repair:</label>
                         <textarea name="repair_type" id="repair_type" class="border p-2 w-full"><?php echo htmlspecialchars($vehicle['repair_type']); ?></textarea>
                     </div>

@@ -12,8 +12,10 @@ try {
         throw new Exception('Vehicle ID is required');
     }
 
+    error_log("needs_repairs: " . $_POST['needs_repairs']); 
+
     // Handle status and repairs
-    $needs_repairs = isset($_POST['needs_repairs']) ? 1 : 0;
+    $needs_repairs = isset($_POST['needs_repairs']) && $_POST['needs_repairs'] == 1 ? 1 : 0;
     $status = $needs_repairs ? 'Needs Repairs' : 'No Repairs';
     $repair_type = $_POST['repair_type'] ?? '';
 
@@ -29,7 +31,7 @@ try {
 
     // Update vehicle data
     $stmt = $pdo->prepare("
-        UPDATE vehicles 
+         UPDATE vehicles 
         SET reg_no = ?, type = ?, make = ?, location = ?, 
             status = ?, repair_type = ?, inspection_date = ?,
             images = CASE 

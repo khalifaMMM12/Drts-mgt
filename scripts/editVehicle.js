@@ -16,6 +16,8 @@ function editVehicle(vehicleId) {
         .then(vehicle => {
             console.log("Vehicle data received:", vehicle);
 
+            console.log(vehicle.needs_repairs) 
+
             // Update form fields
             document.getElementById("reg_no").value = vehicle.reg_no || "";
             document.getElementById("type").value = vehicle.type || "";
@@ -34,12 +36,28 @@ function editVehicle(vehicleId) {
             repairTypeField.style.display = needsRepairsCheckbox.checked ? "block" : "none";
             repairTypeTextarea.value = vehicle.repair_type || "";
 
+            updateStatusField(needsRepairsCheckbox.checked);
+
             needsRepairsCheckbox.removeEventListener("change", toggleRepairType);
             needsRepairsCheckbox.addEventListener("change", toggleRepairType);
 
             function toggleRepairType() {
                 repairTypeField.style.display = this.checked ? "block" : "none";
-                
+                if (!this.checked) {
+                    repairTypeTextarea.value = "";
+                }
+                updateStatusField(vehicleId, this.checked);
+            }
+
+            function updateStatusField(vehicleId, needsRepairs) {
+                const statusField = document.getElementById(`status-${vehicleId}`);
+                if (statusField) {
+                    statusField.innerHTML = needsRepairs
+                        ? `<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>`
+                        : `<span class="text-gray-500 font-bold">No Repairs</span>`;
+                } else {
+                    console.log(`Updating status for vehicle ID ${vehicleId} with needsRepairs: ${needsRepairs}`);
+                }
             }
 
             imageGallery.innerHTML = ""; // Clear existing images
@@ -273,11 +291,9 @@ function submitEditForm() {
     const formData = new FormData(form);
     
     const needsRepairsCheckbox = document.getElementById("needsRepairs");
-    const repairType = document.getElementById("repair_type").value;
-    const needsRepairs = needsRepairsCheckbox.checked;
+    const needsRepairs = needsRepairsCheckbox.checked ? '1' : '0'; 
     
-    formData.append('needs_repairs', needsRepairs ? '1' : '0');
-    formData.append('status', needsRepairs ? 'Needs Repairs' : 'No Repairs');
+    formData.append('needs_repairs', needsRepairs);
 
     fetch("edit_vehicle.php", {
         method: "POST",
@@ -292,8 +308,8 @@ function submitEditForm() {
                 type: formData.get('type'),
                 make: formData.get('make'),
                 location: formData.get('location'),
-                status: needsRepairs ? 'Needs Repairs' : 'No Repairs',
-                repair_type: needsRepairs ? repairType : '',
+                status: needsRepairsCheckbox.checked ? 'Needs Repairs' : 'No Repairs',
+                repair_type: needsRepairsCheckbox.checked ? formData.get('repair_type') : '',
                 inspection_date: formData.get('inspection_date')
             };
 

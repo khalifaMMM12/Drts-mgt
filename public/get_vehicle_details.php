@@ -22,6 +22,8 @@ if (isset($_GET['id']) && !empty(trim($_GET['id']))) {
             // Handle null or empty images
             $images = $vehicle['images'] ? explode(',', $vehicle['images']) : [];
 
+            $status = ($vehicle['needs_repairs'] == 1) ? 'Needs Repairs' : 'No Repairs';
+
             // Return the vehicle details
             echo json_encode([
                 'id' => $vehicle['id'],
@@ -29,7 +31,7 @@ if (isset($_GET['id']) && !empty(trim($_GET['id']))) {
                 'type' => $vehicle['type'],
                 'make' => $vehicle['make'],
                 'location' => $vehicle['location'],
-                'status' => $vehicle['status'] ?? 'Unknown', 
+                'status' => $status, 
                 'repair_type' => $vehicle['repair_type'] ?? '', 
                 'needs_repairs' => (int)($vehicle['needs_repairs'] ?? 0), 
                 'inspection_date' => $vehicle['inspection_date'],

@@ -26,7 +26,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function getStatusBadge(status) {
         const badges = {
             'Fixed': `<span class="text-green-500 font-bold">✔ Cleared</span>`,
-            'Needs Repairs': `<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>`
+            'Needs Repairs': `<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>`,
+            'No Repairs': `<span class="text-gray-500 font-bold">No Repairs</span>`
         };
         return badges[status] || `<span class="text-gray-500 font-bold"> ${status}</span>`;
     }

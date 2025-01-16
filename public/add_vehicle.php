@@ -12,6 +12,8 @@ try {
     }
 
     $needs_repairs = 0;
+    $status = 'No Repairs';
+    
     if (!empty($_POST['needs_repairs']) && $_POST['needs_repairs'] === "1") {
         $needs_repairs = 1;
         $status = 'Needs Repairs';

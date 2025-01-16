@@ -34,6 +34,7 @@ try {
          UPDATE vehicles 
         SET reg_no = ?, type = ?, make = ?, location = ?, 
             status = ?, repair_type = ?, inspection_date = ?,
+            needs_repairs = ?,
             images = CASE 
                 WHEN ? != '' THEN CONCAT(COALESCE(images, ''), ',', ?)
                 ELSE images 
@@ -52,7 +53,7 @@ try {
         $repair_type,
         $_POST['inspection_date'],
         $newImages,
-        $newImages,
+        // $newImages,
         $vehicleId
     ]);
 

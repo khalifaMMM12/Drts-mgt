@@ -19,9 +19,9 @@ if (isset($_GET['id']) && !empty(trim($_GET['id']))) {
         $vehicle = $stmt->fetch(PDO::FETCH_ASSOC);  
 
         if ($vehicle) {
-            // Handle null or empty images
             $images = $vehicle['images'] ? explode(',', $vehicle['images']) : [];
 
+            $needs_repairs = (int)$vehicle['needs_repairs'];
             $status = ($vehicle['needs_repairs'] == 1) ? 'Needs Repairs' : 'No Repairs';
 
             // Return the vehicle details
@@ -33,7 +33,7 @@ if (isset($_GET['id']) && !empty(trim($_GET['id']))) {
                 'location' => $vehicle['location'],
                 'status' => $status, 
                 'repair_type' => $vehicle['repair_type'] ?? '', 
-                'needs_repairs' => (int)($vehicle['needs_repairs'] ?? 0), 
+                'needs_repairs' => $needs_repairs, 
                 'inspection_date' => $vehicle['inspection_date'],
                 'images' => $images 
             ]);

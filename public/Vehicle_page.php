@@ -376,7 +376,7 @@ $vehicles = $stmt->fetchAll();
     <div id="EditvehicleContent" class="modal-content relative bg-white p-6 rounded-lg shadow-lg border-2 border-yellow-400 w-full max-w-lg md:max-w-2xl lg:max-w-3xl overflow-y-auto max-h-full">
         <button onclick="closeEditModal()" class="absolute top-2 right-2 text-gray-700 text-4xl">&times;</button>
         <h2 class="text-xl mb-4 text-yellow-500 font-bold">Edit Vehicle</h2>
-        <form action="edit_vehicle.php" id="editVehicleForm" method="POST" enctype="multipart/form-data">
+        <form action="edit_vehicle.php" id="editVehicleForm" onsubmit="submitEditForm(event)" method="POST" enctype="multipart/form-data">
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <!-- Form Fields -->
                 <div>
@@ -409,9 +409,9 @@ $vehicles = $stmt->fetchAll();
                     <input type="date" name="inspection_date" id="inspection_date" value="<?php echo htmlspecialchars($vehicle['inspection_date']); ?>" class="border p-2 w-full mb-4">
                 </div>
                 <div>
-                    <label class="block">Needs Repairs:</label>
-                    <input type="checkbox" id="needsRepairs" name="needs_repairs" onclick="toggleRepairType()" <?php echo ($vehicle['status'] === 'Needs Repairs') ? 'checked' : ''; ?>>
-                    <div id="repairTypeField" class="mt-4" style="display: <?php echo ($vehicle['needs_repairs'] === 1) ? 'block' : 'none'; ?>;">
+                    <label for="needsRepairs" class="block">Needs Repairs:</label>
+                    <input type="checkbox" id="needsRepairs" name="needs_repairs" value="1" <?php echo ($vehicle['needs_repairs'] == 1) ? 'checked' : ''; ?>>
+                    <div id="repairTypeField" class="mt-4">
                         <label class="block">Type of Repair:</label>
                         <textarea name="repair_type" id="repair_type" class="border p-2 w-full"><?php echo htmlspecialchars($vehicle['repair_type']); ?></textarea>
                     </div>

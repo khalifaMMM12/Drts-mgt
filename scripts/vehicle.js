@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <td class="p-4 border-b">${vehicle.type}</td>
                     <td class="p-4 border-b">${vehicle.make}</td>
                     <td class="p-4 border-b">${vehicle.location}</td>
-                    <td class="p-4 border-b">${getStatusBadge(vehicle.status)}</td>
+                    <td class="p-4 border-b" id="status-${vehicle.id}">${getStatusBadge(vehicle.status, vehicle.needs_repairs)}</td>
                     <td class="p-4 border-b">${vehicle.inspection_date || 'N/A'}</td>
                     <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
                     <button onclick="showDetails(${vehicle.id})" 
@@ -153,13 +153,22 @@ function toggleRepairType() {
         return;
     }
 
-    repairTypeField.style.display = needsRepairsCheckbox.checked ? "block" : "none";
+    console.log("Checkbox initial state:", needsRepairsCheckbox.checked);
     
-    if (!needsRepairsCheckbox.checked) {
-        const repairTypeTextarea = document.getElementById("repair_type");
-        if (repairTypeTextarea) {
-            repairTypeTextarea.value = "";
-        }
+    repairTypeField.style.display = "block";
+    
+    // if (!needsRepairsCheckbox.checked) {
+    //     const repairTypeTextarea = document.getElementById("repair_type");
+    //     if (repairTypeTextarea) {
+    //         repairTypeTextarea.value = "";
+    //     }
+    // }
+    const vehicleId = document.getElementById("vehicleId").value;
+    const statusField = document.getElementById(`status-${vehicleId}`);
+    if (statusField) {
+        statusField.innerHTML = needsRepairsCheckbox.checked 
+            ? `<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>`
+            : `<span class="text-gray-500 font-bold">No Repairs</span>`;
     }
 
     console.log("Checkbox checked:", needsRepairsCheckbox.checked);
@@ -302,18 +311,19 @@ function addVehicleToTable(vehicle) {
     existingRows.forEach(row => row.remove());
 
     const tbody = document.querySelector("table tbody");
+    const statusDisplay = getStatusBadge(vehicle.status, vehicle.needs_repairs);
 
-    let statusDisplay = '';
-    switch (vehicle.status) {
-        case 'Needs Repairs':
-            statusDisplay = `<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>`;
-            break;
-        case 'Fixed':
-            statusDisplay = `<span class="text-green-500 font-bold">✔ Cleared</span>`;
-            break;
-        default:
-            statusDisplay = `<span class="text-gray-500 font-bold">No Repairs</span>`;
-    }
+    // let statusDisplay = '';
+    // switch (vehicle.status) {
+    //     case 'Needs Repairs':
+    //         statusDisplay = `<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>`;
+    //         break;
+    //     case 'Fixed':
+    //         statusDisplay = `<span class="text-green-500 font-bold">✔ Cleared</span>`;
+    //         break;
+    //     default:
+    //         statusDisplay = `<span class="text-gray-500 font-bold">No Repairs</span>`;
+    // }
 
     // Create a new row
     const newRow = document.createElement("tr");
@@ -323,7 +333,7 @@ function addVehicleToTable(vehicle) {
         <td class="p-4 border-b">${vehicle.type}</td>
         <td class="p-4 border-b">${vehicle.make}</td>
         <td class="p-4 border-b">${vehicle.location}</td>
-        <td class="p-4 border-b">${statusDisplay}</td>
+        <td class="p-4 border-b" id="status-${vehicle.id}">${statusDisplay}</td>
         <td class="p-4 border-b">${vehicle.inspection_date}</td>
         <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
             <button onclick="showDetails(${vehicle.id})" class="text-blue-500 hover:text-blue-700">ℹ</button>

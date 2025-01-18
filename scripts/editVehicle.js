@@ -14,47 +14,36 @@ function editVehicle(vehicleId) {
     fetch(`get_vehicle_details.php?id=${vehicleId}`)
         .then(response => response.json())
         .then(vehicle => {
-            console.log("Vehicle data received:", vehicle);
+            console.log("Vehicle data:", vehicle);
 
             console.log(vehicle.needs_repairs) 
 
-            // Update form fields
             document.getElementById("reg_no").value = vehicle.reg_no || "";
             document.getElementById("type").value = vehicle.type || "";
             document.getElementById("make").value = vehicle.make || "";
             document.getElementById("location").value = vehicle.location || "";
             document.getElementById("inspection_date").value = vehicle.inspection_date || "";
             document.getElementById("vehicleId").value = vehicle.id || "";
-            document.getElementById("repair_completion_date").value = vehicle.repair_completion_date || "";
 
-            // Update needs repairs checkbox
+           
+
             const needsRepairsCheckbox = document.getElementById("needsRepairs");
             const repairTypeField = document.getElementById("repairTypeField");
             const repairTypeTextarea = document.getElementById("repair_type");
+            
+            console.log("Vehicle needs repairs:", vehicle.needs_repairs);
+            needsRepairsCheckbox.checked = parseInt(vehicle.needs_repairs) === 1;
+            console.log("Checkbox checked state:", needsRepairsCheckbox.checked);
 
-            needsRepairsCheckbox.checked = vehicle.needs_repairs === 1;
             repairTypeField.style.display = "block";
             repairTypeTextarea.value = vehicle.repair_type || "";
 
-            updateStatusField(vehicle.id, needsRepairsCheckbox.checked);
+            updateStatusDisplay(vehicle.id, needsRepairsCheckbox.checked);
 
-            needsRepairsCheckbox.removeEventListener("change", toggleRepairType);
-            needsRepairsCheckbox.addEventListener("change", function() {
-                if (!this.checked) {
-                    updateStatusField(vehicle.id, this.checked);
-                }
-            });
+            needsRepairsCheckbox.removeEventListener("change", handleCheckboxChange);
+            needsRepairsCheckbox.addEventListener("change", handleCheckboxChange);
 
-            function updateStatusField(vehicleId, needsRepairs) {
-                const statusField = document.getElementById(`status-${vehicleId}`);
-                if (statusField) {
-                    statusField.innerHTML = needsRepairs
-                        ? `<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>`
-                        : `<span class="text-gray-500 font-bold">No Repairs</span>`;
-                }
-            }
-
-            imageGallery.innerHTML = ""; // Clear existing images
+            imageGallery.innerHTML = "";
             const imagesArray = vehicle.images ? (typeof vehicle.images === "string" ? vehicle.images.split(",") : vehicle.images) : [];
             imagesArray.forEach((image, index) => {
                 const sanitizedImage = image.trim().replace(/[^a-zA-Z0-9._-]/g, "");
@@ -97,6 +86,27 @@ function editVehicle(vehicleId) {
             console.log("Edit modal successfully populated.");
         })
         .catch(error => console.error("Error loading vehicle data:", error));
+}
+
+function handleCheckboxChange() {
+    const vehicleId = document.getElementById("vehicleId").value;
+    const isChecked = this.checked;
+    console.log("Checkbox changed:", isChecked);
+    
+    // Update status display immediately
+    const statusField = document.getElementById(`status-${vehicleId}`);
+    if (statusField) {
+        statusField.innerHTML = getStatusBadge(isChecked ? 'Needs Repairs' : 'No Repairs', isChecked ? 1 : 0);
+    }
+}
+
+function updateStatusDisplay(vehicleId, isChecked) {
+    const statusField = document.getElementById(`status-${vehicleId}`);
+    if (statusField) {
+        statusField.innerHTML = isChecked 
+            ? `<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>`
+            : `<span class="text-gray-500 font-bold">No Repairs</span>`;
+    }
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -279,15 +289,26 @@ function deleteImage(vehicleId, image) {
         .catch(error => console.error('Error:', error));
 }
 
-function submitEditForm() {
-    const form = document.getElementById("editVehicleForm");
-    const vehicleId = document.getElementById("vehicleId").value;
+function submitEditForm(e) {
+    e.preventDefault();
+    
+    const form = document.getElementById('editVehicleForm');
     const formData = new FormData(form);
     
     const needsRepairsCheckbox = document.getElementById("needsRepairs");
+    console.log("Checkbox state:", needsRepairsCheckbox.checked);
+
     formData.set('needs_repairs', needsRepairsCheckbox.checked ? '1' : '0');
-    
-    formData.append('needs_repairs', needsRepairs);
+
+    console.log("Form data before submit:", Object.fromEntries(formData));
+    formData.delete('needs_repairs');
+    formData.append('needs_repairs', needs_repairs);
+    console.log("Submitting needs_repairs value:", needs_repairs);
+
+
+    for (let pair of formData.entries()) {
+        console.log(pair[0] + ': ' + pair[1]);
+    }
 
     fetch("edit_vehicle.php", {
         method: "POST",
@@ -295,56 +316,16 @@ function submitEditForm() {
     })
     .then(response => response.json())
     .then(result => {
+        console.log("Response from server:", result);
         if (result.success) {
-            const updatedVehicle = result.vehicle; 
-            // {
-            //     id: vehicleId,
-            //     reg_no: formData.get('reg_no'),
-            //     type: formData.get('type'),
-            //     make: formData.get('make'),
-            //     location: formData.get('location'),
-            //     status: needsRepairsCheckbox.checked ? 'Needs Repairs' : 'No Repairs',
-            //     repair_type: needsRepairsCheckbox.checked ? formData.get('repair_type') : '',
-            //     inspection_date: formData.get('inspection_date')
-            // };
+            const updatedVehicle = result.vehicle;
+            console.log("Updated vehicle:", updatedVehicle);
 
-            const row = document.querySelector(`tr[data-vehicle-id="${vehicleId}"]`);
-            if (row) {
-                const getStatusBadge = (status, repairType) => {
-                    if (status === 'Needs Repairs') {
-                        return `<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>
-                                ${repairType ? `<div class="text-xs text-gray-600">(${repairType})</div>` : ''}`;
-                    }
-                    return `<span class="text-gray-500 font-bold">No Repairs</span>`;
-                };
-
-                row.innerHTML = `
-                    <td class="p-4 border-b">${updatedVehicle.reg_no}</td>
-                    <td class="p-4 border-b">${updatedVehicle.type}</td>
-                    <td class="p-4 border-b">${updatedVehicle.make}</td>
-                    <td class="p-4 border-b">${updatedVehicle.location}</td>
-                    <td class="p-4 border-b">${getStatusBadge(updatedVehicle.status, updatedVehicle.repair_type)}</td>
-                    <td class="p-4 border-b">${updatedVehicle.inspection_date}</td>
-                    <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
-                        <button onclick="showDetails(${updatedVehicle.id})" class="text-blue-500 hover:text-blue-700">ℹ</button>
-                        <button onclick="editVehicle(${updatedVehicle.id})" class="text-yellow-500 hover:text-yellow-700">
-                            <i class="fa-solid fa-pen-to-square"></i>
-                        </button>
-                        <a href="clear_vehicle.php?id=${updatedVehicle.id}" class="text-green-500 hover:text-green-700">✔</a>
-                        <button onclick="openDeleteModal(${updatedVehicle.id}, '${updatedVehicle.reg_no}')" class="text-red-500 hover:text-red-700">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </td>
-                `;
-            }
             updateTableRow(updatedVehicle);
+            // updateStatusDisplay(updatedVehicle.id, updatedVehicle.needs_repairs === 1);
+
             closeEditModal();
             showAlert('Vehicle updated successfully', 'success');
-
-            const activeFilter = document.querySelector('input[name="vehicleFilter"]:checked');
-            if (activeFilter) {
-                updatedVehicle(activeFilter.value);
-            }
         } else {
             showAlert(result.error || 'Error updating vehicle', 'error');
         }
@@ -354,12 +335,8 @@ function submitEditForm() {
         showAlert('An error occurred while updating the vehicle', 'error');
     });
 }
+document.getElementById('editVehicleForm').removeEventListener('submit', submitEditForm);
 
-
-document.getElementById('editVehicleForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    submitEditForm();
-});
 
 function showAlert(message, type = 'success') {
     const alertDiv = document.createElement('div');
@@ -374,34 +351,33 @@ function showAlert(message, type = 'success') {
     }, 3000);
 }
 
+function getStatusBadge(status, needsRepairs) {
+    console.log("Getting status badge:", { status, needsRepairs });
+    
+    if (parseInt(needsRepairs) === 1) {
+        return `<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>`;
+    } else if (status === 'Fixed') {
+        return `<span class="text-green-500 font-bold">✔ Cleared</span>`;
+    }
+    return `<span class="text-gray-500 font-bold">No Repairs</span>`;
+}
+
 function updateTableRow(vehicle) {
     const row = document.querySelector(`tr[data-vehicle-id="${vehicle.id}"]`);
     if (!row) return;
 
-    const getStatusBadge = (status, repairType = '') => {
-        let badge = '';
-        switch(status) {
-            case 'Needs Repairs':
-                badge = `<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>`;
-                if (repairType) {
-                    badge += `<div class="text-xs text-gray-600">(${repairType})</div>`;
-                }
-                break;
-            case 'Fixed':
-                badge = `<span class="text-green-500 font-bold">✔ Cleared</span>`;
-                break;
-            default:
-                badge = `<span class="text-gray-500 font-bold">No Repairs</span>`;
-        }
-        return badge;
-    };
+    console.log("Updating row with vehicle data:", vehicle);
+
+    const needs_repairs = parseInt(vehicle.needs_repairs);
+    console.log("Needs repairs value:", needs_repairs);
+
 
     row.innerHTML = `
         <td class="p-4 border-b">${vehicle.reg_no}</td>
         <td class="p-4 border-b">${vehicle.type}</td>
         <td class="p-4 border-b">${vehicle.make}</td>
         <td class="p-4 border-b">${vehicle.location}</td>
-        <td class="p-4 border-b">${getStatusBadge(vehicle.status, vehicle.repair_type)}</td>
+        <td class="p-4 border-b" id="status-${vehicle.id}">${getStatusBadge(vehicle.status, needs_repairs)}</td>
         <td class="p-4 border-b">${vehicle.inspection_date}</td>
         <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
             <button onclick="showDetails(${vehicle.id})" class="text-blue-500 hover:text-blue-700">ℹ</button>

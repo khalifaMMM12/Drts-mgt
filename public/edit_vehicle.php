@@ -12,14 +12,15 @@ try {
         throw new Exception('Vehicle ID is required');
     }
 
-    error_log("needs_repairs: " . $_POST['needs_repairs']); 
+    error_log("POST data: " . print_r($_POST, true));
 
-    // Handle status and repairs
-    $needs_repairs = isset($_POST['needs_repairs']) && $_POST['needs_repairs'] == 1 ? 1 : 0;
-    $status = $needs_repairs ? 'Needs Repairs' : 'No Repairs';
+    $needs_repairs = isset($_POST['needs_repairs']) ? (int)$_POST['needs_repairs'] : 0;
+    $status = $needs_repairs === 1 ? 'Needs Repairs' : 'No Repairs';
     $repair_type = $_POST['repair_type'] ?? '';
 
-    // Handle file uploads
+    error_log("needs_repairs: $needs_repairs, status: $status");
+
+
     $images = [];
     if (!empty($_FILES['new_images']['name'][0])) {
         foreach ($_FILES['new_images']['tmp_name'] as $key => $tmp_name) {
@@ -29,7 +30,6 @@ try {
         }
     }
 
-    // Update vehicle data
     $stmt = $pdo->prepare("
          UPDATE vehicles 
         SET reg_no = ?, type = ?, make = ?, location = ?, 
@@ -52,12 +52,15 @@ try {
         $status,
         $repair_type,
         $_POST['inspection_date'],
+        $needs_repairs,
         $newImages,
-        // $newImages,
+        $newImages,
         $vehicleId
     ]);
 
-    // Fetch updated vehicle data
+    $updated = $pdo->query("SELECT * FROM vehicles WHERE id = {$_POST['id']}")->fetch();
+    error_log("Updated vehicle: " . print_r($updated, true));
+
     $stmt = $pdo->prepare("SELECT * FROM vehicles WHERE id = ?");
     $stmt->execute([$vehicleId]);
     $vehicle = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -65,7 +68,17 @@ try {
     echo json_encode([
         'success' => true,
         'message' => 'Vehicle updated successfully',
-        'vehicle' => $vehicle
+        'vehicle' => [
+            'id' => $vehicle['id'],
+            'reg_no' => $vehicle['reg_no'],
+            'type' => $vehicle['type'],
+            'make' => $vehicle['make'],
+            'location' => $vehicle['location'],
+            'status' => $status,
+            'repair_type' => $repair_type,
+            'needs_repairs' => $needs_repairs,
+            'inspection_date' => $vehicle['inspection_date']
+        ]
     ]);
 
 } catch (Exception $e) {
@@ -73,11 +86,7 @@ try {
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'error' => $e->getMessage(),
-        'details' => [
-            'vehicleId' => $vehicleId,
-            'postData' => $_POST
-        ]
+        'error' => $e->getMessage()
     ]);
 }
 ?>

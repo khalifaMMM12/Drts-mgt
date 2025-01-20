@@ -360,17 +360,6 @@ function showAlert(message, type = 'success') {
     }, 3000);
 }
 
-function getStatusBadge(status, needsRepairs) {
-    console.log("Getting status badge:", { status, needsRepairs });
-    
-    if (parseInt(needsRepairs) === 1) {
-        return `<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>`;
-    } else if (status === 'Fixed') {
-        return `<span class="text-green-500 font-bold">✔ Cleared</span>`;
-    }
-    return `<span class="text-gray-500 font-bold">No Repairs</span>`;
-}
-
 function updateTableRow(vehicle) {
     const row = document.querySelector(`tr[data-vehicle-id="${vehicle.id}"]`);
     if (!row) return;

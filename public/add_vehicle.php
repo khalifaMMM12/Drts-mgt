@@ -122,6 +122,7 @@ try {
             'make' => $make,
             'location' => $location,
             'status' => $status,
+            'needs_repairs' => $needs_repairs,
             'repair_type'=> $repair_type,
             'inspection_date' => $inspection_date,
             'images' => $imageNames

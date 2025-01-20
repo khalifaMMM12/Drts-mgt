@@ -244,8 +244,12 @@ document.getElementById('addVehicleForm').addEventListener('submit', function(ev
     const responseMessage = createResponseElement();
     responseMessage.textContent = 'Uploading...';
     responseMessage.className = '';
-    
+
     const formData = new FormData(this);
+
+    const needsRepairsCheckbox = document.getElementById("needsRepairs");
+    formData.set('needs_repairs', needsRepairsCheckbox.checked ? '1' : '0');
+    
     
     // Log the FormData contents for debugging (optional)
     for (let pair of formData.entries()) {
@@ -270,7 +274,6 @@ document.getElementById('addVehicleForm').addEventListener('submit', function(ev
             throw new Error(`Server response was not valid JSON: ${text.replace(/<[^>]*>/g, '')}`);
         }
         
-        // Check if the server returned an error status
         if (!data.status || data.status !== 'success') {
             throw new Error(data.message || 'Server error occurred');
         }
@@ -281,9 +284,12 @@ document.getElementById('addVehicleForm').addEventListener('submit', function(ev
 
         if (typeof closeModal === 'function') {
             closeModal();
+            this.reset();
         }
         if (typeof addVehicleToTable === 'function') {
             addVehicleToTable(data.vehicle);
+            console.log("Adding vehicle with data:", data.vehicle);
+            this.reset();
         }
 
     })
@@ -296,27 +302,33 @@ document.getElementById('addVehicleForm').addEventListener('submit', function(ev
 
 });
 
+function getStatusBadge(status, needsRepairs) {
+    console.log("Getting status badge:", { status, needsRepairs });
+
+    const repairsNeeded = parseInt(needsRepairs) || 0;
+    
+    if (repairsNeeded === 1) {
+        return `<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>`;
+    } else if (status === 'Fixed') {
+        return `<span class="text-green-500 font-bold">✔ Cleared</span>`;
+    }
+    return `<span class="text-gray-500 font-bold">No Repairs</span>`;
+}
 
 function addVehicleToTable(vehicle) {
+    console.log("Adding vehicle with full data:", vehicle);
+
     const existingRows = document.querySelectorAll(`tr[data-vehicle-id="${vehicle.id}"]`);
     existingRows.forEach(row => row.remove());
 
     const tbody = document.querySelector("table tbody");
-    const statusDisplay = getStatusBadge(vehicle.status, vehicle.needs_repairs);
+    const needs_repairs = vehicle.needs_repairs === "1" || vehicle.needs_repairs === 1 ? 1 : 0;
+    const status = needs_repairs === 1 ? 'Needs Repairs' : 'No Repairs';
+    
+    const statusDisplay = getStatusBadge(status, needs_repairs);
 
-    // let statusDisplay = '';
-    // switch (vehicle.status) {
-    //     case 'Needs Repairs':
-    //         statusDisplay = `<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>`;
-    //         break;
-    //     case 'Fixed':
-    //         statusDisplay = `<span class="text-green-500 font-bold">✔ Cleared</span>`;
-    //         break;
-    //     default:
-    //         statusDisplay = `<span class="text-gray-500 font-bold">No Repairs</span>`;
-    // }
+    console.log("Processing status:", { needs_repairs, status });
 
-    // Create a new row
     const newRow = document.createElement("tr");
     newRow.setAttribute("data-vehicle-id", vehicle.id);
     newRow.innerHTML = `
@@ -334,7 +346,7 @@ function addVehicleToTable(vehicle) {
         </td>
     `;
 
-    tbody.appendChild(newRow);
+    tbody.insertBefore(newRow, tbody.firstchild);
 
     console.log("Row added for vehicle ID:", vehicle.id);
 }

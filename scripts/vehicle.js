@@ -155,27 +155,18 @@ function toggleRepairType() {
 
     console.log("Checkbox initial state:", needsRepairsCheckbox.checked);
     
-    repairTypeField.style.display = "block";
+    repairTypeField.style.display = needsRepairsCheckbox.checked ? "block" : "none";
     
-    // if (!needsRepairsCheckbox.checked) {
-    //     const repairTypeTextarea = document.getElementById("repair_type");
-    //     if (repairTypeTextarea) {
-    //         repairTypeTextarea.value = "";
-    //     }
-    // }
-    const vehicleId = document.getElementById("vehicleId").value;
-    const statusField = document.getElementById(`status-${vehicleId}`);
-    if (statusField) {
-        statusField.innerHTML = needsRepairsCheckbox.checked 
-            ? `<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>`
-            : `<span class="text-gray-500 font-bold">No Repairs</span>`;
+    if (!needsRepairsCheckbox.checked) {
+        const repairTypeTextarea = document.getElementById("repair_type");
+        if (repairTypeTextarea) {
+            repairTypeTextarea.value = "";
+        }
     }
 
     console.log("Checkbox checked:", needsRepairsCheckbox.checked);
     console.log("Repair type field display:", repairTypeField.style.display);
 }
-
-
 
 function hasPermission(permission) {
     

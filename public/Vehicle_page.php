@@ -409,8 +409,8 @@ $vehicles = $stmt->fetchAll();
                     <input type="date" name="inspection_date" id="inspection_date" value="<?php echo htmlspecialchars($vehicle['inspection_date']); ?>" class="border p-2 w-full mb-4">
                 </div>
                 <div>
-                    <label for="needsRepairs" class="block">Needs Repairs:</label>
-                    <input type="checkbox" id="needsRepairs" name="needs_repairs" value="1" <?php echo ($vehicle['needs_repairs'] == 1) ? 'checked' : ''; ?>>
+                    <label for="editNeedsRepairs" class="block">Needs Repairs:</label>
+                    <input type="checkbox" id="editNeedsRepairs" name="needs_repairs" value="1" <?php echo ($vehicle['needs_repairs'] == 1) ? 'checked' : ''; ?>>
                     <div id="repairTypeField" class="mt-4">
                         <label class="block">Type of Repair:</label>
                         <textarea name="repair_type" id="repair_type" class="border p-2 w-full"><?php echo htmlspecialchars($vehicle['repair_type']); ?></textarea>

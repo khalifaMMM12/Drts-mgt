@@ -7,6 +7,9 @@ function editVehicle(vehicleId) {
         return;
     }
     
+    const form = document.getElementById('editVehicleForm');
+    form.reset();
+
     const modal = document.getElementById("EditvehicleModal");
     const imageGallery = document.getElementById("editImagePreview");
     modal.classList.add("active");
@@ -27,21 +30,21 @@ function editVehicle(vehicleId) {
 
            
 
-            const needsRepairsCheckbox = document.getElementById("needsRepairs");
+            const editNeedsRepairsCheckbox  = document.getElementById("editNeedsRepairs");
             const repairTypeField = document.getElementById("repairTypeField");
             const repairTypeTextarea = document.getElementById("repair_type");
             
             console.log("Vehicle needs repairs:", vehicle.needs_repairs);
-            needsRepairsCheckbox.checked = parseInt(vehicle.needs_repairs) === 1;
-            console.log("Checkbox checked state:", needsRepairsCheckbox.checked);
+            editNeedsRepairsCheckbox.checked = parseInt(vehicle.needs_repairs) === 1;
+            console.log("Checkbox checked state:", editNeedsRepairsCheckbox .checked);
 
             repairTypeField.style.display = "block";
             repairTypeTextarea.value = vehicle.repair_type || "";
 
-            updateStatusDisplay(vehicle.id, needsRepairsCheckbox.checked);
+            updateStatusDisplay(vehicle.id, editNeedsRepairsCheckbox .checked);
 
-            needsRepairsCheckbox.removeEventListener("change", handleCheckboxChange);
-            needsRepairsCheckbox.addEventListener("change", handleCheckboxChange);
+            editNeedsRepairsCheckbox .removeEventListener("change", handleCheckboxChange);
+            editNeedsRepairsCheckbox .addEventListener("change", handleCheckboxChange);
 
             imageGallery.innerHTML = "";
             const imagesArray = vehicle.images ? (typeof vehicle.images === "string" ? vehicle.images.split(",") : vehicle.images) : [];
@@ -109,15 +112,15 @@ function updateStatusDisplay(vehicleId, isChecked) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    const needsRepairsCheckbox = document.getElementById("needsRepairs");
+// document.addEventListener("DOMContentLoaded", function () {
+//     const editNeedsRepairsCheckbox  = document.getElementById("needsRepairs");
 
-    if (needsRepairsCheckbox) {
-        needsRepairsCheckbox.addEventListener("change", toggleRepairType);
-    } else {
-        console.error("Needs Repairs checkbox not found in DOM!");
-    }
-});
+//     if (needsRepairsCheckbox) {
+//         needsRepairsCheckbox.addEventListener("change", toggleRepairType);
+//     } else {
+//         console.error("Needs Repairs checkbox not found in DOM!");
+//     }
+// });
 
 function updateImageGallery(images, vehicleId) {
     const imageGallery = document.getElementById("editImagePreview");
@@ -165,6 +168,15 @@ function createImageContainer(image, index, vehicleId) {
 function closeEditModal() {
     console.log("Closing Edit Modal");
     document.getElementById("EditvehicleModal").classList.remove("active");
+
+    const form = document.getElementById('editVehicleForm');
+    form.reset();
+    
+    const needsRepairsCheckbox = document.getElementById("needsRepairs");
+    const repairTypeField = document.getElementById("repairTypeField");
+    needsRepairsCheckbox.checked = false;
+    
+    needsRepairsCheckbox.removeEventListener("change", handleCheckboxChange);
 }
 
 function uploadNewImage(vehicleId) {
@@ -295,15 +307,12 @@ function submitEditForm(e) {
     const form = document.getElementById('editVehicleForm');
     const formData = new FormData(form);
     
-    const needsRepairsCheckbox = document.getElementById("needsRepairs");
-    console.log("Checkbox state:", needsRepairsCheckbox.checked);
+    const editNeedsRepairsCheckbox  = document.getElementById("editNeedsRepairs");
+    console.log("Checkbox state:", editNeedsRepairsCheckbox .checked);
 
-    formData.set('needs_repairs', needsRepairsCheckbox.checked ? '1' : '0');
+    formData.set('needs_repairs', editNeedsRepairsCheckbox .checked ? '1' : '0');
 
     console.log("Form data before submit:", Object.fromEntries(formData));
-    formData.delete('needs_repairs');
-    formData.append('needs_repairs', needs_repairs);
-    console.log("Submitting needs_repairs value:", needs_repairs);
 
 
     for (let pair of formData.entries()) {

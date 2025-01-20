@@ -324,13 +324,32 @@ function addVehicleToTable(vehicle) {
     const tbody = document.querySelector("table tbody");
     const needs_repairs = vehicle.needs_repairs === "1" || vehicle.needs_repairs === 1 ? 1 : 0;
     const status = needs_repairs === 1 ? 'Needs Repairs' : 'No Repairs';
-    
+
     const statusDisplay = getStatusBadge(status, needs_repairs);
 
     console.log("Processing status:", { needs_repairs, status });
 
     const newRow = document.createElement("tr");
     newRow.setAttribute("data-vehicle-id", vehicle.id);
+
+    const actionButtons = `
+    <button onclick="showDetails(${vehicle.id})" class="text-blue-500 hover:text-blue-700">ℹ</button>
+    ${hasPermission('edit_vehicle') ? 
+        `<button onclick="editVehicle(${vehicle.id})" class="text-yellow-500 hover:text-yellow-700">
+            <i class="fa-solid fa-pen-to-square"></i>
+        </button>` : ''
+    }
+    ${hasPermission('clear_vehicle') ? 
+        `<a href="clear_vehicle.php?id=${vehicle.id}" class="text-green-500 hover:text-green-700">✔ Clear</a>` : ''
+    }
+    ${hasPermission('delete_vehicle') ? 
+        `<button class="text-red-500 hover:text-red-700 delete-button" 
+            data-vehicle-id="${vehicle.id}" 
+            data-vehicle-reg-no="${vehicle.reg_no}">
+            <i class="fa-solid fa-trash-can"></i>
+        </button>` : ''
+    }
+`;
     newRow.innerHTML = `
         <td class="p-4 border-b">${vehicle.reg_no}</td>
         <td class="p-4 border-b">${vehicle.type}</td>
@@ -339,10 +358,7 @@ function addVehicleToTable(vehicle) {
         <td class="p-4 border-b" id="status-${vehicle.id}">${statusDisplay}</td>
         <td class="p-4 border-b">${vehicle.inspection_date}</td>
         <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
-            <button onclick="showDetails(${vehicle.id})" class="text-blue-500 hover:text-blue-700">ℹ</button>
-            <button onclick="editVehicle(${vehicle.id})" class="text-yellow-500 hover:text-yellow-700"><i class="fa-solid fa-pen-to-square"></i></button>
-            <a href="_vehicle.php?id=${vehicle.id}" class="text-green-500 hover:text-green-700">✔ Clear</a>
-            <button class="text-red-500 hover:text-red-700 delete-button" data-vehicle-id="${vehicle.id}" data-vehicle-reg-no="${vehicle.reg_no}"><i class="fa-solid fa-trash-can"></i></button>
+            ${actionButtons}
         </td>
     `;
 

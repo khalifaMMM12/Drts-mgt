@@ -23,7 +23,7 @@ unset($_SESSION['error_message']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add User</title>
+    <title>Add User page</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="../style/style.css" rel="stylesheet">    
     <link href="../style/output.css" rel="stylesheet">
@@ -56,7 +56,7 @@ unset($_SESSION['error_message']);
                                 <i class="fa-solid fa-car mr-2"></i> Vehicles
                             </a>
                         <?php endif; ?>
-                        <a href="#" class="flex items-center px-4 py-2 text-gray-100 bg-gray-900 hover:bg-gray-500 rounded-2xl">
+                        <a href="profile.php" class="flex items-center px-4 py-2 text-gray-100 bg-gray-900 hover:bg-gray-500 rounded-2xl">
                             <i class="fa-solid fa-id-badge mr-2"></i>
                             Profile
                         </a>
@@ -74,16 +74,11 @@ unset($_SESSION['error_message']);
             <div class="py-2 md:py-3 px-2 md:px-3 rounded-xl border-yellow-400 border-4 md:border-8 bg-gray-900">
                 <div class="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4">
                     <div class="flex items-center gap-2 md:gap-4 w-full md:w-auto">
-                        <h2 class="font-bold text-xl md:text-3xl text-white">Welcome <?php echo htmlspecialchars($_SESSION['username']); ?></h2>
+                        <h2 class="font-bold text-xl md:text-3xl text-white"><?php echo htmlspecialchars($_SESSION['username']); ?></h2>
                     </div>
 
                     <div class="flex flex-wrap md:flex-nowrap gap-2 md:gap-4">
                         <div class="flex flex-wrap md:flex-nowrap gap-2 md:gap-4">
-                            <!-- <button onclick="openModal()" 
-                                class="rounded bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 shadow-lg flex items-center gap-2">
-                                <i class="fas fa-plus"></i> Add Vehicle
-                            </button> -->
-                            
                             <button onclick="openLogoutModal()" 
                                 class="rounded bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 shadow-lg flex items-center gap-2">
                                 <i class="fas fa-sign-out-alt"></i> Logout

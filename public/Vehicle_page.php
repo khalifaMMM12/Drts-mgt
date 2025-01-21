@@ -22,7 +22,7 @@ $vehicles = $stmt->fetchAll();
      
 <head>
     <meta charset="UTF-8">
-    <title>Vehicle Inspection Status</title>
+    <title>Vehicle page</title>
     <link href="../style/style.css" rel="stylesheet">
     <link href="../style/output.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -56,7 +56,7 @@ $vehicles = $stmt->fetchAll();
                                 <i class="fas fa-user-plus mr-2"></i> Add User
                             </a>
                         <?php endif; ?>
-                        <a href="#" class="flex items-center px-4 py-2 text-gray-100 bg-gray-900 hover:bg-gray-500 rounded-2xl">
+                        <a href="profile.php" class="flex items-center px-4 py-2 text-gray-100 bg-gray-900 hover:bg-gray-500 rounded-2xl">
                             <i class="fa-solid fa-id-badge mr-2"></i>
                             Profile
                         </a>
@@ -74,7 +74,7 @@ $vehicles = $stmt->fetchAll();
             <div class="py-2 md:py-3 px-2 md:px-3 rounded-xl border-yellow-400 border-4 md:border-8 bg-gray-900">
                 <div class="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4">
                     <div class="flex items-center gap-2 md:gap-4 w-full md:w-auto">
-                        <h2 class="font-bold text-xl md:text-3xl text-white">Welcome <?php echo htmlspecialchars($_SESSION['username']); ?></h2>
+                        <h2 class="font-bold text-xl md:text-3xl text-white"><?php echo htmlspecialchars($_SESSION['username']); ?></h2>
                     </div>
 
                     <div class="flex flex-wrap md:flex-nowrap gap-2 md:gap-4">

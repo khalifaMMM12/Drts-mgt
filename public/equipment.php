@@ -18,7 +18,7 @@ require_once '../includes/auth_functions.php';
     <link href="../style/style.css" rel="stylesheet">
     <link href="../style/output.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <title>Office Equipment</title>
+    <title>Equipments page</title>
 </head>
 <body class="bg-gray-100 ">
     <button id="mobile-menu-button" class="md:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-yellow-500 text-black">
@@ -34,7 +34,7 @@ require_once '../includes/auth_functions.php';
             <div class="flex flex-col flex-1">
                 <nav class="flex flex-col flex-1 px-2 py-4 gap-10">
                     <div>
-                        <a href="#" class="flex items-center text-gray-100 hover:bg-gray-700">
+                        <a href="#" class="flex items-center text-gray-100">
                             <img class="w-20" src="../img/DRTS_logo.png" alt="DRTS Logo">
                             <h2 class="font-bold text-black text-lg">Directorate of Road Traffic Services</h2>
                         </a>
@@ -49,7 +49,7 @@ require_once '../includes/auth_functions.php';
                                 <i class="fas fa-user-plus mr-2"></i> Add User
                             </a>
                         <?php endif; ?>
-                        <a href="#" class="flex items-center px-4 py-2 mt-2 text-gray-100 bg-gray-900 hover:bg-gray-500 rounded-2xl">
+                        <a href="profile.php" class="flex items-center px-4 py-2 text-gray-100 bg-gray-900 hover:bg-gray-500 rounded-2xl">
                             <i class="fa-solid fa-id-badge mr-2"></i>
                             Profile
                         </a>

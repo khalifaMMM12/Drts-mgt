@@ -41,3 +41,12 @@ function closeLogoutModal() {
     document.getElementById('logoutModal').classList.add('hidden');
     document.getElementById('logoutModal').classList.remove('flex');
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const sidebar = document.getElementById('sidebar');
+
+    mobileMenuButton.addEventListener('click', function() {
+        sidebar.classList.toggle('active');
+    });
+});

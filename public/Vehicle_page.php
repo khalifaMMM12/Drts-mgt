@@ -28,7 +28,7 @@ $vehicles = $stmt->fetchAll();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="bg-gray-200">
-    <button id="mobile-menu-button" class="md:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-yellow-500 text-black">
+    <button id="mobile-menu-button" class="block md:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-yellow-500 text-black">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
         </svg>
@@ -36,8 +36,8 @@ $vehicles = $stmt->fetchAll();
 
 <div class="flex h-screen">
     <!-- Side Bar -->
-     <div class="hidden md:flex flex-col w-64  rounded-r-2xl shadow-2xl bg-yellow-500">
-        <div id="sidebar" class="fixed left-0 top-0 w-64 h-screen rounded-2xl shadow-2xl transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+    <div class="hidden md:flex flex-col w-64  rounded-r-2xl shadow-2xl bg-yellow-500">
+        <div id="sidebar" class="fixed left-0 top-0 w-64 h-screen bg-yellow-500 rounded-r-2xl shadow-2xl transform transition-transform duration-300 ease-in-out md:translate-x-0">
             <div class="flex flex-col flex-1">
                 <nav class="flex flex-col flex-1 px-2 py-4 gap-10">
                     <div>

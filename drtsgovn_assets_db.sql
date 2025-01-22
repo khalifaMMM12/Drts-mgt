@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 08, 2025 at 12:11 PM
+-- Generation Time: Jan 21, 2025 at 12:52 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `vehicleinspection_db`
+-- Database: `drtsgovn_assets_db`
 --
 
 -- --------------------------------------------------------
@@ -158,7 +158,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `role`, `can_delete_vehicle`, `can_edit_vehicle`, `can_add_vehicle`, `can_delete_equipment`, `can_edit_equipment`, `can_add_equipment`, `created_at`) VALUES
-(6, 'user1', '$2y$10$YF5pMa0QpIFGgqIlQZv1fO.s.E8xfvqz6LR8JsfijuC17.nnHxFNW', 'user', 1, 1, 1, 0, 0, 0, '2025-01-07 11:42:14');
+(6, 'user1', '$2y$10$YF5pMa0QpIFGgqIlQZv1fO.s.E8xfvqz6LR8JsfijuC17.nnHxFNW', 'user', 1, 1, 1, 0, 0, 0, '2025-01-07 11:42:14'),
+(7, 'user2', '$2y$10$J1njbuGO0ULQHTMtw3NmIexjoMZjP2Sw53kvDlQTW8gDiTK05u94.', 'user', 0, 1, 0, 0, 0, 0, '2025-01-09 13:22:14'),
+(9, 'user3', '$2y$10$.5qb2JcyaoFDuRBDOUI0WORrvzVSW3iE9toUdXmtUXO4gGxo1C78m', 'user', 0, 0, 1, 0, 0, 0, '2025-01-20 04:03:16');
 
 -- --------------------------------------------------------
 
@@ -173,7 +175,7 @@ CREATE TABLE `vehicles` (
   `make` varchar(50) NOT NULL,
   `location` varchar(100) NOT NULL,
   `inspection_date` date NOT NULL,
-  `needs_repairs` tinyint(1) DEFAULT 0,
+  `needs_repairs` tinyint(1) NOT NULL DEFAULT 0,
   `repair_type` text DEFAULT NULL,
   `status` varchar(50) DEFAULT NULL,
   `repair_completion_date` date DEFAULT NULL,
@@ -186,8 +188,10 @@ CREATE TABLE `vehicles` (
 --
 
 INSERT INTO `vehicles` (`id`, `reg_no`, `type`, `make`, `location`, `inspection_date`, `needs_repairs`, `repair_type`, `status`, `repair_completion_date`, `images`, `created_at`) VALUES
-(121, 'CT002', 'Sedan', 'Peaugot:508', 'mabushi', '2024-12-03', 0, NULL, 'Fixed', '2024-12-28', '', '2024-12-27 23:56:04'),
-(129, '5555', 'Sedan', 'Peaugot:508', 'mabushi', '2025-01-01', 0, 'windscreen ', 'Needs Repairs', NULL, '6777ed4b7d23a_1735912779.jpeg,6777ed4b993ad_1735912779.jpeg', '2025-01-03 13:59:39');
+(206, 'CT001', 'Sedan', 'Peaugot:406', 'mabushi', '2025-01-02', 0, 'cars', 'No Repairs', NULL, '', '2025-01-20 03:37:23'),
+(218, '5555', 'Sedan', 'Toyota:  PRADO', 'mabushi', '2025-01-08', 1, 'gears', 'Needs Repairs', NULL, '', '2025-01-20 06:14:53'),
+(222, '4564', 'Sedan', 'Toyota', 'mabushi', '2025-01-01', 1, NULL, 'Needs Repairs', NULL, '', '2025-01-20 06:39:05'),
+(223, 'CT01RT', 'Sedan', 'Toyota:  PRADO', 'mabushi', '2025-01-09', 1, 'gears', 'Needs Repairs', NULL, '', '2025-01-20 06:43:19');
 
 --
 -- Indexes for dumped tables
@@ -287,13 +291,13 @@ ALTER TABLE `solar`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `vehicles`
 --
 ALTER TABLE `vehicles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=130;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=224;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

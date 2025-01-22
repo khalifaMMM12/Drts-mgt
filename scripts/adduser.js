@@ -54,7 +54,11 @@ function closeLogoutModal() {
     document.getElementById('logoutModal').classList.remove('flex');
 }
 
-document.getElementById('mobile-menu-button').addEventListener('click', () => {
+document.addEventListener('DOMContentLoaded', function() {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
     const sidebar = document.getElementById('sidebar');
-    sidebar.classList.toggle('-translate-x-full');
+
+    mobileMenuButton.addEventListener('click', function() {
+        sidebar.classList.toggle('active');
+    });
 });

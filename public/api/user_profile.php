@@ -1,27 +1,16 @@
 <?php
-session_start();
-require_once '../config/db.php';
 
-if (!isset($_SESSION['username']) || !isset($_SESSION['role'])) {
-    header("Location: login.php");
-    exit;
-}
-
-
-// Initialize variables
 $user = null;
 $error = null;
 $success = null;
 
-// Fetch user data
 try {
     $table = ($_SESSION['role'] === 'admin') ? 'admin' : 'users';
-    $query = ($table === 'admin') 
-        ? "SELECT id, username, role, password FROM admin WHERE username = ?"
-        : "SELECT id, username, role, password, created_at FROM users WHERE username = ?";
+    $fields = $table === 'admin' ? 
+        ['id', 'username', 'role'] : 
+        ['id', 'username', 'role', 'created_at', 'can_delete_vehicle', 'can_edit_vehicle', 'can_add_vehicle'];
     
-    error_log("Using table: " . $table);
-    error_log("Username: " . $_SESSION['username']);
+    $query = "SELECT " . implode(', ', $fields) . ", password FROM $table WHERE username = ?";
 
     // Execute query
     $stmt = $pdo->prepare($query);
@@ -36,11 +25,11 @@ try {
         throw new Exception("User not found in database");
     }
 
-    error_log("User data: " . print_r($user, true));
+    error_log("User data fetched from $table: " . print_r($user, true));
 
 } catch(PDOException $e) {
     $error = $e->getMessage();
-    error_log("Profile Error: " . $error);
+    error_log("User profile error: " . $error);
 }
 
 // Handle password change

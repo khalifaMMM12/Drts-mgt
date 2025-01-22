@@ -1,5 +1,8 @@
 <?php
 session_start();
+include '../config/db.php';
+
+include 'api/user_profile.php';
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header("Location: index.php");
@@ -31,7 +34,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
             <div class="flex flex-col flex-1">
                 <nav class="flex flex-col flex-1 px-2 py-4 gap-10">
                     <div>
-                        <a href="#" class="flex items-center text-gray-100 hover:bg-gray-700">
+                        <a href="#" class="flex items-center text-gray-100">
                             <img class="w-20" src="../img/DRTS_logo.png" alt="DRTS Logo">
                             <h2 class="font-bold text-black text-lg">Directorate of Road Traffic Services</h2>
                         </a>

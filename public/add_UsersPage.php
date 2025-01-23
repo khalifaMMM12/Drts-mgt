@@ -2,18 +2,15 @@
 session_start();
 require_once '../config/db.php';
 
-// Check for admin access
 if (!isset($_SESSION['loggedin']) || $_SESSION['role'] !== 'admin') {
     $_SESSION['error_message'] = "Admin access required";
     header('Location: vehicle_page.php');
     exit();
 }
 
-// Get messages
 $success_message = isset($_SESSION['success_message']) ? $_SESSION['success_message'] : '';
 $error_message = isset($_SESSION['error_message']) ? $_SESSION['error_message'] : '';
 
-// Clear messages
 unset($_SESSION['success_message']);
 unset($_SESSION['error_message']);
 ?>

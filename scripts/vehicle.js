@@ -451,25 +451,76 @@ function closeDetailsModal() {
 
 function previewImages() {
     const imagePreview = document.getElementById('imagePreview');
-    const files = document.getElementById('images').files;
+    const input = document.getElementById('images');
+    const files = input.files;
+    const maxImages = 2;
 
-    imagePreview.innerHTML = ''; // Clear previous previews
+    imagePreview.innerHTML = '';
 
-    for (const file of files) {
-        const reader = new FileReader();
+    if (files.length > maxImages) {
+        showAlert(`Maximum ${maxImages} images allowed`, 'error');
+        input.value = '';
+        return;
+    }
+
+    const processedFiles = new Set();
+
+    Array.from(files).forEach((file, index) => {
         
-        reader.onload = function(event) {
+        if (processedFiles.has(file.name)) {
+            return;
+        }
+        
+        processedFiles.add(file.name);
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const previewWrapper = document.createElement('div');
+            previewWrapper.className = 'relative group';
+            previewWrapper.dataset.fileName = file.name;
+
             const imgElement = document.createElement('img');
-            imgElement.src = event.target.result;
-            imgElement.classList.add('w-40', 'h-40', 'object-cover', 'rounded');
-            imagePreview.appendChild(imgElement);
+            imgElement.src = e.target.result;
+            imgElement.className = 'w-40 h-40 object-cover rounded';
+
+            const deleteButton = document.createElement('button');
+            deleteButton.className = 'absolute hidden group-hover:block top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center';
+            deleteButton.innerHTML = '×';
+            deleteButton.onclick = (e) => {
+                e.preventDefault();
+                removeImage(index, previewWrapper, input);
+            };
+
+            previewWrapper.appendChild(imgElement);
+            previewWrapper.appendChild(deleteButton);
+            imagePreview.appendChild(previewWrapper);
         };
 
         reader.readAsDataURL(file);
+    });
+}
+
+function removeImage(index, previewWrapper, input) {
+    if (!input || !input.files) return;
+
+    const dt = new DataTransfer();
+    const { files } = input;
+
+    for (let i = 0; i < files.length; i++) {
+        if (i !== index) {
+            dt.items.add(files[i]);
+        }
     }
 
-    console.log("Preview function called");
+    input.files = dt.files;
+    previewWrapper.remove();
 }
+
+// document.addEventListener('DOMContentLoaded', () => {
+//     const imageInput = document.getElementById('images');
+//     if (imageInput) {
+//         imageInput.addEventListener('change', previewImages);
+//     }
+// });
 
 function showdetails() {
     document.getElementById("detailsModal").classList.remove("hidden");

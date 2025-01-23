@@ -360,9 +360,7 @@ $vehicles = $stmt->fetchAll();
                         <input hidden="" type="file" name="images[]" id="images" onchange="previewImages()" accept="image/*" multiple>
                     </div>
 
-                    <!-- Image Preview Section -->
                     <div id="imagePreview" class="col-span-2 grid grid-cols-2 gap-2 md:grid-cols-4">
-                        <!-- Preview images will be dynamically inserted here by JavaScript -->
                     </div>
                 </div>
                 <button type="submit" name="submit" class="bg-yellow-500 text-black p-2 rounded mt-4 w-full md:w-auto">Submit</button>

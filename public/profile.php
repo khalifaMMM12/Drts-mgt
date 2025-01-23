@@ -86,8 +86,8 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
         <h1 class="text-3xl font-bold text-black mb-6">User Profile</h1>
 
         <!-- LOGOUT MODAL -->
-        <div id="logoutModal" class="fixed inset-0 bg-gray-600 z-[60] bg-opacity-50 hidden items-center justify-center">
-            <div class="bg-white p-8 rounded-lg shadow-xl z-[70] relative">
+        <div id="logoutModal" class="fixed inset-0 bg-gray-600 z-50 bg-opacity-50 hidden items-center justify-center">
+            <div class="bg-white p-8 rounded-lg shadow-xl">
                 <h2 class="text-xl font-bold mb-4">Confirm Logout</h2>
                 <p class="mb-6">Are you sure you want to logout?</p>
                 <div class="flex justify-end gap-4">
@@ -159,14 +159,14 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
                         <label class="block text-gray-700 font-bold mb-2" for="confirm_password">
                             Confirm New Password
                         </label>
-                        <div class="relative">
+                        <div class="relative ">
                             <input type="password" id="confirm_password" name="confirm_password" required
                                 class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-yellow-500">
                             <i class="fas fa-eye absolute right-3 top-3 cursor-pointer" id="toggleConfirmPassword"></i>
                         </div>
                     </div>
                     <button type="submit" 
-                        class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded">
+                        class="rounded bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 shadow-lg">
                         Update Password
                     </button>
                 </form>

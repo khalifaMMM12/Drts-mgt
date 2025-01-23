@@ -2,7 +2,7 @@
 session_start();
 include '../config/db.php';
 
-include 'api/user_profile.php';
+include 'user_profile.php';
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     header("Location: index.php");
@@ -21,7 +21,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
     <title>Profile page</title>
 </head>
 <body class="bg-gray-100 ">
-    <button id="mobile-menu-button" class="md:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-yellow-500 text-black">
+    <button id="mobile-menu-button" class="md:hidden fixed top-4 left-4 z-[40] p-2 rounded-lg bg-yellow-500 text-black">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
         </svg>
@@ -86,8 +86,8 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
         <h1 class="text-3xl font-bold text-black mb-6">User Profile</h1>
 
         <!-- LOGOUT MODAL -->
-        <div id="logoutModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center">
-            <div class="bg-white p-8 rounded-lg shadow-xl">
+        <div id="logoutModal" class="fixed inset-0 bg-gray-600 z-[60] bg-opacity-50 hidden items-center justify-center">
+            <div class="bg-white p-8 rounded-lg shadow-xl z-[70] relative">
                 <h2 class="text-xl font-bold mb-4">Confirm Logout</h2>
                 <p class="mb-6">Are you sure you want to logout?</p>
                 <div class="flex justify-end gap-4">
@@ -132,7 +132,7 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
             </div>
 
             <!-- Change Password Form -->
-            <div>
+            <div class="z-[30]">
                 <h2 class="text-xl font-bold mb-4">Change Password</h2>
                 <form method="POST" class="space-y-4">
                     <div>

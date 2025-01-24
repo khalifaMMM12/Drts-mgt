@@ -483,8 +483,8 @@ function previewImages() {
             imgElement.className = 'w-40 h-40 object-cover rounded';
 
             const deleteButton = document.createElement('button');
-            deleteButton.className = 'absolute hidden group-hover:block top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center';
-            deleteButton.innerHTML = '×';
+            deleteButton.className = 'text-lg absolute block top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center';
+            deleteButton.innerHTML = 'X';
             deleteButton.onclick = (e) => {
                 e.preventDefault();
                 removeImage(index, previewWrapper, input);

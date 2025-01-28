@@ -89,7 +89,6 @@ try {
     // Begin transaction
     $pdo->beginTransaction();
 
-    // Check if registration number already exists
     $checkSql = "SELECT COUNT(*) FROM vehicles WHERE reg_no = ?";
     $checkStmt = $pdo->prepare($checkSql);
     $checkStmt->execute([$reg_no]);
@@ -97,7 +96,6 @@ try {
         throw new Exception('Vehicle with this registration number already exists');
     }
 
-    // Insert vehicle data
     $sql = "INSERT INTO vehicles (reg_no, type, make, location, status, repair_type, inspection_date, images, needs_repairs) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $pdo->prepare($sql);

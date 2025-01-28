@@ -98,7 +98,7 @@ require_once '../includes/auth_functions.php';
     </div>
 
     <div class="container mx-auto p-4 md:p-6 lg:px-8">
-        <h1 class="text-3xl font-bold text-black mb-6">DRTS Equipments</h1>
+        <h1 class="text-3xl font-bold text-black mb-6">Equipments Managements</h1>
 
         <!-- Modal -->
         <div id="addEquipmentModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">

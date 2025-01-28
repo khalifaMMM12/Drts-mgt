@@ -22,8 +22,8 @@ unset($_SESSION['temp_username']);
     <div class="w-full max-w-md shadow-2xl m-auto border-8 border-gray-900 bg-amber-300 rounded-md p-5">   
         <header class="mb-5">
             <img class="w-28 mx-auto" src="../img/DRTS_logo.png" />
-            <h2 class="mb-2 text-center text-3xl font-bold tracking-tight text-gray-900">Directorate of Road Traffic Services</h2>
-            <p class="">Login with the assigned username and password</p>
+            <h2 class="mb-2 text-center text-3xl font-bold tracking-tight text-gray-900">DRTS Assests Management</h2>
+            <p class="text-center">Login with your assigned username and password</p>
         </header>   
         <form method="POST" action="login.php" id="loginForm">
             <div>

@@ -43,7 +43,7 @@ $vehicles = $stmt->fetchAll();
                     <div>
                         <a href="#" class="flex items-center text-gray-100">
                             <img class="w-20" src="../img/DRTS_logo.png" alt="DRTS Logo">
-                            <h2 class="font-bold text-black text-lg">Directorate of Road Traffic Services</h2>
+                            <h2 class="font-bold text-black text-lg">DRTS Assests Management</h2>
                         </a>
                     </div>
                     <div class="flex flex-col flex-1 gap-3">
@@ -99,7 +99,7 @@ $vehicles = $stmt->fetchAll();
 
     <!-- Main Content Container -->
     <div class="container mx-auto md:p-5 lg:px-8">
-        <h1 class="text-3xl font-bold text-gray-900 m3r-4 mb-6">Vehicle Inspection Status</h1>
+        <h1 class="text-3xl font-bold text-gray-900 m3r-4 mb-6">Vehicle Management</h1>
         
         <div class="flex items-center gap-2">
             <div class="flex items-center p-2 rounded-xl bg-gray-800 mb-6">
@@ -444,11 +444,11 @@ $vehicles = $stmt->fetchAll();
                             <div class="relative group">
                                 <img src="../assets/vehicles/<?php echo htmlspecialchars(trim($image)); ?>" 
                                     class="w-32 h-32 object-cover rounded-lg shadow-lg">
-                                <button type="button" 
-                                        onclick="deleteImage(<?php echo $vehicle['id']; ?>, '<?php echo htmlspecialchars(trim($image)); ?>')"
-                                        class="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
-                                    delete image <i class="fas fa-times text-xs"></i>
-                                </button>
+                                <!-- <button type="button" 
+                                    onclick="deleteImage('<?php echo htmlspecialchars(trim($image)); ?>', <?php echo $vehicle['id']; ?>, this.parentElement)"
+                                    class="absolute opacity-0 group-hover:opacity-100 flex items-center justify-center -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 z-10 transition-opacity duration-200">
+                                ×
+                                </button> -->
                             </div>
                         <?php endforeach; ?>
                     <?php endif; ?>

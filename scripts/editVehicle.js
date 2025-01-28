@@ -112,15 +112,6 @@ function updateStatusDisplay(vehicleId, isChecked) {
     }
 }
 
-// document.addEventListener("DOMContentLoaded", function () {
-//     const editNeedsRepairsCheckbox  = document.getElementById("needsRepairs");
-
-//     if (needsRepairsCheckbox) {
-//         needsRepairsCheckbox.addEventListener("change", toggleRepairType);
-//     } else {
-//         console.error("Needs Repairs checkbox not found in DOM!");
-//     }
-// });
 
 function updateImageGallery(images, vehicleId) {
     const imageGallery = document.getElementById("editImagePreview");
@@ -128,7 +119,7 @@ function updateImageGallery(images, vehicleId) {
 
     const imagesArray = typeof images === "string" ? images.split(",") : images;
     
-    if (imagesArray) {
+    if (imagesArray && imagesArray.length > 0) {
         imagesArray.forEach((image, index) => {
             if (image.trim()) {
                 const imageContainer = createImageContainer(image.trim(), index, vehicleId);
@@ -141,28 +132,52 @@ function updateImageGallery(images, vehicleId) {
 function createImageContainer(image, index, vehicleId) {
     const container = document.createElement("div");
     container.className = "relative group";
-    container.setAttribute('data-image', image);
 
     const img = document.createElement("img");
     img.src = `../assets/vehicles/${image}`;
-    img.className = "w-32 h-32 object-cover rounded-lg shadow-lg";
+    img.className = "w-40 h-40 object-cover rounded cursor-pointer";
 
-    const deleteButton = document.createElement("button");
-    deleteButton.className = "absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10";
-    deleteButton.innerHTML = '<i class="fas fa-times text-xs"></i>';
-    deleteButton.type = "button";
-    
+    const deleteButton = document.createElement('button');
+    deleteButton.className = 'absolute opacity-0 group-hover:opacity-100 flex items-center justify-center top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 z-10 transition-all duration-200';
+    deleteButton.innerHTML = 'X';
     deleteButton.onclick = (e) => {
         e.preventDefault();
         e.stopPropagation();
         if (confirm('Are you sure you want to delete this image?')) {
-            deleteImage(vehicleId, image);
+            deleteImage(image, vehicleId, container);
         }
     };
 
     container.appendChild(img);
     container.appendChild(deleteButton);
     return container;
+}
+
+function deleteImage(imageName, vehicleId, container) {
+    fetch('delete_image.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            image: imageName,
+            vehicleId: vehicleId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            container.remove();
+            showAlert('Image deleted successfully', 'success');
+        } else {
+            showAlert('Failed to delete image', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('Error deleting image', 'error');
+    });
+    
 }
 
 function closeEditModal() {
@@ -210,20 +225,18 @@ function uploadNewImage(vehicleId) {
         body: formData,
     })
         .then(response => {
-            // Check if the response is JSON
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             return response.json();
         })
         .then(result => {
-            console.log("Server response:", result); // Debugging server response
+            console.log("Server response:", result);
 
             if (result.success) {
                 alert("Image(s) uploaded successfully!");
 
-                // Update the gallery with new images
-                const newImages = result.new_images; // Array of newly uploaded images
+                const newImages = result.new_images;
                 const imageGallery = document.getElementById("editImagePreview");
 
                 newImages.forEach((image, index) => {
@@ -282,23 +295,6 @@ function uploadNewImage(vehicleId) {
             console.error("Error uploading images:", error);
             alert("An error occurred while uploading images. Please try again.");
         });
-}
-
-
-function deleteImage(vehicleId, image) {
-    fetch(`delete_image.php?vehicle_id=${vehicleId}&image=${image}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const imageElement = document.querySelector(`[data-image="${image}"]`);
-                if (imageElement) {
-                    imageElement.remove();
-                }
-            } else {
-                alert('Failed to delete image');
-            }
-        })
-        .catch(error => console.error('Error:', error));
 }
 
 function submitEditForm(e) {

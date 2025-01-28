@@ -223,7 +223,6 @@ function showAlert(message, type = 'success') {
     alertDiv.textContent = message;
     document.body.appendChild(alertDiv);
     
-    // Remove alert after 3 seconds
     setTimeout(() => {
         alertDiv.remove();
     }, 3000);
@@ -234,7 +233,6 @@ const createResponseElement = () => {
     if (!responseMessage) {
         responseMessage = document.createElement('div');
         responseMessage.id = 'responseMessage';
-        // Add it after the form
         const form = document.getElementById('addVehicleForm');
         form.parentNode.insertBefore(responseMessage, form.nextSibling);
     }

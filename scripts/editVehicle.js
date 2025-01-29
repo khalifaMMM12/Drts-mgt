@@ -27,8 +27,7 @@ function editVehicle(vehicleId) {
             document.getElementById("inspection_date").value = vehicle.inspection_date || "";
             document.getElementById("vehicleId").value = vehicle.id || "";
 
-           
-
+    
             const editNeedsRepairsCheckbox  = document.getElementById("editNeedsRepairs");
             const repairTypeField = document.getElementById("repairTypeField");
             const repairTypeTextarea = document.getElementById("repair_type");
@@ -45,49 +44,17 @@ function editVehicle(vehicleId) {
             editNeedsRepairsCheckbox .removeEventListener("change", handleCheckboxChange);
             editNeedsRepairsCheckbox .addEventListener("change", handleCheckboxChange);
 
-            imageGallery.innerHTML = "";
-            const imagesArray = vehicle.images ? (typeof vehicle.images === "string" ? vehicle.images.split(",") : vehicle.images) : [];
-            imagesArray.forEach((image, index) => {
-                const sanitizedImage = image.trim().replace(/[^a-zA-Z0-9._-]/g, "");
-                const imagePath = `../assets/vehicles/${sanitizedImage}`;
-
-                const imageContainer = document.createElement("div");
-                imageContainer.classList.add("relative", "group");
-
-                const imgElement = document.createElement("img");
-                imgElement.src = imagePath;
-                imgElement.classList.add("cursor-pointer", "rounded", "shadow-lg");
-                imgElement.onclick = () => openCarousel(index);
-
-                const deleteIcon = document.createElement("span");
-                deleteIcon.classList.add(
-                    "absolute", "top-1", "right-1", "text-white", "text-2xl", "cursor-pointer", "opacity-0", "group-hover:opacity-100"
-                );
-                deleteIcon.innerHTML = "&times;";
-                deleteIcon.onclick = () => {
-                    if (confirm("Are you sure you want to delete this image?")) {
-                        fetch(`delete_image.php?vehicle_id=${vehicleId}&image=${sanitizedImage}`, { method: "GET" })
-                            .then(response => response.json())
-                            .then(result => {
-                                if (result.success) {
-                                    alert("Image deleted successfully!");
-                                    imageContainer.remove();
-                                } else {
-                                    alert("Failed to delete the image.");
-                                }
-                            })
-                            .catch(error => console.error("Error deleting image:", error));
-                    }
-                };
-
-                imageContainer.appendChild(imgElement);
-                imageContainer.appendChild(deleteIcon);
-                imageGallery.appendChild(imageContainer);
-            });
-
-            console.log("Edit modal successfully populated.");
-        })
-        .catch(error => console.error("Error loading vehicle data:", error));
+           
+        console.log("Edit modal successfully populated.");
+        if (vehicle.images) {
+            updateImageGallery(vehicle.images, vehicle.id);
+        }
+        showAlert("Vehicle updated successfully", "success")
+    })
+    .catch(error => {
+        console.error("Error loading vehicle data:", error);
+        showAlert("Error loading vehicle data", "error");
+    });
 }
 
 function handleCheckboxChange() {
@@ -134,10 +101,10 @@ function createImageContainer(image, index, vehicleId) {
 
     const img = document.createElement("img");
     img.src = `../assets/vehicles/${image}`;
-    img.className = "w-40 h-40 object-cover rounded cursor-pointer";
+    img.className = "w-40 h-40 object-cover rounded";
 
     const deleteButton = document.createElement('button');
-    deleteButton.className = 'absolute opacity-0 group-hover:opacity-100 flex items-center justify-center top-2 right-2 bg-red-500 hover:bg-red-600 text-black rounded-full w-6 h-6 z-10 transition-all duration-200';
+    deleteButton.className = 'text-lg absolute block top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center';
     deleteButton.innerHTML = 'X';
     deleteButton.onclick = (e) => {
         e.preventDefault();
@@ -293,18 +260,18 @@ function submitEditForm(e) {
 document.getElementById('editVehicleForm').removeEventListener('submit', submitEditForm);
 
 
-function showAlert(message, type = 'success') {
-    const alertDiv = document.createElement('div');
-    alertDiv.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg ${
-        type === 'success' ? 'bg-green-500' : 'bg-red-500'
-    } text-white`;
-    alertDiv.textContent = message;
-    document.body.appendChild(alertDiv);
+// function showAlert(message, type = 'success') {
+//     const alertDiv = document.createElement('div');
+//     alertDiv.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg ${
+//         type === 'success' ? 'bg-green-100' : 'bg-red-500'
+//     } text-white`;
+//     alertDiv.textContent = message;
+//     document.body.appendChild(alertDiv);
     
-    setTimeout(() => {
-        alertDiv.remove();
-    }, 3000);
-}
+//     setTimeout(() => {
+//         alertDiv.remove();
+//     }, 3000);
+// }
 
 function updateTableRow(vehicle) {
     const row = document.querySelector(`tr[data-vehicle-id="${vehicle.id}"]`);

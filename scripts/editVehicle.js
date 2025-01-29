@@ -1,4 +1,3 @@
-// Edit Vehicle Model
 function editVehicle(vehicleId) {
     console.log("Opening edit modal for vehicle ID:", vehicleId);
 
@@ -138,7 +137,7 @@ function createImageContainer(image, index, vehicleId) {
     img.className = "w-40 h-40 object-cover rounded cursor-pointer";
 
     const deleteButton = document.createElement('button');
-    deleteButton.className = 'absolute opacity-0 group-hover:opacity-100 flex items-center justify-center top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 z-10 transition-all duration-200';
+    deleteButton.className = 'absolute opacity-0 group-hover:opacity-100 flex items-center justify-center top-2 right-2 bg-red-500 hover:bg-red-600 text-black rounded-full w-6 h-6 z-10 transition-all duration-200';
     deleteButton.innerHTML = 'X';
     deleteButton.onclick = (e) => {
         e.preventDefault();
@@ -195,106 +194,57 @@ function closeEditModal() {
 }
 
 function uploadNewImage(vehicleId) {
-    // Get the file input element
     const fileInput = document.getElementById("new_images");
+    const existingImages = document.querySelectorAll('#editImagePreview .relative').length;
+    const maxTotalImages = 2;
 
-    // Validate vehicle ID
     if (!vehicleId) {
-        alert("Vehicle ID is missing.");
+        showAlert("Vehicle ID is missing.", "error");
         return;
     }
 
-    // Validate if files are selected
     if (fileInput.files.length === 0) {
-        alert("Please select at least one image.");
+        showAlert("Please select at least one image.", "error");
         return;
     }
 
-    // Create a FormData object and append vehicle ID
+    if (existingImages >= maxTotalImages) {
+        showAlert("Maximum images reached. Please delete an existing image before adding new ones.", "error");
+        fileInput.value = '';
+        return;
+    }
+
+    if (existingImages + fileInput.files.length > maxTotalImages) {
+        showAlert(`Only ${maxTotalImages - existingImages} more image(s) can be added.`, "error");
+        fileInput.value = '';
+        return;
+    }
+
     const formData = new FormData();
     formData.append("vehicle_id", vehicleId);
 
-    // Append selected files to FormData
     for (const file of fileInput.files) {
-        formData.append("new_image[]", file); // Ensure this matches the PHP script's expected key
+        formData.append("new_image[]", file);
     }
 
-    // Make the fetch API call
     fetch("upload_new_image.php", {
         method: "POST",
         body: formData,
     })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(result => {
-            console.log("Server response:", result);
-
-            if (result.success) {
-                alert("Image(s) uploaded successfully!");
-
-                const newImages = result.new_images;
-                const imageGallery = document.getElementById("editImagePreview");
-
-                newImages.forEach((image, index) => {
-                    const sanitizedImage = image.trim().replace(/[^a-zA-Z0-9._-]/g, '');
-                    const imagePath = `../assets/vehicles/${sanitizedImage}`;
-
-                    // Create image container
-                    const imageContainer = document.createElement("div");
-                    imageContainer.classList.add("relative", "group");
-
-                    // Create img element
-                    const imgElement = document.createElement("img");
-                    imgElement.src = imagePath;
-                    imgElement.classList.add("cursor-pointer", "rounded", "shadow-lg");
-                    imgElement.onclick = () => openCarousel(index); // Function for opening carousel
-
-                    // Create delete icon
-                    const deleteIcon = document.createElement("span");
-                    deleteIcon.classList.add(
-                        "absolute", "top-1", "right-1", "text-white", "text-2xl", "cursor-pointer", "opacity-0", "group-hover:opacity-100"
-                    );
-                    deleteIcon.innerHTML = "&times;";
-                    deleteIcon.onclick = () => {
-                        if (confirm("Are you sure you want to delete this image?")) {
-                            fetch(`delete_image.php?vehicle_id=${vehicleId}&image=${sanitizedImage}`, { method: 'GET' })
-                                .then(response => response.json())
-                                .then(deleteResult => {
-                                    if (deleteResult.success) {
-                                        alert("Image deleted successfully!");
-                                        imageContainer.remove();
-                                    } else {
-                                        alert("Failed to delete the image.");
-                                    }
-                                })
-                                .catch(error => console.error("Error deleting image:", error));
-                        }
-                    };
-
-                    // Append img and delete icon to the container
-                    imageContainer.appendChild(imgElement);
-                    imageContainer.appendChild(deleteIcon);
-
-                    // Append container to the gallery
-                    imageGallery.appendChild(imageContainer);
-                });
-
-                // Clear the file input
-                fileInput.value = "";
-            } else {
-                // Show error message from server
-                alert("Failed to upload image(s): " + result.error);
-            }
-        })
-        .catch(error => {
-            // Log any errors for debugging
-            console.error("Error uploading images:", error);
-            alert("An error occurred while uploading images. Please try again.");
-        });
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            showAlert("Image(s) uploaded successfully!", "success");
+            updateImageGallery(result.new_images, vehicleId);
+            fileInput.value = "";
+        } else {
+            showAlert(result.error || "Failed to upload image(s)", "error");
+        }
+    })
+    .catch(error => {
+        console.error("Error uploading images:", error);
+        showAlert("An error occurred while uploading images", "error");
+    });
 }
 
 function submitEditForm(e) {

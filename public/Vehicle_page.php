@@ -444,11 +444,11 @@ $vehicles = $stmt->fetchAll();
                             <div class="relative group">
                                 <img src="../assets/vehicles/<?php echo htmlspecialchars(trim($image)); ?>" 
                                     class="w-32 h-32 object-cover rounded-lg shadow-lg">
-                                <!-- <button type="button" 
+                                <button type="button" 
                                     onclick="deleteImage('<?php echo htmlspecialchars(trim($image)); ?>', <?php echo $vehicle['id']; ?>, this.parentElement)"
-                                    class="absolute opacity-0 group-hover:opacity-100 flex items-center justify-center -top-2 -right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 z-10 transition-opacity duration-200">
+                                    class="absolute opacity-0 group-hover:opacity-100 flex items-center justify-center top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 z-10 transition-opacity duration-200">
                                 ×
-                                </button> -->
+                                </button>
                             </div>
                         <?php endforeach; ?>
                     <?php endif; ?>

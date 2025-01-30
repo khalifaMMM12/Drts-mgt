@@ -101,7 +101,7 @@ function createImageContainer(image, index, vehicleId) {
 
     const img = document.createElement("img");
     img.src = `../assets/vehicles/${image}`;
-    img.className = "w-40 h-40 object-cover rounded";
+    img.className = "w-40 h-40 object-cover rounded-lg shadow-lg";
 
     const deleteButton = document.createElement('button');
     deleteButton.className = 'text-lg absolute block top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center';

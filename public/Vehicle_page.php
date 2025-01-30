@@ -342,6 +342,7 @@ $vehicles = $stmt->fetchAll();
                         </div>
                     </div>
 
+                    <div class="space-y-4">
                     <div class="relative">
                         <label title="Click to upload" for="images" class="cursor-pointer flex items-center gap-4 px-6 py-4 relative group">
                             <div class="w-max relative z-10">
@@ -360,7 +361,7 @@ $vehicles = $stmt->fetchAll();
                         <input hidden="" type="file" name="images[]" id="images" onchange="previewImages()" accept="image/*" multiple>
                     </div>
 
-                    <div id="imagePreview" class="col-span-2 grid grid-cols-2 gap-2 md:grid-cols-4">
+                    <div id="imagePreview" class="grid grid-flow-col grid-rows-4 gap-4"></div>
                     </div>
                 </div>
                 <button type="submit" name="submit" class="bg-yellow-500 text-black p-2 rounded mt-4 w-full md:w-auto">Submit</button>

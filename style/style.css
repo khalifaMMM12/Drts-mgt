@@ -126,6 +126,12 @@ input[type="radio"]:checked + label {
   object-fit: cover;
 }
 
+.previewImg{
+  width: 250px;
+  height: 250px;
+  /* border: 10px solid red; */
+}
+
 .delete-btn {
   position: absolute;
   top: 0;

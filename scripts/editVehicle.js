@@ -10,8 +10,10 @@ function editVehicle(vehicleId) {
     form.reset();
 
     const modal = document.getElementById("EditvehicleModal");
-    const imageGallery = document.getElementById("editImagePreview");
+    const modalContent = document.getElementById("EditvehicleContent");
+
     modal.classList.add("active");
+    modalContent.classList.remove("hide");
 
     fetch(`get_vehicle_details.php?id=${vehicleId}`)
         .then(response => response.json())
@@ -49,7 +51,6 @@ function editVehicle(vehicleId) {
         if (vehicle.images) {
             updateImageGallery(vehicle.images, vehicle.id);
         }
-        showAlert("Vehicle updated successfully", "success")
     })
     .catch(error => {
         console.error("Error loading vehicle data:", error);
@@ -148,7 +149,14 @@ function deleteImage(imageName, vehicleId, container) {
 
 function closeEditModal() {
     console.log("Closing Edit Modal");
-    document.getElementById("EditvehicleModal").classList.remove("active");
+
+    const editModal = document.getElementById("EditvehicleModal")
+    const editModalContent = document.getElementById("EditvehicleContent")
+
+    editModalContent.classList.add("hide")
+    editModalContent.addEventListener("animationend", () => {
+        editModal.classList.remove("active")
+    }, {once: true})
 
     const form = document.getElementById('editVehicleForm');
     form.reset();

@@ -210,11 +210,6 @@ function openModal() {
     }, { once: true });
 }
 
-function closeEditModal() {
-    console.log("Closing Edit Modal");
-    document.getElementById("EditvehicleModal").classList.remove("active");
-}
-
 function showAlert(message, type = 'success') {
     const alertDiv = document.createElement('div');
     alertDiv.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg ${
@@ -478,7 +473,7 @@ function previewImages() {
 
             const imgElement = document.createElement('img');
             imgElement.src = e.target.result;
-            imgElement.className = 'w-40 h-40 object-cover rounded-lg shadow-lg';
+            imgElement.className = 'previewImg object-cover rounded-lg shadow-lg';
 
             const deleteButton = document.createElement('button');
             deleteButton.className = 'text-lg absolute block top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center';

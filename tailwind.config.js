@@ -2,7 +2,16 @@
 module.exports = {
   content: ["./public/**/*.php"],
   theme: {
-    extend: {},
+    extend: {
+      width: {
+        '40': '10rem',
+        '48': '12rem',
+    },
+    height: {
+        '40': '10rem',
+        '48': '12rem',
+    }
+    },
   },
   plugins: [],
 }

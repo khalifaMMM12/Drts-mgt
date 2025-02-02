@@ -646,11 +646,18 @@ function closeDetailsModal() {
     }, { once: true });
 }
 
-// Add event listeners
+// Event listeners for closing modals
 document.addEventListener('DOMContentLoaded', () => {
     const detailsModal = document.getElementById("detailsModal");
     const editModal = document.getElementById("EditvehicleModal");
     const vehicleModal = document.getElementById("vehicleModal");
+    const deleteModal = document.getElementById("deleteModal")
+
+    deleteModal.addEventListener('click', (e) => {
+        if(e.target === deleteModal){
+            closeDeleteModal();
+        }
+    })
 
     vehicleModal.addEventListener('click', (e) => {
         if (e.target === vehicleModal) {

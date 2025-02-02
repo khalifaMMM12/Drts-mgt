@@ -5,10 +5,10 @@ const cancelDelete = document.getElementById("cancelDelete");
 let vehicleToDelete = null;
 
 function openDeleteModal(vehicleId, vehicleRegNo) {
-    console.log("delete btn clicked");
+    const deleteModalcontent = document.getElementById("deleteModalcontent")
     vehicleToDelete = vehicleId;
-    deleteModal.classList.remove("hidden");
     deleteModal.classList.add("active");
+    deleteModalcontent.classList.remove("hide");
 
     document.getElementById('deleteVehicleRegNo').textContent = vehicleRegNo;
     
@@ -20,8 +20,16 @@ function openDeleteModal(vehicleId, vehicleRegNo) {
 }
 
 function closeDeleteModal() {
-    deleteModal.classList.add("hidden");
+    const deleteModalcontent = document.getElementById("deleteModalcontent")
+    const deleteModal = document.getElementById("deleteModal");
+
+    deleteModalcontent.classList.add("hide")
+    deleteModalcontent.addEventListener('animationend', () => {
+        deleteModal.classList.remove("active")
+    }, {once: true})
     vehicleToDelete = null; 
+
+    console.log("delete modal closed");
 }
 
 document.addEventListener("keydown", (e) => {

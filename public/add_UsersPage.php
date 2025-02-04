@@ -102,7 +102,7 @@ unset($_SESSION['error_message']);
     <div class="container mx-auto md:p-5 lg:px-8">
         <h2 class="text-3xl font-bold text-gray-900 m3r-4 mb-6">Add New User</h2>
         
-    <div class="mt-7 bg-white rounded-xl shadow-lg dark:bg-gray-800 dark:border-gray-700 border-2 border-yellow-400">
+    <div class="mt-7 bg-white rounded-xl shadow-lg border-2 border-yellow-400">
     <div class="p-4 sm:p-7">
         <?php if ($success_message): ?>
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4"><?php echo $success_message; ?></div>

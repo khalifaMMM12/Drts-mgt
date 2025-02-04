@@ -85,8 +85,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 class="text-yellow-500 hover:text-yellow-700">
                             <i class="fa-solid fa-pen-to-square"></i>
                         </button>
-                        <a href="clear_vehicle.php?id=${vehicle.id}" 
-                           class="text-green-500 hover:text-green-700">✔ Clear</a>
+                        <button onclick="openClearModal(${vehicle.id}, '${vehicle.reg_no}')" 
+                           class="text-green-500 hover:text-green-700">✔ Clear</button>
                     `: ''}
                     ${hasPermission('delete_vehicle') ? `
                     <button onclick="openDeleteModal(${vehicle.id}, '${vehicle.reg_no}')"
@@ -337,7 +337,9 @@ function addVehicleToTable(vehicle) {
         </button>` : ''
     }
     ${hasPermission('clear_vehicle') ? 
-        `<a href="clear_vehicle.php?id=${vehicle.id}" class="text-green-500 hover:text-green-700">✔ Clear</a>` : ''
+        `<button data-vehicle-id="${vehicle.id}" 
+            data-vehicle-reg-no="${vehicle.reg_no}"
+            class="text-green-500 hover:text-green-700">✔ Clear</button>` : ''
     }
     ${hasPermission('delete_vehicle') ? 
         `<button class="text-red-500 hover:text-red-700 delete-button" 
@@ -652,6 +654,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const editModal = document.getElementById("EditvehicleModal");
     const vehicleModal = document.getElementById("vehicleModal");
     const deleteModal = document.getElementById("deleteModal")
+    const clearModal = document.getElementById("clearModal")
+
+    clearModal.addEventListener('click', (e) => {
+        if(e.target === clearModal){
+            closeClearModal()
+        }
+    })
 
     deleteModal.addEventListener('click', (e) => {
         if(e.target === deleteModal){

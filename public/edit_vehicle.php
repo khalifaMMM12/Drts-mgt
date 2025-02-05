@@ -12,14 +12,54 @@ try {
         throw new Exception('Vehicle ID is required');
     }
 
+    
+
     error_log("POST data: " . print_r($_POST, true));
 
     $needs_repairs = isset($_POST['needs_repairs']) ? (int)$_POST['needs_repairs'] : 0;
     $status = $needs_repairs === 1 ? 'Needs Repairs' : 'No Repairs';
     $repair_type = $_POST['repair_type'] ?? '';
 
-    error_log("needs_repairs: $needs_repairs, status: $status");
+    $imagesToDelete = json_decode($_POST['images_to_delete'] ?? '[]', true);
+    if (!empty($imagesToDelete)) {
+        $stmt = $pdo->prepare("SELECT images FROM vehicles WHERE id = ?");
+        $stmt->execute([$vehicleId]);
+        $currentVehicle = $stmt->fetch();
+        $currentImages = explode(',', $currentVehicle['images']);
 
+        foreach ($imagesToDelete as $imageToDelete) {
+            $imagePath = "../assets/vehicles/" . $imageToDelete;
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+            $currentImages = array_filter($currentImages, function($img) use ($imageToDelete) {
+                return trim($img) !== trim($imageToDelete);
+            });
+        }
+
+        $imageString = implode(',', array_filter($currentImages));
+        
+        $stmt = $pdo->prepare("UPDATE vehicles SET images = ? WHERE id = ?");
+        $stmt->execute([$imageString, $vehicleId]);
+    }
+
+    $stmt = $pdo->prepare("SELECT images FROM vehicles WHERE id = ?");
+    $stmt->execute([$vehicleId]);
+    $currentVehicle = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    $currentImages = $currentVehicle['images'] ? explode(',', $currentVehicle['images']) : [];
+    if (isset($_SESSION['images_to_delete']) && !empty($_SESSION['images_to_delete'])) {
+        foreach ($_SESSION['images_to_delete'] as $imageToDelete) {
+            $imagePath = "../assets/vehicles/" . $imageToDelete;
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+            $currentImages = array_filter($currentImages, function($img) use ($imageToDelete) {
+                return trim($img) !== trim($imageToDelete);
+            });
+        }
+        unset($_SESSION['images_to_delete']);
+    }
 
     $images = [];
     if (!empty($_FILES['new_images']['name'][0])) {
@@ -30,20 +70,23 @@ try {
         }
     }
 
+    $allImages = array_merge($currentImages, $images);
+    $imageString = implode(',', array_filter($allImages));
+
     $stmt = $pdo->prepare("
-         UPDATE vehicles 
-        SET reg_no = ?, type = ?, make = ?, location = ?, 
-            status = ?, repair_type = ?, inspection_date = ?,
+        UPDATE vehicles 
+        SET reg_no = ?, 
+            type = ?, 
+            make = ?, 
+            location = ?, 
+            status = ?, 
+            repair_type = ?, 
+            inspection_date = ?,
             needs_repairs = ?,
-            images = CASE 
-                WHEN ? != '' THEN CONCAT(COALESCE(images, ''), ',', ?)
-                ELSE images 
-            END
+            images = ?
         WHERE id = ?
     ");
 
-    $newImages = !empty($images) ? implode(',', $images) : '';
-    
     $stmt->execute([
         $_POST['reg_no'],
         $_POST['type'],
@@ -53,8 +96,7 @@ try {
         $repair_type,
         $_POST['inspection_date'],
         $needs_repairs,
-        $newImages,
-        $newImages,
+        $imageString,
         $vehicleId
     ]);
 
@@ -77,7 +119,8 @@ try {
             'status' => $status,
             'repair_type' => $repair_type,
             'needs_repairs' => $needs_repairs,
-            'inspection_date' => $vehicle['inspection_date']
+            'inspection_date' => $vehicle['inspection_date'],
+            'images' => $imageString
         ]
     ]);
 

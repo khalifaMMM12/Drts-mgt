@@ -121,30 +121,22 @@ function createImageContainer(image, index, vehicleId) {
 }
 
 function deleteImage(imageName, vehicleId, container) {
-    fetch('delete_image.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            image: imageName,
-            vehicleId: vehicleId
+    fetch(`delete_image.php?vehicle_id=${vehicleId}&image=${imageName}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                container.style.display = 'none';
+                container.classList.add('pending-delete');
+                container.dataset.imageName = imageName;
+                showAlert('Image marked for deletion', 'info');
+            } else {
+                throw new Error(data.message);
+            }
         })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            container.remove();
-            showAlert('Image deleted successfully', 'success');
-        } else {
-            showAlert('Failed to delete image', 'error');
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        showAlert('Error deleting image', 'error');
-    });
-    
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('Error marking image for deletion', 'error');
+        });
 }
 
 function closeEditModal() {
@@ -227,6 +219,13 @@ function submitEditForm(e) {
     
     const form = document.getElementById('editVehicleForm');
     const formData = new FormData(form);
+
+    const deletedImages = document.querySelectorAll('.pending-delete');
+    const imagesToDelete = [];
+    deletedImages.forEach(img => {
+        imagesToDelete.push(img.dataset.imageName);
+    });
+    formData.append('images_to_delete', JSON.stringify(imagesToDelete));
     
     const editNeedsRepairsCheckbox  = document.getElementById("editNeedsRepairs");
     console.log("Checkbox state:", editNeedsRepairsCheckbox .checked);
@@ -244,7 +243,12 @@ function submitEditForm(e) {
         method: "POST",
         body: formData
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
     .then(result => {
         console.log("Response from server:", result);
         if (result.success) {

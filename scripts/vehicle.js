@@ -1,13 +1,21 @@
 
 
 function openLogoutModal() {
-    document.getElementById('logoutModal').classList.remove('hidden');
-    document.getElementById('logoutModal').classList.add('flex');
+    const logoutModal = document.getElementById('logoutModal')
+    const logoutModalcontent = document.getElementById('logoutModalcontent')
+    
+    logoutModal.classList.add("active");
+    logoutModalcontent.classList.remove("hide");
 }
 
 function closeLogoutModal() {
-    document.getElementById('logoutModal').classList.add('hidden');
-    document.getElementById('logoutModal').classList.remove('flex');
+    const logoutModal = document.getElementById('logoutModal')
+    const logoutModalcontent = document.getElementById('logoutModalcontent')
+
+    logoutModalcontent.classList.add("hide")
+    logoutModalcontent.addEventListener('animationend', () => {
+        logoutModal.classList.remove("active")
+    },{once: true})
 }
 
 // Mobile menu toggle
@@ -286,6 +294,7 @@ document.getElementById('addVehicleForm').addEventListener('submit', function(ev
         }
         if (typeof addVehicleToTable === 'function') {
             addVehicleToTable(data.vehicle);
+            showAlert('Vehicle Added successfully', 'success')
             console.log("Adding vehicle with data:", data.vehicle);
             this.reset();
         }
@@ -683,6 +692,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const vehicleModal = document.getElementById("vehicleModal");
     const deleteModal = document.getElementById("deleteModal")
     const clearModal = document.getElementById("clearModal")
+    const logoutModal = document.getElementById("logoutModal")
+
+    logoutModal.addEventListener('click', (e) => {
+        if(e.target === logoutModal){
+            closeLogoutModal()
+        }
+    })
 
     clearModal.addEventListener('click', (e) => {
         if(e.target === clearModal){

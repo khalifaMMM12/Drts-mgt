@@ -150,13 +150,15 @@ $vehicles = $stmt->fetchAll();
             </style>
         </div>
 
-        <div id="logoutModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden items-center justify-center">
-            <div class="bg-white p-8 rounded-lg shadow-xl">
-                <h2 class="text-xl font-bold mb-4">Confirm Logout</h2>
-                <p class="mb-6">Are you sure you want to logout?</p>
-                <div class="flex justify-end gap-4">
-                    <button onclick="closeLogoutModal()" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">Cancel</button>
-                    <a href="logout.php" class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600">Logout</a>
+        <div id="logoutModal" class="modal-overlay items-center justify-center hidden fixed z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4">
+            <div id="logoutModalcontent" class="modal-content relative mx-auto shadow-xl rounded-md bg-white max-w-md">
+                <div class="p-6 text-center">
+                    <h2 class="text-lg text-red-600 font-bold mb-4">Confirm Logout</h2>
+                    <p class="mb-6">Are you sure you want to logout?</p>
+                    <div class="flex justify-end gap-4">
+                        <button onclick="closeLogoutModal()" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">No</button>
+                        <a href="logout.php" class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600">Yes</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -438,10 +440,10 @@ $vehicles = $stmt->fetchAll();
                     </div>
                 </div>
                 <input type="hidden" name="id" id="vehicleId" value="<?php echo htmlspecialchars($vehicle['id']); ?>">
-                <div>
+                <!-- <div>
                     <label>fixed Date:</label>
                     <input type="date" name="repair_completion_date" id="repair_completion_date" value="<?php echo htmlspecialchars($vehicle['repair_completion_date']); ?>" class="border p-2 w-full mb-4">
-                </div>
+                </div> -->
 
                 <div class="relative">
                     <label title="Click to upload" for="new_images" class="cursor-pointer flex items-center gap-4 px-6 py-4 relative group">

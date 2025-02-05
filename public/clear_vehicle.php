@@ -1,17 +1,20 @@
 <?php
 include '../config/db.php';
+header('Content-Type: application/json');
 
-if (isset($_GET['id'])) {
-    $vehicleId = $_GET['id'];
-    $currentDate = date('Y-m-d');
+try {
+    if (isset($_GET['id'])) {
+        $vehicleId = $_GET['id'];
+        $currentDate = date('Y-m-d');
 
-    // Update the vehicle status to "Fixed"
-    $sql = "UPDATE vehicles SET status = 'Fixed', repair_completion_date = :repair_completion_date WHERE id = :id";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([':repair_completion_date' => $currentDate, ':id' => $vehicleId]);
+        $sql = "UPDATE vehicles SET status = 'Fixed', repair_completion_date = :repair_completion_date WHERE id = :id";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([':repair_completion_date' => $currentDate, ':id' => $vehicleId]);
 
-    // Redirect back to the main page
-    header("Location: vehicle_page.php");
-    exit();
+        echo json_encode(['success' => true, 'message' => 'Vehicle cleared successfully']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Vehicle ID not provided']);
+    }
+} catch (PDOException $e) {
+    echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
 }
-?>

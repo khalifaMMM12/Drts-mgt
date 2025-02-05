@@ -78,7 +78,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                 disabled title="This vehicle is fixed and cannot be edited">
                             <i class="fa-solid fa-pen-to-squar</button>e"></i>
                         </button>
-                        <button class="text-green-500 opacity-50 cursor-not-allowed" 
+                        <button onclick="openClearModal(${vehicle.id}, '${vehicle.reg_no}')"
+                                class="text-green-500 opacity-50 cursor-not-allowed" 
                                 disabled title="This vehicle is already cleared">✔ Clear</button>
                     ` : hasPermission('edit_vehicle') ?`
                         <button onclick="editVehicle(${vehicle.id})" 
@@ -312,6 +313,32 @@ function getStatusBadge(status, needsRepairs) {
     return `<span class="text-gray-500 font-bold">No Repairs</span>`;
 }
 
+function updateVehicleStatus(vehicleId) {
+    const row = document.querySelector(`tr[data-vehicle-id="${vehicleId}"]`);
+    if (row) {
+        const statusCell = row.querySelector('.status-cell');
+        if (statusCell) {
+            statusCell.innerHTML = getStatusBadge('Fixed', 0);
+        }
+
+        const actionCell = row.querySelector('.action-cell');
+        if (actionCell) {
+            actionCell.innerHTML = `
+                <button onclick="showDetails(${vehicleId})" class="text-blue-500 hover:text-blue-700">ℹ</button>
+                <button class="text-yellow-500 opacity-50 cursor-not-allowed" disabled>
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button class="text-green-500 opacity-50 cursor-not-allowed" disabled>✔ Clear</button>
+            `;
+        }
+
+        const repairsCell = row.querySelector('.repairs-cell');
+        if (repairsCell) {
+            repairsCell.innerHTML = '<span class="text-gray-500 font-bold">No Repairs</span>';
+        }
+    }
+}
+
 function addVehicleToTable(vehicle) {
     console.log("Adding vehicle with full data:", vehicle);
 
@@ -339,6 +366,7 @@ function addVehicleToTable(vehicle) {
     ${hasPermission('clear_vehicle') ? 
         `<button data-vehicle-id="${vehicle.id}" 
             data-vehicle-reg-no="${vehicle.reg_no}"
+            onclick="openClearModal(${vehicle.id}, '${vehicle.reg_no}')"
             class="text-green-500 hover:text-green-700">✔ Clear</button>` : ''
     }
     ${hasPermission('delete_vehicle') ? 

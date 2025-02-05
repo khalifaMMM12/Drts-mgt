@@ -187,14 +187,10 @@ $vehicles = $stmt->fetchAll();
 
         <!-- Clear Modal -->
         <div id="clearModal" class="modal-overlay items-center justify-center hidden fixed z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4">
-            <div id="clearModalcontent" class="modal-content relative mx-auto shadow-xl rounded-md bg-white max-w-md">
-                <div class="p-6 pt-0 text-center">
-                    <svg class="w-20 h-20 text-red-600 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                        <h3 class="text-xl font-normal text-black mt-5 mb-6">Clearing vehicle with registration number: 
+            <div id="clearModalcontent" class="modal-content relative mx-auto shadow-xl rounded-xl bg-white max-w-md">
+                <div class="p-6 pt-2 text-center">
+                <svg class="h-20 w-20 mx-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#22c55e" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"/></svg>                        
+                    <h3 class="text-xl font-normal text-black mt-5 mb-6">Clearing vehicle with registration number: 
                         <span id="clearVehicleRegNo" class="font-bold text-green-800"></span>
                     </h3>
                     <a href="#" id="confirmClear" 

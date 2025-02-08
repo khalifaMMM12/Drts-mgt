@@ -406,5 +406,22 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+function openLogoutModal() {
+    const logoutModal = document.getElementById('logoutModal')
+    const logoutModalcontent = document.getElementById('logoutModalcontent')
+    
+    logoutModal.classList.add("active");
+    logoutModalcontent.classList.remove("hide");
+}
+
+function closeLogoutModal() {
+    const logoutModal = document.getElementById('logoutModal')
+    const logoutModalcontent = document.getElementById('logoutModalcontent')
+
+    logoutModalcontent.classList.add("hide")
+    logoutModalcontent.addEventListener('animationend', () => {
+        logoutModal.classList.remove("active")
+    },{once: true})
+}
 
 

@@ -28,52 +28,47 @@ $vehicles = $stmt->fetchAll();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="bg-gray-200">
-    <button id="mobile-menu-button" class="block md:hidden fixed top-4 left-4 z-50 p-2 rounded-lg bg-yellow-500 text-black">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-        </svg>
-    </button>
 
-<div class="flex h-screen">
+<div class="flex h-screen overflow-hidden">
     <!-- Side Bar -->
-    <div class="hidden md:flex flex-col w-64  rounded-r-2xl shadow-2xl bg-yellow-500">
-        <div id="sidebar" class="fixed left-0 top-0 w-64 h-screen bg-yellow-500 rounded-r-2xl shadow-2xl transform transition-transform duration-300 ease-in-out md:translate-x-0">
-            <div class="flex flex-col flex-1">
-                <nav class="flex flex-col flex-1 px-2 py-4 gap-10">
-                    <div>
-                        <a href="#" class="flex items-center text-gray-100">
+        <div id="sidebar" class="bg-yellow-500 rounded-r-2xl text-white w-64 min-h-screen overflow-y-auto transition-transform transform -translate-x-full ease-in-out duration-300">
+            <nav class="flex flex-col flex-1 px-2 py-4 gap-10">
+                <div>
+                    <a href="#" class="flex items-center text-gray-100">
                             <img class="w-20" src="../img/DRTS_logo.png" alt="DRTS Logo">
                             <h2 class="font-bold text-black text-lg">DRTS Assests Management</h2>
-                        </a>
-                    </div>
-                    <div class="flex flex-col flex-1 gap-3">
-                        <a href="equipment.php" class="hover:bg-opacity-25 rounded-2xl bg-gray-900  hover:bg-gray-400 text-white px-4 py-2 flex items-center">
+                    </a>
+                </div>
+                <div class="flex flex-col flex-1 gap-3">
+                    <a href="equipment.php" class="hover:bg-opacity-25 rounded-2xl bg-gray-900  hover:bg-gray-400 text-white px-4 py-2 flex items-center">
                             <i class="fas fa-tools mr-2"></i> Equipment
-                        </a>
-                        <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
-                            <a href="add_UsersPage.php" 
+                    </a>
+                    <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                        <a href="add_UsersPage.php" 
                                 class="hover:bg-opacity-25 rounded-2xl bg-gray-900  hover:bg-gray-400 text-white px-4 py-2 flex items-center">
                                 <i class="fas fa-user-plus mr-2"></i> Add User
-                            </a>
-                        <?php endif; ?>
-                        <a href="profile.php" class="flex items-center px-4 py-2 text-gray-100 bg-gray-900 hover:bg-gray-500 rounded-2xl">
-                            <i class="fa-solid fa-id-badge mr-2"></i>
-                            Profile
                         </a>
-                    </div>
-                </nav>
-            </div>
+                    <?php endif; ?>
+                    <a href="profile.php" class="flex items-center px-4 py-2 text-gray-100 bg-gray-900 hover:bg-gray-500 rounded-2xl">
+                        <i class="fa-solid fa-id-badge mr-2"></i>
+                            Profile
+                    </a>
+                </div>
+            </nav>
         </div>
-    </div>
 
-    <div class="flex flex-col flex-1 overflow-y-auto transition-margin duration-300 ease-in-out">
+    <div class="flex-1 flex flex-col overflow-hidden">
         
     <!-- Navigation Bar -->
     <div class="grid xl:grid-cols-1 grid-cols-1">
-        <div class="p-2 md:p-5">
-            <div class="py-2 md:py-3 px-2 md:px-3 rounded-xl border-yellow-400 border-4 md:border-8 bg-gray-900">
+            <div class="p-2 md:p-5 py-2 md:py-3 px-2 md:px-3 rounded-xl border-yellow-400 border-4 md:border-8 bg-gray-900">
                 <div class="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4">
                     <div class="flex items-center gap-2 md:gap-4 w-full md:w-auto">
+                        <button id="open-sidebar" class="top-4 left-4 z-50 p-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-black">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                            </svg>
+                        </button>
                         <h2 class="font-bold text-xl md:text-3xl text-white"><?php echo htmlspecialchars($_SESSION['username']); ?></h2>
                     </div>
 
@@ -94,11 +89,10 @@ $vehicles = $stmt->fetchAll();
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 
     <!-- Main Content Container -->
-    <div class="container mx-auto md:p-5 lg:px-8">
+    <div class="container flex-1 overflow-auto p-4">
         <h1 class="text-3xl font-bold text-gray-900 m3r-4 mb-6">Vehicle Management</h1>
         
         <div class="flex items-center gap-2">

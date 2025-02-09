@@ -22,6 +22,10 @@ function closeLogoutModal() {
 document.addEventListener('DOMContentLoaded', function() {
     const sidebar = document.getElementById('sidebar');
     const openSidebarButton = document.getElementById('open-sidebar');
+
+    openSidebarButton.addEventListener('click', function() {
+        sidebar.classList.toggle('active');
+    });
     
     openSidebarButton.addEventListener('click', (e) => {
         e.stopPropagation();

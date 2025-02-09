@@ -3,69 +3,39 @@
 @tailwind utilities;
 
 /* Mobile-first responsive styles */
-@layer components {
-  /* Sidebar */
-  .sidebar {
-      @apply fixed left-0 top-0 h-screen w-64 transform transition-transform duration-300 ease-in-out -translate-x-full md:translate-x-0;
-  }
-
-  /* Mobile menu button */
-  .mobile-menu-button {
-      @apply md:hidden fixed top-4 left-4 z-50;
-  }
-
-  /* Main content area */
-  .main-content {
-      @apply flex-1 transition-all duration-300 ease-in-out;
-  }
-
-  /* Table responsive */
-  .responsive-table {
-      @apply overflow-x-auto;
-  }
-
-  /* Table cells */
-  .table-cell {
-      @apply p-2 md:p-4;
-  }
-
-  /* Action buttons */
-  .action-buttons {
-      @apply flex flex-wrap gap-2 justify-center md:justify-around;
-  }
-
-  /* Modal adjustments */
-  .modal-content {
-      @apply w-full mx-4 md:mx-auto md:max-w-lg lg:max-w-2xl;
-  }
-
-  /* Form fields */
-  .form-field {
-      @apply w-full md:w-auto;
-  }
-}
-
-/* Mobile-specific animations */
 @media (max-width: 768px) {
-  #mobile-menu-button {
-      display: block;
+  #sidebar {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 75%;
+      height: 100vh;
+      background-color: #1a202c;
+      transition: left 0.3s ease-in-out;
+      z-index: 50;
   }
   
-  .sidebar-open {
-      transform: translateX(0) !important;
+  #sidebar.active {
+      left: 0;
+  }
+  
+  #open-sidebar {
+      display: block;
   }
 }
 
 @media (min-width: 769px) {
-  #mobile-menu-button {
+  #sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 250px;
+      height: 100vh;
+  }
+  
+  #open-sidebar {
       display: none;
   }
-}
-
-@media (max-width: 640px) {
-  .table-container { overflow-x: auto; }
-  .table { min-width: 600px; }
-  .table th, .table td { padding: 0.5rem; }
 }
 
 input[type="radio"]:checked + label {

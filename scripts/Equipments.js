@@ -1,12 +1,20 @@
 function openLogoutModal() {
-    document.getElementById('logoutModal').classList.remove('hidden');
-    document.getElementById('logoutModal').classList.add('flex');
+    const logoutModal = document.getElementById('logoutModal')
+    const logoutModalcontent = document.getElementById('logoutModalcontent')
+    
+    logoutModal.classList.add("active");
+    logoutModalcontent.classList.remove("hide");
 }
 
 function closeLogoutModal() {
-    document.getElementById('logoutModal').classList.add('hidden');
-    document.getElementById('logoutModal').classList.remove('flex');
-}
+    const logoutModal = document.getElementById('logoutModal')
+    const logoutModalcontent = document.getElementById('logoutModalcontent')
+
+    logoutModalcontent.classList.add("hide")
+    logoutModalcontent.addEventListener('animationend', () => {
+        logoutModal.classList.remove("active")
+    },{once: true})
+}            
 
 // Wait for the DOM to load
 document.addEventListener("DOMContentLoaded", function () {

@@ -31,7 +31,7 @@ $vehicles = $stmt->fetchAll();
 
 <div class="flex h-screen overflow-hidden">
     <!-- Side Bar -->
-        <div id="sidebar" class="bg-yellow-500 rounded-r-2xl text-white w-64 min-h-screen overflow-y-auto transition-transform transform -translate-x-full ease-in-out duration-300">
+        <div id="sidebar" class="bg-yellow-500 rounded-r-2xl text-white w-64 min-h-screen overflow-y-auto transition-transform transform -translate-x-full md:translate-x-0 ease-in-out duration-300">
             <nav class="flex flex-col flex-1 px-2 py-4 gap-10">
                 <div>
                     <a href="#" class="flex items-center text-gray-100">
@@ -57,14 +57,14 @@ $vehicles = $stmt->fetchAll();
             </nav>
         </div>
 
-    <div class="flex-1 flex flex-col overflow-hidden">
+    <div class="flex-1 flex flex-col overflow-hidden ml-0 md:ml-64 p-4">
         
     <!-- Navigation Bar -->
     <div class="grid xl:grid-cols-1 grid-cols-1">
             <div class="p-2 md:p-5 py-2 md:py-3 px-2 md:px-3 rounded-xl border-yellow-400 border-4 md:border-8 bg-gray-900">
                 <div class="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4">
                     <div class="flex items-center gap-2 md:gap-4 w-full md:w-auto">
-                        <button id="open-sidebar" class="top-4 left-4 z-50 p-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-black">
+                        <button id="open-sidebar" class="md:hidden top-4 left-4 z-50 p-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-black">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
                             </svg>
@@ -147,9 +147,9 @@ $vehicles = $stmt->fetchAll();
         <div id="logoutModal" class="modal-overlay items-center justify-center hidden fixed z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4">
             <div id="logoutModalcontent" class="modal-content relative mx-auto shadow-xl rounded-md bg-white max-w-md">
                 <div class="p-6 text-center">
-                    <h2 class="text-lg text-red-600 font-bold mb-4">Confirm Logout</h2>
-                    <p class="mb-6">Are you sure you want to logout?</p>
-                    <div class="flex justify-end gap-4">
+                    <h2 class="text-2xl text-red-600 font-bold mb-4">Confirm Logout</h2>
+                    <p class="mb-6 text-xl text-black">Are you sure you want to logout?</p>
+                    <div class="flex justify-center gap-4">
                         <button onclick="closeLogoutModal()" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">No</button>
                         <a href="logout.php" class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600">Yes</a>
                     </div>

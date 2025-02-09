@@ -274,7 +274,7 @@ $vehicles = $stmt->fetchAll();
     </div>
 
   <!-- Vehicle Details Modal -->
-<div id="detailsModal" class="modal-overlay fixed inset-0 bg-gray-500 bg-opacity-75 hidden flex items-center justify-center p-4">
+<div id="detailsModal" class="modal-overlay fixed inset-0 bg-gray-500 bg-opacity-75 hidden items-center justify-center p-4">
     <div id="detailsModalContent" class="modal-content relative bg-white p-8 rounded-lg shadow-2xl border-4 border-yellow-400 w-full max-w-lg md:max-w-2xl lg:max-w-3xl">
         <button onclick="closeDetailsModal()" id="closeDetails" class="absolute top-4 right-4 text-gray-600 text-3xl font-bold hover:text-gray-800">&times;</button>
         
@@ -297,7 +297,7 @@ $vehicles = $stmt->fetchAll();
         </div>
         
         <!-- Enlarged Image View with Carousel Controls -->
-        <div id="carouselModal" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center p-6">
+        <div id="carouselModal" class="hidden fixed inset-0 bg-black bg-opacity-80 items-center justify-center p-6">
             <div class="carousel-content relative w-11/12 md:w-3/4 lg:w-1/2 bg-white rounded-lg shadow-lg p-4">
                 <button onclick="closeCarousel()" id="closeCarousel" class="absolute top-3 right-3 text-gray-600 text-2xl font-bold hover:text-gray-800">&times;</button>
                 
@@ -312,7 +312,7 @@ $vehicles = $stmt->fetchAll();
 </div>
 
     <!-- Add Vehicle Modal -->
-    <div id="vehicleModal" class="modal-overlay hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
+    <div id="vehicleModal" class="modal-overlay hidden fixed inset-0 bg-gray-500 bg-opacity-75 items-center justify-center p-4">
         <div id="vehicleModalContent" class="modal-content relative bg-white p-6 rounded-lg shadow-lg border-2 border-yellow-400 w-full max-w-lg md:max-w-2xl lg:max-w-3xl overflow-y-auto max-h-full">
             <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-700 text-4xl">&times;</button>            
             <h2 class="text-xl mb-4 text-yellow-500 font-bold">Add Vehicle</h2>
@@ -389,7 +389,7 @@ $vehicles = $stmt->fetchAll();
 
 
 <!-- Edit vehicle Modal -->
-    <div id="EditvehicleModal" class="modal-overlay hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
+    <div id="EditvehicleModal" class="modal-overlay hidden fixed inset-0 bg-gray-500 bg-opacity-75 items-center justify-center p-4">
     <div id="EditvehicleContent" class="modal-content relative bg-white p-6 rounded-lg shadow-lg border-2 border-yellow-400 w-full max-w-lg md:max-w-2xl lg:max-w-3xl overflow-y-auto max-h-full">
         <button onclick="closeEditModal()" class="absolute top-2 right-2 text-gray-700 text-4xl">&times;</button>
         <h2 class="text-xl mb-4 text-yellow-500 font-bold">Edit Vehicle</h2>

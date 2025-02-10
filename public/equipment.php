@@ -101,7 +101,7 @@ require_once '../includes/auth_functions.php';
         <h1 class="text-3xl font-bold text-black mb-6">Equipments Managements</h1>
 
         <!-- Modal -->
-        <div id="addEquipmentModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 items-center justify-center p-4">
+        <div id="addEquipmentModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
             <div class="modal-content relative bg-white p-6 rounded-lg shadow-lg border-2 border-yellow-400 w-full max-w-lg md:max-w-2xl lg:max-w-3xl overflow-y-auto max-h-full">
                 <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-700 text-4xl">&times;</button>
                 <h2 id="modalTitle" class="text-xl font-bold mb-4"></h2>

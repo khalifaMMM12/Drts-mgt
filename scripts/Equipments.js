@@ -255,12 +255,12 @@ addEquipmentForm.addEventListener("submit", function (e) {
         })
         .then((data) => {
             if (data.success) {
-                alert("Equipment added successfully!");
+                showAlert("Equipment added successfully!", "success");
                 addEquipmentModal.classList.add("hidden");
                 addEquipmentForm.reset();
                 loadTableData(equipmentSelect.value);
             } else {
-                alert("Error adding equipment: " + data.error);
+                showAlert("Error adding equipment: ", "error");
             }
         })
         .catch((error) => {
@@ -329,9 +329,7 @@ function loadTableData(type) {
                         <td class="p-4">${equipment.no_of_batteries || 'N/A'}</td>
                         <td class="p-4">${equipment.no_of_panels || 'N/A'}</td>
                         <td class="p-4">${equipment.date_added || 'N/A'}</td>
-                        <td class="p-4">            
-                            <a href="#" class="text-red-500 hover:text-red-700" onclick="deleteEquipment(${equipment.id}, 'solar')"><i class="fa-solid fa-trash-can"></i></a>
-                        </td>
+                        ${createActionButtons}
                     `;
                 } else if (type === 'airConditioners') {
                     newRow.innerHTML = `
@@ -341,9 +339,7 @@ function loadTableData(type) {
                         <td class="p-4">${equipment.no_of_units || 'N/A'}</td>
                         <td class="p-4">${equipment.capacity || 'N/A'}</td>
                         <td class="p-4">${equipment.status || 'N/A'}</td>
-                        <td class="p-4">            
-                            <a href="#" class="text-red-500 hover:text-red-700" onclick="deleteEquipment(${equipment.id}, 'airConditioners')"><i class="fa-solid fa-trash-can"></i></a>
-                        </td>
+                        ${createActionButtons}
                     `;
                 } else if (type === 'fireExtinguishers') {
                     newRow.innerHTML = `
@@ -354,9 +350,7 @@ function loadTableData(type) {
                         <td class="p-4">${equipment.status || 'N/A'}</td>
                         <td class="p-4">${equipment.last_service_date || 'N/A'}</td>
                         <td class="p-4">${equipment.expiration_date || 'N/A'}</td>
-                        <td class="p-4">            
-                            <button class="text-red-500 hover:text-red-700" onclick="deleteEquipment(${equipment.id}, 'fireExtinguishers')"><i class="fa-solid fa-trash-can"></i></button>
-                        </td>
+                        ${createActionButtons}
                     `;
                 } else if (type === 'borehole'){
                     newRow.innerHTML = `
@@ -371,9 +365,7 @@ function loadTableData(type) {
                         <td class="p-4">${equipment.model || 'N/A'}</td>
                         <td class="p-4">${equipment.status || 'N/A'}</td>
                         <td class="p-4">${equipment.noOfUnits || 'N/A'}</td>
-                        <td class="p-4">            
-                            <a href="#" class="text-red-500 hover:text-red-700" onclick="deleteEquipment(${equipment.id}, 'generator')"><i class="fa-solid fa-trash-can"></i></a>
-                        </td>
+                        ${createActionButtons}
                     `;
                 }
 
@@ -408,16 +400,34 @@ function openDeleteModal(id, name, type) {
     modalContent.classList.remove('hide');
 
     if (!hasPermission('delete_equipment')) {
-        alert('You do not have permission to delete vehicles');
+        showAlert('You do not have permission to delete vehicles', 'error');
         return;
     }
 }
 
 function closeDeleteModal() {
-    const modal = document.getElementById('delEquipmentModal');
-    modal.classList.remove('flex');
-    modal.classList.add('hidden');
-    equipmentToDelete = null;
+    const Modal = document.getElementById('delEquipmentModal')
+    const Modalcontent = document.getElementById('delEquipmentModalcontent')
+
+    Modalcontent.classList.add("hide")
+    Modalcontent.addEventListener('animationend', () => {
+        Modal.classList.remove("active")
+    },{once: true})
+
+    equipmentToDelete = null
+}
+
+function showAlert(message, type = 'success') {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg ${
+        type === 'success' ? 'bg-green-500' : 'bg-red-500'
+    } text-white`;
+    alertDiv.textContent = message;
+    document.body.appendChild(alertDiv);
+    
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 3000);
 }
 
 document.getElementById('confirmDelete').addEventListener('click', async function() {
@@ -438,15 +448,15 @@ document.getElementById('confirmDelete').addEventListener('click', async functio
         const data = await response.json();
         
         if (data.status === 'success') {
-            loadEquipmentData(equipmentToDelete.type);
+            loadTableData(equipmentToDelete.type);
             closeDeleteModal();
-            alert('Equipment deleted successfully');
+            showAlert('Equipment deleted successfully', 'success');
         } else {
-            alert('Failed to delete equipment: ' + data.message);
+            showAlert('Failed to delete equipment: ', 'error');
         }
     } catch (error) {
         console.error('Error:', error);
-        alert('An error occurred while deleting the equipment');
+        showAlert('An error occurred while deleting the equipment', 'error');
     }
 });
 
@@ -458,23 +468,5 @@ document.addEventListener('DOMContentLoaded', function() {
         sidebar.classList.toggle('active');
     });
 });
-
-function openLogoutModal() {
-    const logoutModal = document.getElementById('logoutModal')
-    const logoutModalcontent = document.getElementById('logoutModalcontent')
-    
-    logoutModal.classList.add("active");
-    logoutModalcontent.classList.remove("hide");
-}
-
-function closeLogoutModal() {
-    const logoutModal = document.getElementById('logoutModal')
-    const logoutModalcontent = document.getElementById('logoutModalcontent')
-
-    logoutModalcontent.classList.add("hide")
-    logoutModalcontent.addEventListener('animationend', () => {
-        logoutModal.classList.remove("active")
-    },{once: true})
-}
 
 

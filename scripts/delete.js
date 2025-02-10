@@ -13,7 +13,7 @@ function openDeleteModal(vehicleId, vehicleRegNo) {
     document.getElementById('deleteVehicleRegNo').textContent = vehicleRegNo;
     
     if (!hasPermission('delete_vehicle')) {
-        alert('You do not have permission to delete vehicles');
+        showAlert('You do not have permission to delete vehicles', 'error');
         return;
     }
 

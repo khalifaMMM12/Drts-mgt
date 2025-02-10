@@ -10,7 +10,7 @@ function openClearModal(vehicleId, vehicleRegNo) {
     document.getElementById('clearVehicleRegNo').textContent = vehicleRegNo;
     
     // if (!hasPermission('clear_vehicle')) {
-    //     alert('You do not have permission to delete vehicles');
+    //     showAlert('You do not have permission to delete vehicles', 'error');
     //     return;
     // }
 

@@ -3,17 +3,17 @@ function validateForm() {
     const password = document.getElementById('password').value.trim();
     
     if (!username || !password) {
-        alert('Username and password are required');
+        showAlert('Username and password are required', 'error');
         return false;
     }
     
     if (username.length < 3) {
-        alert('Username must be at least 3 characters');
+        showAlert('Username must be at least 3 characters', 'error');
         return false;
     }
     
     if (password.length < 6) {
-        alert('Password must be at least 6 characters');
+        showAlert('Password must be at least 6 characters', 'error');
         return false;
     }
 
@@ -70,3 +70,16 @@ document.addEventListener('DOMContentLoaded', function() {
         sidebar.classList.toggle('active');
     });
 });
+
+function showAlert(message, type = 'success') {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg ${
+        type === 'success' ? 'bg-green-500' : 'bg-red-500'
+    } text-white`;
+    alertDiv.textContent = message;
+    document.body.appendChild(alertDiv);
+    
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 3000);
+}

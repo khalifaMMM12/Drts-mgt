@@ -270,6 +270,20 @@ addEquipmentForm.addEventListener("submit", function (e) {
     
 });
 
+function hasPermission(permission) {
+    
+    if (window.isAdmin === true) {
+        return true;
+    }
+    
+    if (typeof window.userPermissions === 'object' && window.userPermissions !== null) {
+        return Boolean(window.userPermissions[permission]);
+    }
+    
+    console.warn('Permissions not properly initialized');
+    return false;
+}
+
 // Load table data
 function loadTableData(type) {
     fetch(`get_equipment_data.php?type=${type}`)
@@ -290,9 +304,22 @@ function loadTableData(type) {
                 return;
             }
 
+
             data.forEach((equipment) => {
                 const newRow = document.createElement('tr');
                 newRow.classList.add('border-b');
+
+                const createActionButtons = `
+                    <td class="p-4 border-b">
+                        ${hasPermission('delete_equipment') ? `
+                            <button onclick="openDeleteModal(${equipment.id}, '${equipment.name || equipment.location}', '${type}')"
+                                    class="text-red-500 hover:text-red-700">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        ` : ''}
+                        <!-- Add other action buttons here -->
+                    </td>
+                `;
 
                 if (type === 'solar') {
                     newRow.innerHTML = `
@@ -328,7 +355,7 @@ function loadTableData(type) {
                         <td class="p-4">${equipment.last_service_date || 'N/A'}</td>
                         <td class="p-4">${equipment.expiration_date || 'N/A'}</td>
                         <td class="p-4">            
-                            <a href="#" class="text-red-500 hover:text-red-700" onclick="deleteEquipment(${equipment.id}, 'fireExtinguishers')"><i class="fa-solid fa-trash-can"></i></a>
+                            <button class="text-red-500 hover:text-red-700" onclick="deleteEquipment(${equipment.id}, 'fireExtinguishers')"><i class="fa-solid fa-trash-can"></i></button>
                         </td>
                     `;
                 } else if (type === 'borehole'){
@@ -336,9 +363,7 @@ function loadTableData(type) {
                         <td class="p-4">${equipment.location || 'N/A'}</td>
                         <td class="p-4">${equipment.model || 'N/A'}</td>
                         <td class="p-4">${equipment.status || 'N/A'}</td>
-                        <td class="p-4">            
-                            <a href="#" class="text-red-500 hover:text-red-700" onclick="deleteEquipment(${equipment.id}, 'borehole')"><i class="fa-solid fa-trash-can"></i></a>
-                        </td>
+                        ${createActionButtons}
                     `;
                 }else if (type === 'generator'){
                     newRow.innerHTML = `
@@ -366,44 +391,64 @@ function loadTableData(type) {
 
 loadTableData('solar');
 
-function deleteModal(){
-    
-}
+let equipmentToDelete = null;
 
-function deleteEquipment(equipmentId, equipmentType) {
-    if (!confirm('Are you sure you want to delete this equipment?')) {
+function openDeleteModal(id, name, type) {
+    const modal = document.getElementById('delEquipmentModal');
+    const modalContent = document.getElementById('delEquipmentModalcontent');
+    
+    equipmentToDelete = {
+        id: id,
+        type: type
+    };
+    
+    document.getElementById('deleteEquipmentType').textContent = type;
+    document.getElementById('deleteEquipmentName').textContent = name;
+    modal.classList.add('active');
+    modalContent.classList.remove('hide');
+
+    if (!hasPermission('delete_equipment')) {
+        alert('You do not have permission to delete vehicles');
         return;
     }
-
-    fetch('delete_equipment.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            id: equipmentId,    
-            type: equipmentType     
-        })
-    })
-    .then(response => {
-        if (!response.ok) {
-            return response.text().then(text => {
-                console.error('Response Text:', text);
-                throw new Error('Server Error: ' + text);
-            });
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.status === 'success') {
-            alert("Equipment deleted successfully.");
-            loadTableData(equipmentType);
-        } else {
-            alert("Error deleting equipment: " + data.message);
-        }
-    })
-    .catch(error => console.error('Error:', error));
 }
+
+function closeDeleteModal() {
+    const modal = document.getElementById('delEquipmentModal');
+    modal.classList.remove('flex');
+    modal.classList.add('hidden');
+    equipmentToDelete = null;
+}
+
+document.getElementById('confirmDelete').addEventListener('click', async function() {
+    if (!equipmentToDelete) return;
+    
+    try {
+        const response = await fetch(`delete_equipment.php`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: equipmentToDelete.id,
+                type: equipmentToDelete.type
+            })
+        });
+
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+            loadEquipmentData(equipmentToDelete.type);
+            closeDeleteModal();
+            alert('Equipment deleted successfully');
+        } else {
+            alert('Failed to delete equipment: ' + data.message);
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('An error occurred while deleting the equipment');
+    }
+});
 
 document.addEventListener('DOMContentLoaded', function() {
     const mobileMenuButton = document.getElementById('mobile-menu-button');

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 21, 2025 at 12:52 PM
+-- Generation Time: Feb 10, 2025 at 12:18 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -39,7 +39,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id`, `username`, `password`, `role`) VALUES
-(6, 'DRTS', '$2y$10$ET59OIP6LGLQSpGyqY2NVOWVNnaHlpiCHec.nP6QQjOj6LO3mCbuq', 'admin');
+(6, 'DRTS', '$2y$10$uwSD1LNutgZrMV2Mw/UITe6FNJnjcWoYpTsX5bg/Z/Zr7/bU6/Rre', 'admin');
 
 -- --------------------------------------------------------
 
@@ -62,7 +62,7 @@ CREATE TABLE `airconditioners` (
 --
 
 INSERT INTO `airconditioners` (`id`, `location`, `model`, `type`, `no_of_units`, `capacity`, `status`) VALUES
-(9, 'power house', 'sharp', 'Split', 3, '1.5hp', 'Not Operational');
+(10, 'power house', 'sharp', 'Split', 3, '7.5kva', 'Not Operational');
 
 -- --------------------------------------------------------
 
@@ -76,14 +76,6 @@ CREATE TABLE `borehole` (
   `model` varchar(255) NOT NULL,
   `status` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `borehole`
---
-
-INSERT INTO `borehole` (`id`, `location`, `model`, `status`) VALUES
-(2, 'power house', 'downforce', 'Not Operational'),
-(3, 'mabushi', 'downforcwe', 'Operational');
 
 -- --------------------------------------------------------
 
@@ -188,10 +180,10 @@ CREATE TABLE `vehicles` (
 --
 
 INSERT INTO `vehicles` (`id`, `reg_no`, `type`, `make`, `location`, `inspection_date`, `needs_repairs`, `repair_type`, `status`, `repair_completion_date`, `images`, `created_at`) VALUES
-(206, 'CT001', 'Sedan', 'Peaugot:406', 'mabushi', '2025-01-02', 0, 'cars', 'No Repairs', NULL, '', '2025-01-20 03:37:23'),
-(218, '5555', 'Sedan', 'Toyota:  PRADO', 'mabushi', '2025-01-08', 1, 'gears', 'Needs Repairs', NULL, '', '2025-01-20 06:14:53'),
-(222, '4564', 'Sedan', 'Toyota', 'mabushi', '2025-01-01', 1, NULL, 'Needs Repairs', NULL, '', '2025-01-20 06:39:05'),
-(223, 'CT01RT', 'Sedan', 'Toyota:  PRADO', 'mabushi', '2025-01-09', 1, 'gears', 'Needs Repairs', NULL, '', '2025-01-20 06:43:19');
+(225, 'CT003', 'SUV', 'Toyota:  PRADO', 'mabushi', '2025-01-08', 0, '', 'Fixed', '2025-02-03', '67981f0288ebc_1738022658.jpeg,img_679a10a258cd50.01454105.jpeg', '2025-01-28 00:04:18'),
+(243, '5555', 'SUV', 'Toyota:  PRADO', 'mabushi', '2025-02-03', 0, 'windscreen', 'No Repairs', NULL, '67a341ded5dd7_1738752478.jpeg', '2025-02-05 10:47:58'),
+(244, '1234', 'Sedan', 'Toyota:  PRADO', 'mabushi', '2025-02-12', 1, 'vhjvkjhjvm', 'Needs Repairs', NULL, '67a3e71feaaa8_1738794783.jpeg,67a3e71feb776_1738794783.jpeg', '2025-02-05 22:33:03'),
+(245, 'CT01RT', 'Sedan', 'Toyota:  PRADO', 'mabushi', '2025-02-04', 0, NULL, 'No Repairs', NULL, '', '2025-02-05 23:30:42');
 
 --
 -- Indexes for dumped tables
@@ -261,7 +253,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `airconditioners`
 --
 ALTER TABLE `airconditioners`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `borehole`
@@ -285,7 +277,7 @@ ALTER TABLE `generator`
 -- AUTO_INCREMENT for table `solar`
 --
 ALTER TABLE `solar`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -297,7 +289,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `vehicles`
 --
 ALTER TABLE `vehicles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=224;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=246;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

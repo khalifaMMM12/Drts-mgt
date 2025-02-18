@@ -307,7 +307,7 @@ function updateTableRow(vehicle) {
             <button onclick="editVehicle(${vehicle.id})" class="text-yellow-500 hover:text-yellow-700">
                 <i class="fa-solid fa-pen-to-square"></i>
             </button>
-            <a href="clear_vehicle.php?id=${vehicle.id}" class="text-green-500 hover:text-green-700">✔</a>
+            <a href="clear_vehicle.php?id=${vehicle.id}" class="text-green-500 hover:text-green-700">✔ Clear</a>
             <button onclick="openDeleteModal(${vehicle.id}, '${vehicle.reg_no}')" class="text-red-500 hover:text-red-700">
                 <i class="fa-solid fa-trash-can"></i>
             </button>

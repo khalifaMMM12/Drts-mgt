@@ -1,6 +1,6 @@
 <?php
 $host = 'localhost';
-$db = 'drtsasse_db';
+$db = 'drtsgovn_assets_db';
 $user = 'root';
 $pass = '';
 

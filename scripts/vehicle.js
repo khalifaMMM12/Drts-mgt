@@ -74,11 +74,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
     
             if (data.data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="text-center p-4">
-                    ${filter === 'cleared' ? 'No cleared vehicles found' : 
-                      filter === 'repairs' ? 'No vehicles needing repairs found' : 
-                      filter === 'no_repairs' ? 'No vehicles without repairs found' : 
-                      'No vehicles found'}</td></tr>`;
+                const message = filter === 'cleared' ? 'No cleared vehicles found' : 
+                              filter === 'repairs' ? 'No vehicles needing repairs found' : 
+                              filter === 'no_repairs' ? 'No vehicles without repairs found' : 
+                              'No vehicles found';
+                              
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center p-4">${message}</td>
+                    </tr>
+                `;
                 return;
             }
             
@@ -365,8 +370,13 @@ function addVehicleToTable(vehicle) {
 
     const existingRows = document.querySelectorAll(`tr[data-vehicle-id="${vehicle.id}"]`);
     existingRows.forEach(row => row.remove());
-
     const tbody = document.querySelector("table tbody");
+
+    const noVehiclesRow = tbody.querySelector('tr td[colspan="7"]');
+    if (noVehiclesRow && noVehiclesRow.textContent.includes('No vehicles found')) {
+        noVehiclesRow.parentElement.remove();
+    }
+
     const needs_repairs = vehicle.needs_repairs === "1" || vehicle.needs_repairs === 1 ? 1 : 0;
     const status = needs_repairs === 1 ? 'Needs Repairs' : 'No Repairs';
 
@@ -410,7 +420,11 @@ function addVehicleToTable(vehicle) {
         </td>
     `;
 
-    tbody.insertBefore(newRow, tbody.firstchild);
+    if (tbody.firstChild) {
+        tbody.insertBefore(newRow, tbody.firstChild);
+    } else {
+        tbody.appendChild(newRow);
+    }
 
     console.log("Row added for vehicle ID:", vehicle.id);
 }

@@ -23,6 +23,7 @@ $vehicles = $stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <title>Vehicle page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <link href="../style/style.css" rel="stylesheet">
     <link href="../style/output.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">

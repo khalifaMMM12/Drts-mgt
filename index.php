@@ -13,19 +13,19 @@ unset($_SESSION['temp_username']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="../style/style.css" rel="stylesheet">    
-    <link href="../style/output.css" rel="stylesheet">    
+    <link href="style/style.css" rel="stylesheet">    
+    <link href="style/output.css" rel="stylesheet">    
 <title>SignUp</title>
 </head>
 <body>
     <div class="flex h-screen bg-yellow-300">
     <div class="w-full max-w-md shadow-2xl m-auto border-8 border-gray-900 bg-amber-300 rounded-md p-5">   
         <header class="mb-5">
-            <img class="w-28 mx-auto" src="../img/DRTS_logo.png" />
+            <img class="w-28 mx-auto" src="img/DRTS_logo.png" />
             <h2 class="mb-2 text-center text-3xl font-bold tracking-tight text-gray-900">DRTS Assests Management</h2>
             <p class="text-center">Login with your assigned username and password</p>
         </header>   
-        <form method="POST" action="login.php" id="loginForm">
+        <form method="POST" action="public/login.php" id="loginForm">
             <div>
                 <label class="block mb-2 font-bold text-black-500" for="username">Username</label>
                 <input class="w-full p-2 mb-6 text-black-700 border-b-4 border-amber-500 outline-none focus:bg-gray-300" value="<?php echo htmlspecialchars($temp_username); ?>" id="username" type="text" name="username">
@@ -53,7 +53,7 @@ unset($_SESSION['temp_username']);
         </div>
     </div>
 
-    <script src="../scripts/login.js"></script>
+    <script src="scripts/login.js"></script>
     <script src="https://kit.fontawesome.com/79a49acde1.js" crossorigin="anonymous"></script>
 </body>
 </html>

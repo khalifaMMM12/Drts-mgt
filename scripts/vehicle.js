@@ -90,10 +90,10 @@ document.addEventListener('DOMContentLoaded', function() {
             
             tbody.innerHTML = data.data.map(vehicle => `
                 <tr class="hover:bg-gray-300" data-vehicle-id="${vehicle.id}">
-                    <td class="p-4 border-b">${vehicle.reg_no}</td>
-                    <td class="p-4 border-b">${vehicle.type}</td>
-                    <td class="p-4 border-b">${vehicle.make}</td>
-                    <td class="p-4 border-b">${vehicle.location}</td>
+                    <td class="p-4 border-b uppercase">${formatText(vehicle.reg_no, 'reg')}</td>
+                    <td class="p-4 border-b capitalize">${formatText(vehicle.type)}</td>
+                    <td class="p-4 border-b capitalize">${formatText(vehicle.make)}</td>
+                    <td class="p-4 border-b capitalize">${formatText(vehicle.location)}</td>
                     <td class="p-4 border-b" id="status-${vehicle.id}">${getStatusBadge(vehicle.status, vehicle.needs_repairs)}</td>
                     <td class="p-4 border-b">${vehicle.inspection_date || 'N/A'}</td>
                     <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
@@ -380,6 +380,12 @@ function updateVehicleStatus(vehicleId) {
     }
 }
 
+function formatText(text, type = 'normal') {
+    if (!text) return '';
+    if (type === 'reg') return text.toUpperCase();
+    return text.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+}
+
 function addVehicleToTable(vehicle) {
     console.log("Adding vehicle with full data:", vehicle);
 
@@ -424,10 +430,10 @@ function addVehicleToTable(vehicle) {
     }
 `;
     newRow.innerHTML = `
-        <td class="p-4 border-b">${vehicle.reg_no}</td>
-        <td class="p-4 border-b">${vehicle.type}</td>
-        <td class="p-4 border-b">${vehicle.make}</td>
-        <td class="p-4 border-b">${vehicle.location}</td>
+        <td class="p-4 border-b uppercase">${formatText(vehicle.reg_no, 'reg')}</td>
+        <td class="p-4 border-b">${formatText(vehicle.type)}</td>
+        <td class="p-4 border-b">${formatText(vehicle.make)}</td>
+        <td class="p-4 border-b">${formatText(vehicle.location)}</td>
         <td class="p-4 border-b" id="status-${vehicle.id}">${statusDisplay}</td>
         <td class="p-4 border-b">${vehicle.inspection_date}</td>
         <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">

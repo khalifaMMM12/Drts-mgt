@@ -60,10 +60,10 @@ $vehicles = $stmt->fetchAll();
         <tbody>
             <?php foreach ($fixedVehicles as $vehicle): ?>
                 <tr>
-                    <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['reg_no']); ?></td>
-                    <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['type']); ?></td>
-                    <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['make']); ?></td>
-                    <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['location']); ?></td>
+                    <td class="p-4 border-b uppercase"><?php echo htmlspecialchars($vehicle['reg_no']); ?></td>
+                    <td class="p-4 border-b"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['type']))); ?></td>
+                    <td class="p-4 border-b"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['make']))); ?></td>
+                    <td class="p-4 border-"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['location']))); ?></td>
                     <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['repair_completion_date']); ?></td>
                     <td class="p-4 border-b">
                         <!-- Info Icon for Viewing Full Details -->

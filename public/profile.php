@@ -5,7 +5,7 @@ include '../config/db.php';
 include 'user_profile.php';
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header("Location: index.php");
+    header("Location: ../index.php");
     exit;
 }
 

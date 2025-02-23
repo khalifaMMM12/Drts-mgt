@@ -284,6 +284,11 @@ document.getElementById('editVehicleForm').removeEventListener('submit', submitE
 //         alertDiv.remove();
 //     }, 3000);
 // }
+function formatText(text, type = 'normal') {
+    if (!text) return '';
+    if (type === 'reg') return text.toUpperCase();
+    return text.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+}
 
 function updateTableRow(vehicle) {
     const row = document.querySelector(`tr[data-vehicle-id="${vehicle.id}"]`);
@@ -296,10 +301,10 @@ function updateTableRow(vehicle) {
 
 
     row.innerHTML = `
-        <td class="p-4 border-b">${vehicle.reg_no}</td>
-        <td class="p-4 border-b">${vehicle.type}</td>
-        <td class="p-4 border-b">${vehicle.make}</td>
-        <td class="p-4 border-b">${vehicle.location}</td>
+        <td class="p-4 border-b uppercase">${formatText(vehicle.reg_no, 'reg')}</td>
+        <td class="p-4 border-b">${formatText(vehicle.type)}</td>
+        <td class="p-4 border-b">${formatText(vehicle.make)}</td>
+        <td class="p-4 border-b">${formatText(vehicle.location)}</td>
         <td class="p-4 border-b" id="status-${vehicle.id}">${getStatusBadge(vehicle.status, needs_repairs)}</td>
         <td class="p-4 border-b">${vehicle.inspection_date}</td>
         <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
@@ -307,7 +312,7 @@ function updateTableRow(vehicle) {
             <button onclick="editVehicle(${vehicle.id})" class="text-yellow-500 hover:text-yellow-700">
                 <i class="fa-solid fa-pen-to-square"></i>
             </button>
-            <a href="clear_vehicle.php?id=${vehicle.id}" class="text-green-500 hover:text-green-700">✔ Clear</a>
+            <button href="clear_vehicle.php?id=${vehicle.id}" class="text-green-500 hover:text-green-700">✔ Clear</button>
             <button onclick="openDeleteModal(${vehicle.id}, '${vehicle.reg_no}')" class="text-red-500 hover:text-red-700">
                 <i class="fa-solid fa-trash-can"></i>
             </button>

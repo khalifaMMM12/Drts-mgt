@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
-    header("Location: index.php");
+    header("Location: ../index.php");
     exit;
 }
 
@@ -223,10 +223,10 @@ $vehicles = $stmt->fetchAll();
                 <tbody>
                     <?php foreach ($vehicles as $vehicle): ?>
                         <tr class="hover:bg-gray-500" data-vehicle-id="<?php echo $vehicle['id']; ?>">
-                            <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['reg_no']); ?></td>
-                            <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['type']); ?></td>
-                            <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['make']); ?></td>
-                            <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['location']); ?></td>
+                            <td class="p-4 border-b uppercase"><?php echo htmlspecialchars($vehicle['reg_no']); ?></td>
+                            <td class="p-4 border-b"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['type']))); ?></td>
+                            <td class="p-4 border-b"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['make']))); ?></td>
+                            <td class="p-4 border-"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['location']))); ?></td>
                             <td class="p-4 border-b" id="status-<?php echo $vehicle['id']; ?>">
                                 <?php if ($vehicle['status'] === 'Fixed'): ?>
                                     <span class="text-green-500 font-bold">✔ Cleared</span>
@@ -334,8 +334,8 @@ $vehicles = $stmt->fetchAll();
                             <option value="" disabled selected>Select a type</option>
                             <option value="Saloon">Saloon</option>
                             <option value="SUV">SUV</option>
-                            <option value="Truck">Truck</option>
                             <option value="Pickup">Pickup</option>
+                            <option value="Bus">Bus</option>
                             <option value="Bike">Bike</option>
                             <option value="Van">Van</option>
                             <option value="Wagon">Wagon</option>
@@ -411,8 +411,8 @@ $vehicles = $stmt->fetchAll();
                         <option value="" disabled>Select a type</option>
                         <option value="Saloon" <?php if ($vehicle['type'] === 'Saloon') echo 'selected'; ?>>Saloon</option>
                         <option value="SUV" <?php if ($vehicle['type'] === 'SUV') echo 'selected'; ?>>SUV</option>
-                        <option value="Truck" <?php if ($vehicle['type'] === 'Truck') echo 'selected'; ?>>Truck</option>
                         <option value="Pickup" <?php if ($vehicle['type'] === 'Pickup') echo 'selected'; ?>>Pickup</option>
+                        <option value="Bus" <?php if ($vehicle['type'] === 'Bus') echo 'selected'; ?>>Bus</option>
                         <option value="Bike" <?php if ($vehicle['type'] === 'Bike') echo 'selected'; ?>>Bike</option>
                         <option value="Van" <?php if ($vehicle['type'] === 'Van') echo 'selected'; ?>>Van</option>
                         <option value="Wagon" <?php if ($vehicle['type'] === 'Wagon') echo 'selected'; ?>>Wagon</option>

@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (empty($username) || empty($password)) {
         $_SESSION['error'] = "Username and password required";
-        header("Location: index.php");
+        header("Location: ../index.php");
         exit;
     }
 
@@ -48,17 +48,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // If no match found
         $_SESSION['error'] = "Invalid username or password";
-        header("Location: index.php");
+        header("Location: ../index.php");
         exit;
         
     } catch(PDOException $e) {
         $_SESSION['error'] = "Login error occurred";
-        header("Location: index.php");
+        header("Location: ../index.php");
         exit;
     }
 }
 
 // Redirect if accessed directly
-header("Location: index.php");
+header("Location: ../index.php");
 exit;
 ?>

@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('click', (e) => {
         if (!sidebar.contains(e.target) && !openSidebarButton.contains(e.target)) {
             sidebar.classList.add('-translate-x-full');
+            sidebar.classList.add('sidebar-close');
         }
     });
 });
@@ -308,6 +309,8 @@ document.getElementById('addVehicleForm').addEventListener('submit', function(ev
         if (typeof closeModal === 'function') {
             closeModal();
             this.reset();
+            clearImagePreviews();
+            responseMessage.textContent = '';
         }
         if (typeof addVehicleToTable === 'function') {
             addVehicleToTable(data.vehicle);
@@ -325,6 +328,18 @@ document.getElementById('addVehicleForm').addEventListener('submit', function(ev
     });
 
 });
+
+function clearImagePreviews() {
+    const imagePreview = document.getElementById('imagePreview');
+    if (imagePreview) {
+        imagePreview.innerHTML = '';
+    }
+    
+    const imageInput = document.getElementById('images');
+    if (imageInput) {
+        imageInput.value = '';
+    }
+}
 
 function getStatusBadge(status, needsRepairs) {
     console.log("Getting status badge:", { status, needsRepairs });

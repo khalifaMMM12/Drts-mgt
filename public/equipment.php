@@ -66,7 +66,11 @@ require_once '../includes/auth_functions.php';
             <div class="py-2 md:py-3 px-2 md:px-3 rounded-xl border-yellow-400 border-4 md:border-8 bg-gray-900">
                 <div class="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4">
                     <div class="flex items-center gap-2 md:gap-4 w-full md:w-auto">
-                        <!-- <h2 class="font-bold text-xl md:text-3xl text-white">DRTS</h2> -->
+                        <button id="open-sidebar" class="md:hidden top-4 left-4 z-50 p-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-black">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                            </svg>
+                        </button>                        
                         <div class="flex items-center gap-4">
                             <label for="equipmentSelect" class="text-white font-medium">Select Equipment:</label>
                             <select id="equipmentSelect" class="p-2 border rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent bg-white">
@@ -97,7 +101,7 @@ require_once '../includes/auth_functions.php';
         </div>
     </div>
 
-    <div class="container mx-auto p-4 md:p-6 lg:px-8">
+    <div class="container p-4">
         <h1 class="text-3xl font-bold text-black mb-6">Equipments Managements</h1>
 
         <!-- Modal -->

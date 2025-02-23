@@ -96,41 +96,44 @@ $vehicles = $stmt->fetchAll();
     <div class="container flex-1 overflow-auto p-4">
         <h1 class="text-3xl font-bold text-gray-900 m3r-4 mb-6">Vehicle Management</h1>
         
-        <div class="flex items-center gap-2">
-            <div class="flex items-center p-2 rounded-xl bg-gray-800 mb-6">
-                <div class="w-full md:w-96 mr-4">
+        <div class="grid xl:grid-cols-1 grid-cols-1">
+            <div class="flex flex-wrap items-center p-2 rounded-xl bg-gray-800 mb-6 space-x-2">
+                <!-- Search Bar -->
+                <div class="w-auto flex">
                     <form method="GET" action="vehicle_page.php" class="flex">
                         <input type="text" 
                             name="search" 
                             id="searchInput"
                             placeholder="Search by registration, type, or location" 
                             value="<?php echo htmlspecialchars($search); ?>"
-                            class="border border-yellow-400 p-2 w-full rounded-l focus:border-yellow-500 focus:ring focus:ring-yellow-200 focus:ring-opacity-50">
+                            class="border border-yellow-400 p-2 text-xs sm:text-sm md:text-base w-40 sm:w-56 md:w-96 rounded-l focus:border-yellow-500 focus:ring focus:ring-yellow-200 focus:ring-opacity-50">
                         <button type="submit" 
-                            class="bg-yellow-500 text-black font-semibold px-4 py-2 rounded-r hover:bg-yellow-600">
+                            class="bg-yellow-500 shrink-0 text-black font-semibold px-2 sm:px-4 py-2 rounded-r hover:bg-yellow-600 text-xs sm:text-sm">
                             <i class="fas fa-search"></i>
                         </button>
                     </form>
                 </div>
-                <div class="relative flex items-center p-2 space-x-2">
-                    <p class="text-white text-2xl font-bold">Filters:</p>
+
+                <!-- Filters -->
+                <div class="flex flex-wrap items-center space-x-1 sm:space-x-2">
+                    <p class="text-white text-xs sm:text-sm md:text-lg font-bold">Filters:</p>
                     <div class="relative">
                         <input type="radio" id="noRepairs" name="vehicleFilter" value="no_repairs" class="hidden">
-                        <label for="noRepairs" class="px-3 py-1 text-sm cursor-pointer rounded bg-gray-700 hover:bg-yellow-500 text-white transition-colors inline-block">
+                        <label for="noRepairs" class="px-2 sm:px-3 py-1 text-xs sm:text-sm cursor-pointer rounded bg-gray-700 hover:bg-yellow-500 text-white transition-colors inline-block">
                             No Repairs
                         </label>
                     </div>
                     
                     <div class="relative">
                         <input type="radio" id="clearedView" name="vehicleFilter" value="cleared" class="hidden">
-                        <label for="clearedView" class="px-3 py-1 text-sm cursor-pointer rounded bg-gray-700 hover:bg-yellow-500 text-white transition-colors inline-block">
+                        <label for="clearedView" class="px-2 sm:px-3 py-1 text-xs sm:text-sm cursor-pointer rounded bg-gray-700 hover:bg-yellow-500 text-white transition-colors inline-block">
                             Cleared
                         </label>
                     </div>
                     
                     <div class="relative">
                         <input type="radio" id="repairsView" name="vehicleFilter" value="repairs" class="hidden">
-                        <label for="repairsView" class="px-3 py-1 text-sm cursor-pointer rounded bg-gray-700 hover:bg-yellow-500 text-white transition-colors inline-block">
+                        <label for="repairsView" class="px-2 sm:px-3 py-1 text-xs sm:text-sm cursor-pointer rounded bg-gray-700 hover:bg-yellow-500 text-white transition-colors inline-block">
                             Needs Repairs
                         </label>
                     </div>
@@ -144,6 +147,7 @@ $vehicles = $stmt->fetchAll();
                 }
             </style>
         </div>
+
 
         <div id="logoutModal" class="modal-overlay items-center justify-center hidden fixed z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4">
             <div id="logoutModalcontent" class="modal-content relative mx-auto shadow-xl rounded-md bg-white max-w-md">
@@ -328,13 +332,13 @@ $vehicles = $stmt->fetchAll();
                         <label class="block font-semibold">Vehicle Type</label>
                         <select name="type" class="border border-gray-300 p-2 w-full rounded" required>
                             <option value="" disabled selected>Select a type</option>
-                            <option value="Sedan">Sedan</option>
+                            <option value="Saloon">Saloon</option>
                             <option value="SUV">SUV</option>
                             <option value="Truck">Truck</option>
+                            <option value="Pickup">Pickup</option>
+                            <option value="Bike">Bike</option>
                             <option value="Van">Van</option>
                             <option value="Wagon">Wagon</option>
-                            <option value="Coupe">Coupe</option>
-                            <option value="Convertible">Convertible</option>
                         </select>
                     </div>
                     <div>
@@ -405,9 +409,11 @@ $vehicles = $stmt->fetchAll();
                     <label class="block font-semibold">Vehicle Type</label>
                     <select name="type" id="type" class="border border-gray-300 p-2 w-full rounded">
                         <option value="" disabled>Select a type</option>
-                        <option value="Sedan" <?php if ($vehicle['type'] === 'Sedan') echo 'selected'; ?>>Sedan</option>
+                        <option value="Saloon" <?php if ($vehicle['type'] === 'Saloon') echo 'selected'; ?>>Saloon</option>
                         <option value="SUV" <?php if ($vehicle['type'] === 'SUV') echo 'selected'; ?>>SUV</option>
                         <option value="Truck" <?php if ($vehicle['type'] === 'Truck') echo 'selected'; ?>>Truck</option>
+                        <option value="Pickup" <?php if ($vehicle['type'] === 'Pickup') echo 'selected'; ?>>Pickup</option>
+                        <option value="Bike" <?php if ($vehicle['type'] === 'Bike') echo 'selected'; ?>>Bike</option>
                         <option value="Van" <?php if ($vehicle['type'] === 'Van') echo 'selected'; ?>>Van</option>
                         <option value="Wagon" <?php if ($vehicle['type'] === 'Wagon') echo 'selected'; ?>>Wagon</option>
                         <option value="Coupe" <?php if ($vehicle['type'] === 'Coupe') echo 'selected'; ?>>Coupe</option>

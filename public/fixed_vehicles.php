@@ -49,6 +49,7 @@ $vehicles = $stmt->fetchAll();
     <table class="w-full bg-white rounded shadow">
         <thead>
             <tr>
+                <th class="p-4 border-b">S/N</th>
                 <th class="p-4 border-b">Reg No</th>
                 <th class="p-4 border-b">Type</th>
                 <th class="p-4 border-b">Make</th>
@@ -58,8 +59,9 @@ $vehicles = $stmt->fetchAll();
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($fixedVehicles as $vehicle): ?>
+            <?php $counter = 1; foreach ($fixedVehicles as $vehicle): ?>
                 <tr>
+                    <td class="p-4 border-b font-bold"><?php echo $counter++; ?></td>
                     <td class="p-4 border-b uppercase"><?php echo htmlspecialchars($vehicle['reg_no']); ?></td>
                     <td class="p-4 border-b"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['type']))); ?></td>
                     <td class="p-4 border-b"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['make']))); ?></td>

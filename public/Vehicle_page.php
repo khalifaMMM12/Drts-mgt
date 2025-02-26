@@ -61,91 +61,90 @@ $vehicles = $stmt->fetchAll();
     <div class="flex-1 flex flex-col overflow-hidden ml-0 md:ml-64 p-4">
         
     <!-- Navigation Bar -->
-    <div class="grid xl:grid-cols-1 grid-cols-1">
-            <div class="p-2 md:p-5 py-2 md:py-3 px-2 md:px-3 rounded-xl border-yellow-400 border-4 md:border-8 bg-gray-900">
-                <div class="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4">
-                    <div class="flex items-center gap-2 md:gap-4 w-full md:w-auto">
-                        <button id="open-sidebar" class="md:hidden top-4 left-4 z-50 p-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-black">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                            </svg>
-                        </button>
-                        <h2 class="font-bold text-xl md:text-3xl text-white"><?php echo htmlspecialchars($_SESSION['username']); ?></h2>
-                    </div>
-
-                    <div class="flex flex-wrap md:flex-nowrap gap-2 md:gap-4">
-                        <div class="flex flex-wrap md:flex-nowrap gap-2 md:gap-4">
-                            <?php if (hasPermission('add_vehicle') || isAdmin()): ?>
-                                <button onclick="openModal()" 
-                                    class="rounded bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 shadow-lg flex items-center gap-2">
-                                    <i class="fas fa-plus"></i> Add Vehicle
-                                </button>
-                            <?php endif; ?>
-                            
-                            <button onclick="openLogoutModal()" 
-                                class="rounded bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 shadow-lg flex items-center gap-2">
-                                <i class="fas fa-sign-out-alt"></i> Logout
+        <div class="grid xl:grid-cols-1 grid-cols-1">
+                <div class="p-2 md:p-5 py-2 md:py-3 px-2 md:px-3 rounded-xl border-yellow-400 border-4 md:border-8 bg-gray-900">
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-2 md:gap-4">
+                        <div class="flex items-center gap-2 md:gap-4 w-full md:w-auto">
+                            <button id="open-sidebar" class="md:hidden top-4 left-4 z-50 p-2 rounded-lg bg-yellow-500 hover:bg-yellow-600 text-black">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                                </svg>
                             </button>
+                            <h2 class="font-bold text-xl md:text-3xl text-white"><?php echo htmlspecialchars($_SESSION['username']); ?></h2>
+                        </div>
+
+                        <div class="flex flex-wrap md:flex-nowrap gap-2 md:gap-4">
+                            <div class="flex flex-wrap md:flex-nowrap gap-2 md:gap-4">
+                                <?php if (hasPermission('add_vehicle') || isAdmin()): ?>
+                                    <button onclick="openModal()" 
+                                        class="rounded bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 shadow-lg flex items-center gap-2">
+                                        <i class="fas fa-plus"></i> Add Vehicle
+                                    </button>
+                                <?php endif; ?>
+                                
+                                <button onclick="openLogoutModal()" 
+                                    class="rounded bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 shadow-lg flex items-center gap-2">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-    </div>
+        </div>
 
-    <!-- Main Content Container -->
-    <div class="container flex-1 overflow-auto p-4">
-        <h1 class="text-3xl font-bold text-gray-900 m3r-4 mb-6">Vehicle Management</h1>
-        
-        <div class="grid xl:grid-cols-1 grid-cols-1">
-            <div class="flex flex-wrap items-center p-2 rounded-xl bg-gray-800 mb-6 space-x-2">
-                <!-- Search Bar -->
-                <div class="w-auto flex">
-                    <form method="GET" action="vehicle_page.php" class="flex">
-                        <input type="text" 
-                            name="search" 
-                            id="searchInput"
-                            placeholder="Search by registration, type, or location" 
-                            value="<?php echo htmlspecialchars($search); ?>"
-                            class="border border-yellow-400 p-2 text-xs sm:text-sm md:text-base w-40 sm:w-56 md:w-96 rounded-l focus:border-yellow-500 focus:ring focus:ring-yellow-200 focus:ring-opacity-50">
-                        <button type="submit" 
-                            class="bg-yellow-500 shrink-0 text-black font-semibold px-2 sm:px-4 py-2 rounded-r hover:bg-yellow-600 text-xs sm:text-sm">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </form>
+        <!-- Main Content Container -->
+        <div class="">
+            <h1 class="text-3xl font-bold text-gray-900 m3r-4 mt-4 mb-6">Vehicle Management</h1>
+            
+            <div class="grid xl:grid-cols-1 grid-cols-1">
+                <div class="flex flex-wrap items-center p-2 rounded-xl bg-gray-800 mb-6 space-x-2">
+                    <!-- Search Bar -->
+                    <div class="w-auto flex">
+                        <form method="GET" action="vehicle_page.php" class="flex">
+                            <input type="text" 
+                                name="search" 
+                                id="searchInput"
+                                placeholder="Search by registration, type, or location" 
+                                value="<?php echo htmlspecialchars($search); ?>"
+                                class="border border-yellow-400 p-2 text-xs sm:text-sm md:text-base w-40 sm:w-56 md:w-96 rounded-l focus:border-yellow-500 focus:ring focus:ring-yellow-200 focus:ring-opacity-50">
+                            <button type="submit" 
+                                class="bg-yellow-500 shrink-0 text-black font-semibold px-2 sm:px-4 py-2 rounded-r hover:bg-yellow-600 text-xs sm:text-sm">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </form>
+                    </div>
+                    <!-- Filters -->
+                    <div class="flex flex-wrap items-center space-x-1 sm:space-x-2">
+                        <p class="text-white text-xs sm:text-sm md:text-lg font-bold">Filters:</p>
+                        <div class="relative">
+                            <input type="radio" id="noRepairs" name="vehicleFilter" value="no_repairs" class="hidden">
+                            <label for="noRepairs" class="px-2 sm:px-3 py-1 text-xs sm:text-sm cursor-pointer rounded bg-gray-700 hover:bg-yellow-500 text-white transition-colors inline-block">
+                                No Repairs
+                            </label>
+                        </div>
+                        
+                        <div class="relative">
+                            <input type="radio" id="clearedView" name="vehicleFilter" value="cleared" class="hidden">
+                            <label for="clearedView" class="px-2 sm:px-3 py-1 text-xs sm:text-sm cursor-pointer rounded bg-gray-700 hover:bg-yellow-500 text-white transition-colors inline-block">
+                                Cleared
+                            </label>
+                        </div>
+                        
+                        <div class="relative">
+                            <input type="radio" id="repairsView" name="vehicleFilter" value="repairs" class="hidden">
+                            <label for="repairsView" class="px-2 sm:px-3 py-1 text-xs sm:text-sm cursor-pointer rounded bg-gray-700 hover:bg-yellow-500 text-white transition-colors inline-block">
+                                Needs Repairs
+                            </label>
+                        </div>
+                    </div>
                 </div>
-
-                <!-- Filters -->
-                <div class="flex flex-wrap items-center space-x-1 sm:space-x-2">
-                    <p class="text-white text-xs sm:text-sm md:text-lg font-bold">Filters:</p>
-                    <div class="relative">
-                        <input type="radio" id="noRepairs" name="vehicleFilter" value="no_repairs" class="hidden">
-                        <label for="noRepairs" class="px-2 sm:px-3 py-1 text-xs sm:text-sm cursor-pointer rounded bg-gray-700 hover:bg-yellow-500 text-white transition-colors inline-block">
-                            No Repairs
-                        </label>
-                    </div>
-                    
-                    <div class="relative">
-                        <input type="radio" id="clearedView" name="vehicleFilter" value="cleared" class="hidden">
-                        <label for="clearedView" class="px-2 sm:px-3 py-1 text-xs sm:text-sm cursor-pointer rounded bg-gray-700 hover:bg-yellow-500 text-white transition-colors inline-block">
-                            Cleared
-                        </label>
-                    </div>
-                    
-                    <div class="relative">
-                        <input type="radio" id="repairsView" name="vehicleFilter" value="repairs" class="hidden">
-                        <label for="repairsView" class="px-2 sm:px-3 py-1 text-xs sm:text-sm cursor-pointer rounded bg-gray-700 hover:bg-yellow-500 text-white transition-colors inline-block">
-                            Needs Repairs
-                        </label>
-                    </div>
-                </div>
+                <style>
+                    input[type="radio"]:checked + label {
+                        background-color: #F59E0B;
+                        color: black;
+                    }
+                </style>
             </div>
-
-            <style>
-                input[type="radio"]:checked + label {
-                    background-color: #F59E0B;
-                    color: black;
-                }
-            </style>
         </div>
 
 
@@ -207,74 +206,78 @@ $vehicles = $stmt->fetchAll();
         </div>
 
         <!-- Vehicle List Table -->
-        <div class="overflow-x-auto border-gray-500">
-            <table class="w-full bg-white shadow-lg rounded overflow-hidden text-sm md:text-base">
-                <thead class="bg-yellow-500 text-black">
-                    <tr>
-                        <th class="p-4 border-b">Reg No</th>
-                        <th class="p-4 border-b">Type</th>
-                        <th class="p-4 border-b">Make</th>
-                        <th class="p-4 border-b">Location</th>
-                        <th class="p-4 border-b">Status</th>
-                        <th class="p-4 border-b">Last inspection date</th>
-                        <th class="p-4 border-b">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($vehicles as $vehicle): ?>
-                        <tr class="hover:bg-gray-500" data-vehicle-id="<?php echo $vehicle['id']; ?>">
-                            <td class="p-4 border-b uppercase"><?php echo htmlspecialchars($vehicle['reg_no']); ?></td>
-                            <td class="p-4 border-b"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['type']))); ?></td>
-                            <td class="p-4 border-b"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['make']))); ?></td>
-                            <td class="p-4 border-"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['location']))); ?></td>
-                            <td class="p-4 border-b" id="status-<?php echo $vehicle['id']; ?>">
-                                <?php if ($vehicle['status'] === 'Fixed'): ?>
-                                    <span class="text-green-500 font-bold">✔ Cleared</span>
-                                <?php elseif ($vehicle['status'] === 'Needs Repairs'): ?>
-                                    <span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>
-                                <?php else: ?>
-                                    <span class="text-gray-500 font-bold">No Repairs</span>
-                                <?php endif; ?>
-                            </td>
-                            <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['inspection_date']); ?></td>
-                            <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
-                                <button onclick="showDetails(<?php echo $vehicle['id']; ?>)" class="text-blue-500 hover:text-blue-700">ℹ</button>
-                                
-                                <?php if ($vehicle['status'] === 'Fixed'): ?>
-                                        <button 
-                                            class="text-yellow-500 opacity-50 cursor-not-allowed" disabled title="This vehicle is fixed and cannot be edited">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </button>
-                                    <button 
-                                        class="text-green-500 opacity-50 cursor-not-allowed" 
-                                        disabled 
-                                        title="This vehicle is already cleared">✔ Clear
-                                    </button>
-                                <?php else: ?>
-                                <?php if (hasPermission('edit_vehicle') || isAdmin()): ?>
-                                    <button 
-                                        id="editButton-<?php echo $vehicle['id']; ?>" 
-                                        onclick="editVehicle(<?php echo $vehicle['id']; ?>)" 
-                                        class="text-yellow-500 hover:text-yellow-700 <?php echo $vehicle['status'] === 'fixed' ? 'cursor-not-allowed opacity-50' : ''; ?>" 
-                                        <?php echo $vehicle['status'] === 'fixed' ? 'disabled' : ''; ?>><i class="fa-solid fa-pen-to-square"></i>
-                                    </button>  
-                                <?php endif; ?>
-
-                                <button data-vehicle-id="<?php echo $vehicle['id']; ?>" data-vehicle-regno="<?php echo $vehicle['reg_no']; ?>" onclick="openDeleteModal(<?php echo $vehicle['id']; ?>, '<?php echo $vehicle['reg_no']; ?>')" class="text-green-500 hover:text-green-700">✔ Clear
-                                    
-                                </button>
-                                <?php endif; ?>
-                                
-                                <?php if (hasPermission('delete_vehicle') || isAdmin()): ?>
-                                    <button class="text-red-500 hover:text-red-700 delete-button" data-vehicle-id="<?php echo $vehicle['id']; ?>" data-vehicle-regno="<?php echo $vehicle['reg_no']; ?>" onclick="openDeleteModal(<?php echo $vehicle['id']; ?>, '<?php echo $vehicle['reg_no']; ?>')">
-                                        <i class="fa-solid fa-trash-can"></i>
-                                    </button> 
-                                <?php endif; ?>                           
-                            </td>
+        <div class="flex-1 h-full overflow-auto"> 
+            <div class="border-gray-500">
+                <table class="w-full bg-white shadow-lg rounded text-sm md:text-base">
+                    <thead class="bg-yellow-500 text-black">
+                        <tr>
+                            <th class="p-4 border-b">S/N</th>
+                            <th class="p-4 border-b">Reg No</th>
+                            <th class="p-4 border-b">Type</th>
+                            <th class="p-4 border-b">Make</th>
+                            <th class="p-4 border-b">Location</th>
+                            <th class="p-4 border-b">Status</th>
+                            <th class="p-4 border-b">Last inspection date</th>
+                            <th class="p-4 border-b">Actions</th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php $counter = 1; foreach ($vehicles as $vehicle): ?>
+                            <tr class="hover:bg-gray-500" data-vehicle-id="<?php echo $vehicle['id']; ?>">
+                                <td class="p-4 border-b font-bold "><?php echo $counter++; ?></td>
+                                <td class="p-4 border-b uppercase"><?php echo htmlspecialchars($vehicle['reg_no']); ?></td>
+                                <td class="p-4 border-b"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['type']))); ?></td>
+                                <td class="p-4 border-b"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['make']))); ?></td>
+                                <td class="p-4 border-"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['location']))); ?></td>
+                                <td class="p-4 border-b" id="status-<?php echo $vehicle['id']; ?>">
+                                    <?php if ($vehicle['status'] === 'Fixed'): ?>
+                                        <span class="text-green-500 font-bold">✔ Cleared</span>
+                                    <?php elseif ($vehicle['status'] === 'Needs Repairs'): ?>
+                                        <span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>
+                                    <?php else: ?>
+                                        <span class="text-gray-500 font-bold">No Repairs</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['inspection_date']); ?></td>
+                                <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
+                                    <button onclick="showDetails(<?php echo $vehicle['id']; ?>)" class="text-blue-500 hover:text-blue-700">ℹ</button>
+                                    
+                                    <?php if ($vehicle['status'] === 'Fixed'): ?>
+                                            <button 
+                                                class="text-yellow-500 opacity-50 cursor-not-allowed" disabled title="This vehicle is fixed and cannot be edited">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </button>
+                                        <button 
+                                            class="text-green-500 opacity-50 cursor-not-allowed" 
+                                            disabled 
+                                            title="This vehicle is already cleared">✔ Clear
+                                        </button>
+                                    <?php else: ?>
+                                    <?php if (hasPermission('edit_vehicle') || isAdmin()): ?>
+                                        <button 
+                                            id="editButton-<?php echo $vehicle['id']; ?>" 
+                                            onclick="editVehicle(<?php echo $vehicle['id']; ?>)" 
+                                            class="text-yellow-500 hover:text-yellow-700 <?php echo $vehicle['status'] === 'fixed' ? 'cursor-not-allowed opacity-50' : ''; ?>" 
+                                            <?php echo $vehicle['status'] === 'fixed' ? 'disabled' : ''; ?>><i class="fa-solid fa-pen-to-square"></i>
+                                        </button>  
+                                    <?php endif; ?>
+
+                                    <button data-vehicle-id="<?php echo $vehicle['id']; ?>" data-vehicle-regno="<?php echo $vehicle['reg_no']; ?>" onclick="openDeleteModal(<?php echo $vehicle['id']; ?>, '<?php echo $vehicle['reg_no']; ?>')" class="text-green-500 hover:text-green-700">✔ Clear
+                                        
+                                    </button>
+                                    <?php endif; ?>
+                                    
+                                    <?php if (hasPermission('delete_vehicle') || isAdmin()): ?>
+                                        <button class="text-red-500 hover:text-red-700 delete-button" data-vehicle-id="<?php echo $vehicle['id']; ?>" data-vehicle-regno="<?php echo $vehicle['reg_no']; ?>" onclick="openDeleteModal(<?php echo $vehicle['id']; ?>, '<?php echo $vehicle['reg_no']; ?>')">
+                                            <i class="fa-solid fa-trash-can"></i>
+                                        </button> 
+                                    <?php endif; ?>                           
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 

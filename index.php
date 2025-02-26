@@ -46,10 +46,6 @@ unset($_SESSION['temp_username']);
             <button class="w-full bg-neutral-600 hover:bg-neutral-500 text-white font-bold py-2 px-4 mb-6 rounded" type="submit">Login</button>
             </div>       
         </form>  
-        <!-- <footer>
-            <a class="text-indigo-700 hover:text-pink-700 text-sm float-left" href="#">Forgot Password?</a>
-            <a class="text-indigo-700 hover:text-pink-700 text-sm float-right" href="#">Create Account</a>
-        </footer>    -->
         </div>
     </div>
 

@@ -88,8 +88,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            tbody.innerHTML = data.data.map(vehicle => `
+            tbody.innerHTML = data.data.map((vehicle, index) => `
                 <tr class="hover:bg-gray-300" data-vehicle-id="${vehicle.id}">
+                    <td class="p-4 border-b font-bold">${index + 1}</td>
                     <td class="p-4 border-b uppercase">${formatText(vehicle.reg_no, 'reg')}</td>
                     <td class="p-4 border-b capitalize">${formatText(vehicle.type)}</td>
                     <td class="p-4 border-b capitalize">${formatText(vehicle.make)}</td>
@@ -398,6 +399,8 @@ function addVehicleToTable(vehicle) {
         noVehiclesRow.parentElement.remove();
     }
 
+    const serialNumber = tbody.children.length + 1;
+
     const needs_repairs = vehicle.needs_repairs === "1" || vehicle.needs_repairs === 1 ? 1 : 0;
     const status = needs_repairs === 1 ? 'Needs Repairs' : 'No Repairs';
 
@@ -407,6 +410,7 @@ function addVehicleToTable(vehicle) {
 
     const newRow = document.createElement("tr");
     newRow.setAttribute("data-vehicle-id", vehicle.id);
+    newRow.className = "hover:bg-gray-500"
 
     const actionButtons = `
     <button onclick="showDetails(${vehicle.id})" class="text-blue-500 hover:text-blue-700">ℹ</button>
@@ -429,7 +433,9 @@ function addVehicleToTable(vehicle) {
         </button>` : ''
     }
 `;
+
     newRow.innerHTML = `
+        <td class="p-4 border-b font-bold">${serialNumber}</td>
         <td class="p-4 border-b uppercase">${formatText(vehicle.reg_no, 'reg')}</td>
         <td class="p-4 border-b">${formatText(vehicle.type)}</td>
         <td class="p-4 border-b">${formatText(vehicle.make)}</td>
@@ -441,11 +447,7 @@ function addVehicleToTable(vehicle) {
         </td>
     `;
 
-    if (tbody.firstChild) {
-        tbody.insertBefore(newRow, tbody.firstChild);
-    } else {
-        tbody.appendChild(newRow);
-    }
+    tbody.appendChild(newRow);
 
     console.log("Row added for vehicle ID:", vehicle.id);
 }

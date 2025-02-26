@@ -299,8 +299,10 @@ function updateTableRow(vehicle) {
     const needs_repairs = parseInt(vehicle.needs_repairs);
     console.log("Needs repairs value:", needs_repairs);
 
+    const serialNumber = row.cells[0].textContent;
 
     row.innerHTML = `
+        <td class="p-4 border-b text-center">${serialNumber}</td>
         <td class="p-4 border-b uppercase">${formatText(vehicle.reg_no, 'reg')}</td>
         <td class="p-4 border-b">${formatText(vehicle.type)}</td>
         <td class="p-4 border-b">${formatText(vehicle.make)}</td>

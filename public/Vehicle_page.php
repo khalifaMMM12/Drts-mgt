@@ -24,7 +24,6 @@ $vehicles = $stmt->fetchAll();
     <meta charset="UTF-8">
     <title>Vehicle page</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <meta http-equiv="refresh" content="30">
     <meta name="description" content="DRTS Assests Management - vehicle page">
     <link href="../style/style.css" rel="stylesheet">
     <link href="../style/output.css" rel="stylesheet">
@@ -307,17 +306,27 @@ $vehicles = $stmt->fetchAll();
         </div>
         
         <!-- Enlarged Image View with Carousel Controls -->
-        <div id="carouselModal" class="hidden fixed inset-0 bg-black bg-opacity-80 items-center justify-center p-6">
-            <div class="carousel-content relative w-11/12 md:w-3/4 lg:w-1/2 bg-white rounded-lg shadow-lg p-4">
-                <button onclick="closeCarousel()" id="closeCarousel" class="absolute top-3 right-3 text-gray-600 text-2xl font-bold hover:text-gray-800">&times;</button>
+        <div id="carouselModal" class="hidden fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
+            <div class="relative w-full h-full flex items-center justify-center p-4">
+
+                <button onclick="closeCarousel()" class="absolute top-4 right-4 text-white text-4xl font-bold hover:text-yellow-400 z-50 transition-colors duration-200">&times;</button>
                 
-                <button id="prevImage" onclick="showPrevImage()" class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-yellow-400 text-4xl font-bold">&larr;</button>
+                <button id="prevImage" onclick="showPrevImage()" class="absolute left-4 text-white hover:text-yellow-400 text-6xl font-bold z-50 transition-colors duration-200 hidden md:block">&larr;</button>
                 
-                <img id="enlargedImg" class="w-full h-auto rounded-lg border-4 border-yellow-400 shadow-md">
+                <div class="relative flex items-center justify-center w-full h-full">
+                    <img id="enlargedImg" 
+                        class="max-h-[90vh] max-w-[90vw] w-auto h-auto object-contain rounded-lg transition-transform duration-200 cursor-zoom-in"
+                        alt="vehicle image">
+                </div>
                 
-                <button id="nextImage" onclick="showNextImage()" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-yellow-400 text-4xl font-bold">&rarr;</button>
+                <button id="nextImage" onclick="showNextImage()" class="absolute right-4 text-white hover:text-yellow-400 text-6xl font-bold z-50 transition-colors duration-200 hidden md:block">&rarr;</button>
+
+                <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-white bg-black bg-opacity-50 px-4 py-2 rounded-full text-sm">
+                    <span id="currentImageIndex">1</span> / <span id="totalImages">1</span>
+                </div>
             </div>
         </div>
+
     </div>
 </div>
 

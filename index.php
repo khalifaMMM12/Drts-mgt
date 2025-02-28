@@ -13,7 +13,6 @@ unset($_SESSION['temp_username']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="30">
     <meta name="description" content="DRTS Assests Management">
     <link href="style/style.css" rel="stylesheet">    
     <link href="style/output.css" rel="stylesheet">    

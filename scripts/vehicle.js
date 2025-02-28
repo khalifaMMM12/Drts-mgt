@@ -491,20 +491,22 @@ function showDetails(vehicleId) {
                 if (imagesArray.length > 0) {
                     imagesArray.forEach((image, index) => {
                         const imgContainer = document.createElement("div");
-                        imgContainer.className = "relative group";
+                        imgContainer.className = "relative group cursor-pointer hover:opacity-75 transition-opacity";
                         
                         const img = document.createElement("img");
                         img.src = `../assets/vehicles/${image.trim()}`;
-                        img.className = "w-full h-32 object-cover rounded cursor-pointer";
-                        img.onclick = () => {
-                            document.getElementById("carouselModal").classList.remove("hidden");
-                            document.getElementById("enlargedImg").src = img.src;
-                            currentIndex = index;
+                        img.className = "w-full h-32 object-cover rounded-lg shadow-md";
+                        img.alt = `Vehicle image ${index + 1}`;
+                        
+                        imgContainer.onclick = () => {
+                            openCarousel(image.trim(), imagesArray);
                         };
                         
                         imgContainer.appendChild(img);
                         imageGallery.appendChild(imgContainer);
                     });
+
+                    currentImages = imagesArray;
                 }
             }
 
@@ -515,6 +517,7 @@ function showDetails(vehicleId) {
         })
         .catch(error => {
             console.error('Error fetching vehicle details:', error);
+            showAlert('Error loading vehicle details', 'error');
         });
 }
 
@@ -528,6 +531,8 @@ function closeDetailsModal() {
     setTimeout(() => {
         detailsModal.classList.remove("active"); 
     }, 400);
+
+    closeCarousel()
 }
 
 function previewImages() {
@@ -616,81 +621,187 @@ function closeDetails() {
 
 
 // Ensure images is an array
-let images = []; 
-let currentIndex = 0;
+let currentImages = [];
+let currentImageIndex = 0;
 
-function openCarousel(index = 0) {
-    const imageGallery = document.getElementById("editImagePreview");
-    const images = Array.from(imageGallery.querySelectorAll('img')).map(img => {
-        return img.src.split('/').pop(); // Get filename from src
-    });
-
-    if (!images || images.length === 0) {
-        console.error('No images available');
-        return;
-    }
-
-    const carousel = document.getElementById('carouselModal');
-    const enlargedImg = document.getElementById('enlargedImg');
-    
-    carousel.classList.remove('hidden');
-    currentIndex = Math.min(Math.max(index, 0), images.length - 1);
-    enlargedImg.src = `../assets/vehicles/${images[currentIndex]}`;
+function initializeCarousel(images) {
+    currentImages = images;
+    currentImageIndex = 0;
+    updateCarouselImage();
+    updateImageCounter();
 }
 
 function updateCarouselImage() {
-    const enlargedImg = document.getElementById("enlargedImg");
-    
-    if (images[currentIndex]) {
-        enlargedImg.src = `../assets/vehicles/${images[currentIndex]}`; 
-        enlargedImg.alt = `Vehicle Image ${currentIndex + 1}`;
-    } else {
-        console.error("Image not found.");
-    }
+    const img = document.getElementById('enlargedImg');
+    img.src = `../assets/vehicles/${currentImages[currentImageIndex]}`;
 }
 
-function showNextImage() {
-    const images = Array.from(document.getElementById("editImagePreview").querySelectorAll('img'))
-        .map(img => img.src.split('/').pop());
-    
-    if (images.length > 0) {
-        currentIndex = (currentIndex + 1) % images.length;
-        document.getElementById('enlargedImg').src = `../assets/vehicles/${images[currentIndex]}`;
-    }
+function updateImageCounter() {
+    document.getElementById('currentImageIndex').textContent = currentImageIndex + 1;
+    document.getElementById('totalImages').textContent = currentImages.length;
 }
 
 function showPrevImage() {
-    const images = Array.from(document.getElementById("editImagePreview").querySelectorAll('img'))
-        .map(img => img.src.split('/').pop());
-    
-    if (images.length > 0) {
-        currentIndex = (currentIndex - 1 + images.length) % images.length;
-        document.getElementById('enlargedImg').src = `../assets/vehicles/${images[currentIndex]}`;
+    if (currentImageIndex > 0) {
+        currentImageIndex--;
+    } else {
+        currentImageIndex = currentImages.length - 1;
     }
+    updateCarouselImage();
+    updateImageCounter();
 }
 
-function closeCarousel() {
-    document.getElementById('carouselModal').classList.add('hidden');
+function showNextImage() {
+    if (currentImageIndex < currentImages.length - 1) {
+        currentImageIndex++;
+    } else {
+        currentImageIndex = 0;
+    }
+    updateCarouselImage();
+    updateImageCounter();
 }
 
-// Attach the image array from the details modal to the carousel
-function setCarouselImages(imageArray) {
-    images = imageArray;
-    currentIndex = 0;  // Reset index to start from the first image
+function openCarousel(imageSrc, images) {
+    const modal = document.getElementById('carouselModal');
+    const enlargedImg = document.getElementById('enlargedImg');
+    
+    // Reset any existing transform
+    enlargedImg.style.transform = 'scale(1)';
+    
+    // Add loading state
+    enlargedImg.classList.add('opacity-50');
+    const loader = document.createElement('div');
+    loader.className = 'absolute inset-0 flex items-center justify-center';
+    loader.innerHTML = '<div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-yellow-400"></div>';
+    enlargedImg.parentElement.appendChild(loader);
+    
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    
+    // Initialize carousel with cleaned image array
+    const cleanedImages = images.map(img => img.trim());
+    initializeCarousel(cleanedImages);
+    currentImageIndex = cleanedImages.indexOf(imageSrc.trim());
+    
+    // Preload image
+    const img = new Image();
+    img.onload = function() {
+        enlargedImg.classList.remove('opacity-50');
+        if (loader) loader.remove();
+        updateCarouselImage();
+        updateImageCounter();
+    };
+    img.src = `../assets/vehicles/${imageSrc}`;
+
+    // Add keyboard navigation
+    document.addEventListener('keydown', handleCarouselKeyPress);
 }
 
-// Event Listeners for the Carousel
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('carouselModal').addEventListener('click', (e) => {
-        if (e.target.id === 'carouselModal') {
-            closeCarousel();
+function updateCarouselImage() {
+    const img = document.getElementById('enlargedImg');
+    if (!currentImages[currentImageIndex]) return;
+    
+    // Reset zoom before loading new image
+    img.style.transform = 'scale(1)';
+    
+    img.src = `../assets/vehicles/${currentImages[currentImageIndex].trim()}`;
+    img.className = 'max-h-[85vh] max-w-[85vw] w-auto h-auto object-contain rounded-lg transition-all duration-300';
+    img.style.margin = 'auto';
+}
+
+// Improved zoom functionality
+function addZoomCapability() {
+    const enlargedImg = document.getElementById('enlargedImg');
+    let scale = 1;
+    let isDragging = false;
+    let startPos = { x: 0, y: 0 };
+    let currentPos = { x: 0, y: 0 };
+    
+    enlargedImg.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const delta = e.deltaY * -0.01;
+        const newScale = Math.min(Math.max(1, scale + delta), 3);
+        
+        if (newScale !== scale) {
+            scale = newScale;
+            enlargedImg.style.transform = `scale(${scale}) translate(${currentPos.x}px, ${currentPos.y}px)`;
         }
     });
 
-    document.getElementById('closeCarousel').addEventListener('click', closeCarousel);
-    document.getElementById('prevImage').addEventListener('click', showPrevImage);
-    document.getElementById('nextImage').addEventListener('click', showNextImage);
-});
+    enlargedImg.addEventListener('mousedown', (e) => {
+        if (scale > 1) {
+            isDragging = true;
+            startPos = {
+                x: e.clientX - currentPos.x,
+                y: e.clientY - currentPos.y
+            };
+        }
+    });
+
+    enlargedImg.addEventListener('mousemove', (e) => {
+        if (isDragging && scale > 1) {
+            currentPos = {
+                x: e.clientX - startPos.x,
+                y: e.clientY - startPos.y
+            };
+            enlargedImg.style.transform = `scale(${scale}) translate(${currentPos.x}px, ${currentPos.y}px)`;
+        }
+    });
+
+    enlargedImg.addEventListener('mouseup', () => {
+        isDragging = false;
+    });
+
+    enlargedImg.addEventListener('mouseleave', () => {
+        isDragging = false;
+    });
+
+    enlargedImg.addEventListener('dblclick', () => {
+        scale = scale === 1 ? 2 : 1;
+        currentPos = { x: 0, y: 0 };
+        enlargedImg.style.transform = `scale(${scale})`;
+    });
+}
+
+function closeCarousel() {
+    const modal = document.getElementById('carouselModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    
+    document.removeEventListener('keydown', handleCarouselKeyPress);
+}
+
+function resetCarousel() {
+    const enlargedImg = document.getElementById('enlargedImg');
+    if (enlargedImg) {
+        enlargedImg.style.transform = 'scale(1)';
+        currentPos = { x: 0, y: 0 };
+        scale = 1;
+    }
+}
+
+function handleCarouselKeyPress(e) {
+    switch(e.key) {
+        case 'ArrowLeft':
+            showPrevImage();
+            resetCarousel();
+            break;
+        case 'ArrowRight':
+            showNextImage();
+            resetCarousel();
+            break;
+        case 'Escape':
+            closeCarousel();
+            break;
+        case '+':
+            zoomIn();
+            break;
+        case '-':
+            zoomOut();
+            break;
+    }
+}
+
 
 function updateDetailsModal(vehicle) {
     // Update text content
@@ -732,6 +843,8 @@ function closeDetailsModal() {
     detailsModalContent.addEventListener('animationend', () => {
         detailsModal.classList.remove("active");
     }, { once: true });
+
+    closeCarousel()
 }
 
 // Event listeners for closing modals

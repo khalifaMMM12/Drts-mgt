@@ -44,10 +44,10 @@ try {
             $stmt->execute([$model, $location, $status]);
         } elseif ($equipmentType === 'generator'){
             $model = $_POST['model'];
-            $noOfUnits = $_POST['noOfUnits'];
+            $capacity = $_POST['capacity'];
 
-            $stmt = $pdo->prepare("INSERT INTO generator (model, no_of_units, location, status) VALUES (?, ?, ?, ?)");
-            $stmt->execute([$model, $noOfUnits, $location, $status]);
+            $stmt = $pdo->prepare("INSERT INTO generator (model, capacity, location, status) VALUES (?, ?, ?, ?)");
+            $stmt->execute([$model, $capacity, $location, $status]);
         }
         else {
             echo json_encode(['success' => false, 'error' => 'Invalid equipment type']);

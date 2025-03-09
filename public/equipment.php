@@ -234,7 +234,7 @@ require_once '../includes/auth_functions.php';
                         <th class="p-4 border-b">Location</th>
                         <th class="p-4 border-b">Model</th>
                         <th class="p-4 border-b">Status</th>
-                        <th class="p-4 border-b">no_of_units</th>
+                        <th class="p-4 border-b">Capacity</th>
                         <th class="p-4 border-b">Action</th>
                     </tr>
                 </thead>

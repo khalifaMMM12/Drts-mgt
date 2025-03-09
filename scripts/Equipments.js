@@ -206,8 +206,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     <input type="text" id="model" name="model" required class="border p-2 w-full mb-4">
                 </div>
                 <div>
-                    <label for="noOfUnits" class="block">Units</label>
-                    <input type="text" id="noOfUnits" name="noOfUnits" required class="border p-2 w-full mb-4">
+                    <label for="capacity" class="block">Capacity</label>
+                    <input type="text" id="capacity" name="capacity" required class="border p-2 w-full mb-4">
                 </div>
                 <div>
                     <label for="status" class="block">Status</label>
@@ -364,7 +364,7 @@ function loadTableData(type) {
                         <td class="p-4">${equipment.location || 'N/A'}</td>
                         <td class="p-4">${equipment.model || 'N/A'}</td>
                         <td class="p-4">${equipment.status || 'N/A'}</td>
-                        <td class="p-4">${equipment.noOfUnits || 'N/A'}</td>
+                        <td class="p-4">${equipment.capacity || 'N/A'}</td>
                         ${createActionButtons}
                     `;
                 }

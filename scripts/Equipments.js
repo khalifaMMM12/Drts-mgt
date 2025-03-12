@@ -135,8 +135,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div>
                     <label for="status" class="block">Status</label>
                     <select id="status" name="status" class="border p-2 w-full mb-4">
-                        <option value="Operational">Operational</option>
-                        <option value="Not Operational">Not Operational</option>
+                        <option value="Servicable">Servicable</option>
+                        <option value="Unservicable">Unservicable</option>
                     </select>
                 </div>
             `;
@@ -170,8 +170,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div>
                     <label for="status" class="block">Status</label>
                     <select id="status" name="status" class="border p-2 w-full mb-4">
-                        <option value="Operational">Operational</option>
-                        <option value="Not Operational">Not Operational</option>
+                        <option value="Servicable">Servicable</option>
+                        <option value="Unservicable">Unservicable</option>
                     </select>
                 </div>
             `;
@@ -189,8 +189,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div>
                     <label for="status" class="block">Status</label>
                     <select id="status" name="status" class="border p-2 w-full mb-4">
-                        <option value="Operational">Operational</option>
-                        <option value="Not Operational">Not Operational</option>
+                        <option value="Servicable">Servicable</option>
+                        <option value="Unservicable">Unservicable</option>
                     </select>
                 </div>
             `;
@@ -212,8 +212,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div>
                     <label for="status" class="block">Status</label>
                     <select id="status" name="status" class="border p-2 w-full mb-4">
-                        <option value="Operational">Operational</option>
-                        <option value="Not Operational">Not Operational</option>
+                        <option value="Servicable">Servicable</option>
+                        <option value="Unservicable">Unservicable</option>
                     </select>
                 </div>
             `;    
@@ -284,6 +284,13 @@ function hasPermission(permission) {
     return false;
 }
 
+function capitalizeText(text) {
+    if (!text || text === 'N/A') return text;
+    return text.split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+}
+
 // Load table data
 function loadTableData(type) {
     fetch(`get_equipment_data.php?type=${type}`)
@@ -305,70 +312,14 @@ function loadTableData(type) {
             }
 
 
-            data.forEach((equipment) => {
+            data.forEach((equipment, index) => {
                 const newRow = document.createElement('tr');
                 newRow.classList.add('border-b');
+                newRow.classList.add('text-center');
+                newRow.classList.add('hover:bg-gray-300');
+                // const serialNumber = index + 1;
 
-                const createActionButtons = `
-                    <td class="p-4 border-b">
-                        ${hasPermission('delete_equipment') ? `
-                            <button onclick="openDeleteModal(${equipment.id}, '${equipment.name || equipment.location}', '${type}')"
-                                    class="text-red-500 hover:text-red-700">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        ` : ''}
-                        <!-- Add other action buttons here -->
-                    </td>
-                `;
-
-                if (type === 'solar') {
-                    newRow.innerHTML = `
-                        <td class="p-4">${equipment.location || 'N/A'}</td>
-                        <td class="p-4">${equipment.capacity || 'N/A'}</td>
-                        <td class="p-4">${equipment.battery_type || 'N/A'}</td>
-                        <td class="p-4">${equipment.no_of_batteries || 'N/A'}</td>
-                        <td class="p-4">${equipment.no_of_panels || 'N/A'}</td>
-                        <td class="p-4">${equipment.date_added || 'N/A'}</td>
-                        ${createActionButtons}
-                    `;
-                } else if (type === 'airConditioners') {
-                    newRow.innerHTML = `
-                        <td class="p-4">${equipment.location || 'N/A'}</td>
-                        <td class="p-4">${equipment.model || 'N/A'}</td>
-                        <td class="p-4">${equipment.type || 'N/A'}</td>
-                        <td class="p-4">${equipment.no_of_units || 'N/A'}</td>
-                        <td class="p-4">${equipment.capacity || 'N/A'}</td>
-                        <td class="p-4">${equipment.status || 'N/A'}</td>
-                        ${createActionButtons}
-                    `;
-                } else if (type === 'fireExtinguishers') {
-                    newRow.innerHTML = `
-                        <td class="p-4">${equipment.type || 'N/A'}</td>
-                        <td class="p-4">${equipment.weight || 'N/A'}</td>
-                        <td class="p-4">${equipment.amount || 'N/A'}</td>
-                        <td class="p-4">${equipment.location || 'N/A'}</td>
-                        <td class="p-4">${equipment.status || 'N/A'}</td>
-                        <td class="p-4">${equipment.last_service_date || 'N/A'}</td>
-                        <td class="p-4">${equipment.expiration_date || 'N/A'}</td>
-                        ${createActionButtons}
-                    `;
-                } else if (type === 'borehole'){
-                    newRow.innerHTML = `
-                        <td class="p-4">${equipment.location || 'N/A'}</td>
-                        <td class="p-4">${equipment.model || 'N/A'}</td>
-                        <td class="p-4">${equipment.status || 'N/A'}</td>
-                        ${createActionButtons}
-                    `;
-                }else if (type === 'generator'){
-                    newRow.innerHTML = `
-                        <td class="p-4">${equipment.location || 'N/A'}</td>
-                        <td class="p-4">${equipment.model || 'N/A'}</td>
-                        <td class="p-4">${equipment.status || 'N/A'}</td>
-                        <td class="p-4">${equipment.capacity || 'N/A'}</td>
-                        ${createActionButtons}
-                    `;
-                }
-
+                populateEquipmentRow(newRow, equipment, type, index + 1);
                 tableBody.appendChild(newRow);
             });
         })
@@ -469,4 +420,144 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+function searchEquipment() {
+    const searchTerm = document.getElementById('equipmentSearch').value.toLowerCase();
+    const currentType = document.getElementById('equipmentSelect').value;
+    
+    fetch(`get_equipment_data.php?type=${currentType}`)
+        .then(response => response.json())
+        .then(data => {
+            const filteredData = data.filter(equipment => {
+                const searchableFields = [
+                    equipment.location,
+                    equipment.model,
+                    equipment.type,
+                    equipment.status,
+                    equipment.capacity
+                ].filter(Boolean); // Remove undefined/null values
+
+                return searchableFields.some(field => 
+                    field.toString().toLowerCase().includes(searchTerm)
+                );
+            });
+
+            // Update table with filtered results
+            const tableBody = document.getElementById(`${currentType}Data`);
+            tableBody.innerHTML = '';
+
+            if (filteredData.length === 0) {
+                tableBody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center p-4 text-yellow-500 font-bold">
+                            No matching equipment found
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            filteredData.forEach((equipment, index) => {
+                const newRow = document.createElement('tr');
+                newRow.classList.add('border-b');
+                newRow.classList.add('text-center');
+                newRow.classList.add('hover:bg-gray-300');
+                
+                // Use existing row creation logic based on equipment type
+                populateEquipmentRow(newRow, equipment, currentType, index + 1);
+                tableBody.appendChild(newRow);
+            });
+        })
+        .catch(error => {
+            console.error('Error searching equipment:', error);
+            showAlert('Error searching equipment', 'error');
+        });
+}
+
+// Add event listener for real-time search
+document.getElementById('equipmentSearch').addEventListener('input', function(e) {
+    if (this.value.length >= 2 || this.value.length === 0) {
+        searchEquipment();
+    }
+});
+
+// Helper function to populate equipment row
+function populateEquipmentRow(row, equipment, type, serialNumber) {
+    const createActionButtons = `
+        <td class="p-4 border-b">
+            <div class="flex justify-center gap-2">
+                ${hasPermission('edit_equipment') ? `
+                    <button onclick="openEditModal('${equipment.id}', '${type}')"
+                            class="text-blue-500 hover:text-blue-700">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </button>
+                ` : ''}
+                ${hasPermission('delete_equipment') ? `
+                    <button onclick="openDeleteModal(${equipment.id}, '${equipment.location}', '${type}')"
+                            class="text-red-500 hover:text-red-700">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                ` : ''}
+            </div>
+        </td>
+    `;
+
+    switch(type) {
+        case 'solar':
+            row.innerHTML = `
+                <td class="p-4 border-b font-bold">${serialNumber}</td>
+                <td class="p-4">${capitalizeText(equipment.location) || 'N/A'}</td>
+                <td class="p-4">${equipment.capacity || 'N/A'}</td>
+                <td class="p-4">${capitalizeText(equipment.battery_type) || 'N/A'}</td>
+                <td class="p-4">${equipment.no_of_batteries || 'N/A'}</td>
+                <td class="p-4">${equipment.no_of_panels || 'N/A'}</td>
+                <td class="p-4">${equipment.date_added || 'N/A'}</td>
+                ${createActionButtons}
+            `;
+            break;
+        case 'airConditioners':
+            row.innerHTML = `
+                <td class="p-4 border-b font-bold">${serialNumber}</td>
+                <td class="p-4 capitalize">${capitalizeText(equipment.location) || 'N/A'}</td>
+                <td class="p-4 capitalize">${capitalizeText(equipment.model) || 'N/A'}</td>
+                <td class="p-4 capitalize">${capitalizeText(equipment.type) || 'N/A'}</td>
+                <td class="p-4 capitalize">${capitalizeText(equipment.no_of_units) || 'N/A'}</td>
+                <td class="p-4 capitalize">${capitalizeText(equipment.capacity) || 'N/A'}</td>
+                <td class="p-4 capitalize">${capitalizeText(equipment.status) || 'N/A'}</td>
+                    ${createActionButtons}
+            `;
+            break;
+        case 'fireExtinguishers':
+            row.innerHTML = `
+                <td class="p-4 border-b font-bold">${serialNumber}</td>
+                <td class="p-4 capitalize">${capitalizeText(equipment.type) || 'N/A'}</td>
+                <td class="p-4 capitalize">${capitalizeText(equipment.weight) || 'N/A'}</td>
+                <td class="p-4 capitalize">${capitalizeText(equipment.amount) || 'N/A'}</td>
+                <td class="p-4 capitalize">${capitalizeText(equipment.location) || 'N/A'}</td>
+                <td class="p-4 capitalize">${capitalizeText(equipment.status) || 'N/A'}</td>
+                <td class="p-4 capitalize">${capitalizeText(equipment.last_service_date) || 'N/A'}</td>
+                <td class="p-4 capitalize">${capitalizeText(equipment.expiration_date) || 'N/A'}</td>
+                ${createActionButtons}
+            `;
+            break;
+        case 'borehole':
+            row.innerHTML = `
+                <td class="p-4 border-b font-bold">${serialNumber}</td>
+                <td class="p-4 capitalize">${capitalizeText(equipment.location) || 'N/A'}</td>
+                <td class="p-4 capitalize">${capitalizeText(equipment.model) || 'N/A'}</td>
+                <td class="p-4 capitalize">${capitalizeText(equipment.status) || 'N/A'}</td>
+                ${createActionButtons}
+            `;
+            break;
+        case 'generator':
+            row.innerHTML = `
+                <td class="p-4 border-b font-bold">${serialNumber}</td>
+                <td class="p-4 capitalize">${capitalizeText(equipment.location) || 'N/A'}</td>
+                <td class="p-4 capitalize">${capitalizeText(equipment.model) || 'N/A'}</td>
+                <td class="p-4 capitalize">${capitalizeText(equipment.status) || 'N/A'}</td>
+                <td class="p-4 capitalize">${capitalizeText(equipment.capacity) || 'N/A'}</td>
+                ${createActionButtons}
+            `;
+            break;
+            
+    }
+}
 

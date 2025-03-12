@@ -5,33 +5,69 @@ include '../config/db.php';
 
 try {
     $equipmentType = $_GET['type'] ?? 'solar';
+    $equipmentId = $_GET['id'] ?? null;
     $data = [];
 
     switch ($equipmentType) {
         case 'solar':
-            $stmt = $pdo->query("SELECT * FROM solar");
-            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if ($equipmentId) {
+                $stmt = $pdo->prepare("SELECT * FROM solar WHERE id = ?");
+                $stmt->execute([$equipmentId]);
+                $data = $stmt->fetch(PDO::FETCH_ASSOC);
+            } else {
+                $stmt = $pdo->query("SELECT * FROM solar");
+                $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
             break;
         case 'airConditioners':
-            $stmt = $pdo->query("SELECT * FROM airConditioners");
-            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if ($equipmentId) {
+                $stmt = $pdo->prepare("SELECT * FROM airConditioners WHERE id = ?");
+                $stmt->execute([$equipmentId]);
+                $data = $stmt->fetch(PDO::FETCH_ASSOC);
+            } else {
+                $stmt = $pdo->query("SELECT * FROM airConditioners");
+                $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
             break;
         case 'fireExtinguishers':
-            $stmt = $pdo->query("SELECT * FROM fireExtinguishers");
-            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if ($equipmentId) {
+                $stmt = $pdo->prepare("SELECT * FROM fireExtinguishers WHERE id = ?");
+                $stmt->execute([$equipmentId]);
+                $data = $stmt->fetch(PDO::FETCH_ASSOC);
+            } else {
+                $stmt = $pdo->query("SELECT * FROM fireExtinguishers");
+                $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
             break;
         case 'borehole':
-            $stmt = $pdo->query("SELECT * FROM borehole");
-            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if ($equipmentId) {
+                $stmt = $pdo->prepare("SELECT * FROM borehole WHERE id = ?");
+                $stmt->execute([$equipmentId]);
+                $data = $stmt->fetch(PDO::FETCH_ASSOC);
+            } else {
+                $stmt = $pdo->query("SELECT * FROM borehole");
+                $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
             break;
         case 'generator':
-            $stmt = $pdo->query("SELECT * FROM generator");
-            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            if ($equipmentId) {
+                $stmt = $pdo->prepare("SELECT * FROM generator WHERE id = ?");
+                $stmt->execute([$equipmentId]);
+                $data = $stmt->fetch(PDO::FETCH_ASSOC);
+            } else {
+                $stmt = $pdo->query("SELECT * FROM generator");
+                $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            }
             break;
         default:
             http_response_code(400);
             echo json_encode(['error' => 'Invalid equipment type']);
             exit;
+    }
+    if ($equipmentId && !$data) {
+        http_response_code(404);
+        echo json_encode(['error' => 'Equipment not found']);
+        exit;
     }
 
     echo json_encode($data);

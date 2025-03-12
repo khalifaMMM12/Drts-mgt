@@ -105,6 +105,24 @@ require_once '../includes/auth_functions.php';
     <div class="container p-4">
         <h1 class="text-3xl font-bold text-black mb-6">Equipments Managements</h1>
 
+        <div class="grid xl:grid-cols-1 grid-cols-1">
+                <div class="flex flex-wrap items-center p-2 rounded-xl bg-gray-800 mb-6 space-x-2">
+                    <!-- Search Bar -->
+                    <div class="w-auto flex">
+                        <div class="flex">
+                            <input type="text" 
+                                id="equipmentSearch" 
+                                placeholder="Search by location, model, type or status" 
+                                class="border border-yellow-400 p-2 text-xs sm:text-sm md:text-base w-40 sm:w-56 md:w-96 rounded-l focus:border-yellow-500 focus:ring focus:ring-yellow-200 focus:ring-opacity-50">
+                            <button onclick="searchEquipment()" 
+                                class="bg-yellow-500 shrink-0 text-black font-semibold px-2 sm:px-4 py-2 rounded-r hover:bg-yellow-600 text-xs sm:text-sm">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         <!-- Modal -->
         <div id="addEquipmentModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
             <div class="modal-content relative bg-white p-6 rounded-lg shadow-lg border-2 border-yellow-400 w-full max-w-lg md:max-w-2xl lg:max-w-3xl overflow-y-auto max-h-full">
@@ -118,6 +136,28 @@ require_once '../includes/auth_functions.php';
                     </div>
                     <div class="mt-6 flex justify-end">
                         <button type="button" id="cancelButton" class="mr-4 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400">
+                            Cancel
+                        </button>
+                        <button type="submit" class="bg-yellow-500 text-white py-2 px-4 rounded-lg shadow hover:bg-yellow-600">
+                            Submit
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="EditequipmentModal" class="hidden fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
+            <div class="modal-content relative bg-white p-6 rounded-lg shadow-lg border-2 border-yellow-400 w-full max-w-lg md:max-w-2xl lg:max-w-3xl overflow-y-auto max-h-full">
+                <button onclick="closeEditModal()" class="absolute top-2 right-2 text-gray-700 text-4xl">&times;</button>
+                <h2 id="modalTitle" class="text-xl font-bold mb-4"></h2>
+                <form id="EditequipmentForm">
+                    <input type="hidden" id="equipmentType" name="equipmentType">
+                    <div id="fields" class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                        <!-- Fields input -->
+                        
+                    </div>
+                    <div class="mt-6 flex justify-end">
+                        <button type="button" onclick="closeEditModal()" class="mr-4 bg-gray-300 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-400">
                             Cancel
                         </button>
                         <button type="submit" class="bg-yellow-500 text-white py-2 px-4 rounded-lg shadow hover:bg-yellow-600">
@@ -172,6 +212,7 @@ require_once '../includes/auth_functions.php';
             <table id="solarTable" class="w-full bg-white shadow-lg rounded overflow-hidden text-sm md:text-base">
                 <thead class="bg-yellow-500 text-black">
                     <tr>
+                        <th class="p-4 border-b">S/N</th>
                         <th class="p-4 border-b">Location</th>
                         <th class="p-4 border-b">Capacity</th>
                         <th class="p-4 border-b">Battery Type</th>
@@ -188,6 +229,7 @@ require_once '../includes/auth_functions.php';
             <table id="airConditionersTable" class="w-full bg-white shadow-lg rounded overflow-hidden text-sm md:text-base hidden">
                 <thead class="bg-yellow-500 text-black">
                     <tr>
+                        <th class="p-4 border-b">S/N</th>
                         <th class="p-4 border-b">Location</th>
                         <th class="p-4 border-b">Model</th>
                         <th class="p-4 border-b">Type</th>
@@ -203,6 +245,7 @@ require_once '../includes/auth_functions.php';
             <table id="fireExtinguishersTable" class="w-full bg-white shadow-lg rounded overflow-hidden text-sm md:text-base hidden">
                 <thead class="bg-yellow-500 text-black">
                     <tr>
+                        <th class="p-4 border-b">S/N</th>
                         <th class="p-4 border-b">Type</th>
                         <th class="p-4 border-b">Weight</th>
                         <th class="p-4 border-b">Amount</th>
@@ -219,6 +262,7 @@ require_once '../includes/auth_functions.php';
             <table id="boreholeTable" class="w-full bg-white shadow-lg rounded overflow-hidden text-sm md:text-base hidden">
                 <thead class="bg-yellow-500 text-black">
                     <tr>
+                        <th class="p-4 border-b">S/N</th>
                         <th class="p-4 border-b">Location</th>
                         <th class="p-4 border-b">Model</th>
                         <th class="p-4 border-b">Status</th>
@@ -231,6 +275,7 @@ require_once '../includes/auth_functions.php';
             <table id="generatorTable" class="w-full bg-white shadow-lg rounded overflow-hidden text-sm md:text-base hidden">
                 <thead class="bg-yellow-500 text-black">
                     <tr>
+                        <th class="p-4 border-b">S/N</th>
                         <th class="p-4 border-b">Location</th>
                         <th class="p-4 border-b">Model</th>
                         <th class="p-4 border-b">Status</th>
@@ -254,6 +299,7 @@ require_once '../includes/auth_functions.php';
         ?>;
     </script>
     <script src="../scripts/Equipments.js"></script>
+    <script src="../scripts/editEquipments.js"></script>
     <script src="https://kit.fontawesome.com/79a49acde1.js" crossorigin="anonymous"></script>
 </body>
 </html>

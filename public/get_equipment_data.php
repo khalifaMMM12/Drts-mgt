@@ -19,23 +19,23 @@ try {
                 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
             }
             break;
-        case 'airConditioners':
+        case 'air_conditioners':
             if ($equipmentId) {
-                $stmt = $pdo->prepare("SELECT * FROM airConditioners WHERE id = ?");
+                $stmt = $pdo->prepare("SELECT * FROM air_conditioners WHERE id = ?");
                 $stmt->execute([$equipmentId]);
                 $data = $stmt->fetch(PDO::FETCH_ASSOC);
             } else {
-                $stmt = $pdo->query("SELECT * FROM airConditioners");
+                $stmt = $pdo->query("SELECT * FROM air_conditioners");
                 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
             }
             break;
-        case 'fireExtinguishers':
+        case 'fire_extinguishers':
             if ($equipmentId) {
-                $stmt = $pdo->prepare("SELECT * FROM fireExtinguishers WHERE id = ?");
+                $stmt = $pdo->prepare("SELECT * FROM fire_extinguishers WHERE id = ?");
                 $stmt->execute([$equipmentId]);
                 $data = $stmt->fetch(PDO::FETCH_ASSOC);
             } else {
-                $stmt = $pdo->query("SELECT * FROM fireExtinguishers");
+                $stmt = $pdo->query("SELECT * FROM fire_extinguishers");
                 $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
             }
             break;

@@ -20,23 +20,23 @@ try {
 
             $stmt = $pdo->prepare("INSERT INTO solar (location, capacity, battery_type, no_of_batteries, no_of_panels, date_added) VALUES (?, ?, ?, ?, ?, NOW())");
             $stmt->execute([$location, $capacity, $batteryType, $noOfBatteries, $noOfPanels]);
-        } elseif ($equipmentType === 'airConditioners') {
+        } elseif ($equipmentType === 'air_conditioners') {
             $model = $_POST['model'];
-            $type = $_POST['type'];
+            $ac_type = $_POST['ac_type'];
             $noOfUnits = $_POST['noOfUnits'];
             $capacity = $_POST['capacity'];
 
-            $stmt = $pdo->prepare("INSERT INTO airConditioners (location, model, type, no_of_units, capacity, status) VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$location, $model, $type, $noOfUnits, $capacity, $status]);
-        } elseif ($equipmentType === 'fireExtinguishers') {
-            $type = $_POST['type'];
+            $stmt = $pdo->prepare("INSERT INTO air_conditioners (location, model, ac_type, no_of_units, capacity, status) VALUES (?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$location, $model, $ac_type, $noOfUnits, $capacity, $status]);
+        } elseif ($equipmentType === 'fire_extinguishers') {
+            $fe_type = $_POST['fe_type'];
             $weight = $_POST['weight'];
             $amount = $_POST['amount'];
             $lastServiceDate = $_POST['lastServiceDate'];
             $expirationDate = $_POST['expirationDate'];
 
-            $stmt = $pdo->prepare("INSERT INTO fireExtinguishers (type, weight, amount, location, status, last_service_date, expiration_date) VALUES (?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$type, $weight, $amount, $location, $status, $lastServiceDate, $expirationDate]);
+            $stmt = $pdo->prepare("INSERT INTO fire_extinguishers (fe_type, weight, amount, location, status, last_service_date, expiration_date) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$fe_type, $weight, $amount, $location, $status, $lastServiceDate, $expirationDate]);
         } elseif ($equipmentType === 'borehole'){
             $model = $_POST['model'];
 

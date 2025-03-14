@@ -20,8 +20,8 @@ function closeLogoutModal() {
 document.addEventListener("DOMContentLoaded", function () {
     const equipmentSelect = document.getElementById("equipmentSelect");
     const solarTable = document.getElementById("solarTable");
-    const airConditionersTable = document.getElementById("airConditionersTable");
-    const fireExtinguishersTable = document.getElementById("fireExtinguishersTable");
+    const air_conditionersTable = document.getElementById("air_conditionersTable");
+    const fire_extinguishersTable = document.getElementById("fire_extinguishersTable");
     const boreholeTable = document.getElementById("boreholeTable");
     const generatorTable = document.getElementById("generatorTable");
 
@@ -44,18 +44,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Show table based on selected equipment type
     function showTable(type) {
+
+        console.log('Equipment type before table generation:', type);
+
         solarTable.classList.add("hidden");
-        airConditionersTable.classList.add("hidden");
-        fireExtinguishersTable.classList.add("hidden");
+        air_conditionersTable.classList.add("hidden");
+        fire_extinguishersTable.classList.add("hidden");
         boreholeTable.classList.add("hidden");
         generatorTable.classList.add("hidden");
 
         if (type === "solar") {
             solarTable.classList.remove("hidden");
-        } else if (type === "airConditioners") {
-            airConditionersTable.classList.remove("hidden");
-        } else if (type === "fireExtinguishers") {
-            fireExtinguishersTable.classList.remove("hidden");
+        } else if (type === "air_conditioners") {
+            air_conditionersTable.classList.remove("hidden");
+        } else if (type === "fire_extinguishers") {
+            fire_extinguishersTable.classList.remove("hidden");
         }else if (type === "borehole"){
             boreholeTable.classList.remove("hidden")
         }else if (type === "generator"){
@@ -109,7 +112,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <input type="number" id="noOfPanels" name="noOfPanels" required class="border p-2 w-full mb-4">
                 </div>
             `;
-        } else if (type === "airConditioners") {
+        } else if (type === "air_conditioners") {
             fields.innerHTML = `
                 <!-- Air Conditioners Form Fields -->
                 <div>
@@ -122,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 </div>
                 <div>
                     <label for="type" class="block">Type</label>
-                    <input type="text" id="type" name="type" required class="border p-2 w-full mb-4">
+                    <input type="text" id="type" name="ac_type" required class="border p-2 w-full mb-4">
                 </div>
                 <div>
                     <label for="noOfUnits" class="block">No. of Units</label>
@@ -140,7 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     </select>
                 </div>
             `;
-        } else if (type === "fireExtinguishers") {
+        } else if (type === "fire_extinguishers") {
             fields.innerHTML = `
                 <!-- Fire Extinguishers Form Fields -->
                 <div>
@@ -149,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 </div>
                 <div>
                     <label for="type" class="block">Type</label>
-                    <input type="text" id="type" name="type" required class="border p-2 w-full mb-4">
+                    <input type="text" id="type" name="fe_type" required class="border p-2 w-full mb-4">
                 </div>
                 <div>
                     <label for="weight" class="block">Weight</label>
@@ -221,9 +224,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function formatTitle(type) {
-        return type === "airConditioners"
+        return type === "air_conditioners"
             ? "Air Conditioners"
-            : type === "fireExtinguishers"
+            : type === "fire_extinguishers"
             ? "Fire Extinguishers"
             :type === "borehole"
             ? "Borehole"
@@ -483,10 +486,10 @@ document.getElementById('equipmentSearch').addEventListener('input', function(e)
 function populateEquipmentRow(row, equipment, type, serialNumber) {
     const createActionButtons = `
         <td class="p-4 border-b">
-            <div class="flex justify-center gap-2">
+            <div class="flex justify-around space-x-2 gap-2 text-lg">
                 ${hasPermission('edit_equipment') ? `
                     <button onclick="openEditModal('${equipment.id}', '${type}')"
-                            class="text-blue-500 hover:text-blue-700">
+                            class="text-yellow-500 hover:text-yellow-700">
                         <i class="fa-solid fa-pen-to-square"></i>
                     </button>
                 ` : ''}
@@ -513,28 +516,28 @@ function populateEquipmentRow(row, equipment, type, serialNumber) {
                 ${createActionButtons}
             `;
             break;
-        case 'airConditioners':
+        case 'air_conditioners':
             row.innerHTML = `
                 <td class="p-4 border-b font-bold">${serialNumber}</td>
                 <td class="p-4 capitalize">${capitalizeText(equipment.location) || 'N/A'}</td>
                 <td class="p-4 capitalize">${capitalizeText(equipment.model) || 'N/A'}</td>
-                <td class="p-4 capitalize">${capitalizeText(equipment.type) || 'N/A'}</td>
-                <td class="p-4 capitalize">${capitalizeText(equipment.no_of_units) || 'N/A'}</td>
-                <td class="p-4 capitalize">${capitalizeText(equipment.capacity) || 'N/A'}</td>
+                <td class="p-4 capitalize">${capitalizeText(equipment.ac_type) || 'N/A'}</td>
+                <td class="p-4 capitalize">${equipment.no_of_units || 'N/A'}</td>
+                <td class="p-4 capitalize">${equipment.capacity || 'N/A'}</td>
                 <td class="p-4 capitalize">${capitalizeText(equipment.status) || 'N/A'}</td>
                     ${createActionButtons}
             `;
             break;
-        case 'fireExtinguishers':
+        case 'fire_extinguishers':
             row.innerHTML = `
                 <td class="p-4 border-b font-bold">${serialNumber}</td>
-                <td class="p-4 capitalize">${capitalizeText(equipment.type) || 'N/A'}</td>
-                <td class="p-4 capitalize">${capitalizeText(equipment.weight) || 'N/A'}</td>
-                <td class="p-4 capitalize">${capitalizeText(equipment.amount) || 'N/A'}</td>
+                <td class="p-4 capitalize">${capitalizeText(equipment.fe_type) || 'N/A'}</td>
+                <td class="p-4 capitalize">${equipment.weight || 'N/A'}</td>
+                <td class="p-4 capitalize">${equipment.amount || 'N/A'}</td>
                 <td class="p-4 capitalize">${capitalizeText(equipment.location) || 'N/A'}</td>
                 <td class="p-4 capitalize">${capitalizeText(equipment.status) || 'N/A'}</td>
-                <td class="p-4 capitalize">${capitalizeText(equipment.last_service_date) || 'N/A'}</td>
-                <td class="p-4 capitalize">${capitalizeText(equipment.expiration_date) || 'N/A'}</td>
+                <td class="p-4 capitalize">${equipment.last_service_date || 'N/A'}</td>
+                <td class="p-4 capitalize">${equipment.expiration_date || 'N/A'}</td>
                 ${createActionButtons}
             `;
             break;

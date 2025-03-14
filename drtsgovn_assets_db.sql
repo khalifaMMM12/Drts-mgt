@@ -44,10 +44,10 @@ INSERT INTO `admin` (`id`, `username`, `password`, `role`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `airconditioners`
+-- Table structure for table `air_conditioners`
 --
 
-CREATE TABLE `airconditioners` (
+CREATE TABLE `air_conditioners` (
   `id` int(11) NOT NULL,
   `location` varchar(100) NOT NULL,
   `model` varchar(50) NOT NULL,
@@ -58,10 +58,10 @@ CREATE TABLE `airconditioners` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `airconditioners`
+-- Dumping data for table `air_conditioners`
 --
 
-INSERT INTO `airconditioners` (`id`, `location`, `model`, `type`, `no_of_units`, `capacity`, `status`) VALUES
+INSERT INTO `air_conditioners` (`id`, `location`, `model`, `type`, `no_of_units`, `capacity`, `status`) VALUES
 (10, 'power house', 'sharp', 'Split', 3, '7.5kva', 'Not Operational');
 
 -- --------------------------------------------------------
@@ -80,10 +80,10 @@ CREATE TABLE `borehole` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `fireextinguishers`
+-- Table structure for table `fire_extinguishers`
 --
 
-CREATE TABLE `fireextinguishers` (
+CREATE TABLE `fire_extinguishers` (
   `id` int(11) NOT NULL,
   `type` varchar(50) NOT NULL,
   `weight` float NOT NULL,
@@ -197,9 +197,9 @@ ALTER TABLE `admin`
   ADD UNIQUE KEY `username` (`username`);
 
 --
--- Indexes for table `airconditioners`
+-- Indexes for table `air_conditioners`
 --
-ALTER TABLE `airconditioners`
+ALTER TABLE `air_conditioners`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -209,9 +209,9 @@ ALTER TABLE `borehole`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `fireextinguishers`
+-- Indexes for table `fire_extinguishers`
 --
-ALTER TABLE `fireextinguishers`
+ALTER TABLE `fire_extinguishers`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -250,9 +250,9 @@ ALTER TABLE `admin`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `airconditioners`
+-- AUTO_INCREMENT for table `air_conditioners`
 --
-ALTER TABLE `airconditioners`
+ALTER TABLE `air_conditioners`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
@@ -262,9 +262,9 @@ ALTER TABLE `borehole`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT for table `fireextinguishers`
+-- AUTO_INCREMENT for table `fire_extinguishers`
 --
-ALTER TABLE `fireextinguishers`
+ALTER TABLE `fire_extinguishers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --

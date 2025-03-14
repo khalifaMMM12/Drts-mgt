@@ -76,8 +76,8 @@ require_once '../includes/auth_functions.php';
                             <label for="equipmentSelect" class="text-white font-medium">Select Equipment:</label>
                             <select id="equipmentSelect" class="p-2 border rounded-lg text-black focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent bg-white">
                                 <option value="solar">Solar</option>
-                                <option value="airConditioners">Air Conditioners</option>
-                                <option value="fireExtinguishers">Fire Extinguishers</option>
+                                <option value="air_conditioners">Air Conditioners</option>
+                                <option value="fire_extinguishers">Fire Extinguishers</option>
                                 <option value="borehole">Borehole</option>
                                 <option value="generator">Generators</option>
                             </select>
@@ -226,7 +226,7 @@ require_once '../includes/auth_functions.php';
                 <tbody id="solarData"></tbody>
             </table>
 
-            <table id="airConditionersTable" class="w-full bg-white shadow-lg rounded overflow-hidden text-sm md:text-base hidden">
+            <table id="air_conditionersTable" class="w-full bg-white shadow-lg rounded overflow-hidden text-sm md:text-base hidden">
                 <thead class="bg-yellow-500 text-black">
                     <tr>
                         <th class="p-4 border-b">S/N</th>
@@ -239,10 +239,10 @@ require_once '../includes/auth_functions.php';
                         <th class="p-4 border-b">Action</th>
                     </tr>
                 </thead>
-                <tbody id="airConditionersData"></tbody>
+                <tbody id="air_conditionersData"></tbody>
             </table>
 
-            <table id="fireExtinguishersTable" class="w-full bg-white shadow-lg rounded overflow-hidden text-sm md:text-base hidden">
+            <table id="fire_extinguishersTable" class="w-full bg-white shadow-lg rounded overflow-hidden text-sm md:text-base hidden">
                 <thead class="bg-yellow-500 text-black">
                     <tr>
                         <th class="p-4 border-b">S/N</th>
@@ -256,7 +256,7 @@ require_once '../includes/auth_functions.php';
                         <th class="p-4 border-b">Action</th>
                     </tr>
                 </thead>
-                <tbody id="fireExtinguishersData"></tbody>
+                <tbody id="fire_extinguishersData"></tbody>
             </table>
 
             <table id="boreholeTable" class="w-full bg-white shadow-lg rounded overflow-hidden text-sm md:text-base hidden">

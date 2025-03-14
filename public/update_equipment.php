@@ -19,64 +19,63 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 
 try {
+    error_log("UPDATE REQUEST - POST data: " . print_r($_POST, true));
+
     if (!isset($_POST['id']) || !isset($_POST['type'])) {
-        throw new Exception('Missing required parameters');
+        throw new Exception('Missing required parameters: id=' . 
+            (isset($_POST['id']) ? $_POST['id'] : 'missing') . 
+            ', type=' . (isset($_POST['type']) ? $_POST['type'] : 'missing'));
     }
 
     $id = filter_var($_POST['id'], FILTER_VALIDATE_INT);
     $type = $_POST['type'];
     
     if ($id === false) {
-        throw new Exception('Invalid ID format');
+        throw new Exception('Invalid ID format: ' . $_POST['id']);
     }
 
     
     switch($type) {
         case 'solar':
-            if (!isset($_POST['location']) || !isset($_POST['capacity']) || 
-                !isset($_POST['battery_type']) || !isset($_POST['no_of_batteries']) || 
-                !isset($_POST['no_of_panels'])) {
-                throw new Exception('Missing required solar parameters');
-            }
             $sql = "UPDATE solar SET 
-                location = ?, 
-                capacity = ?, 
-                battery_type = ?,
-                no_of_batteries = ?, 
-                no_of_panels = ?
-                WHERE id = ?";
+                    location = :location, 
+                    capacity = :capacity, 
+                    battery_type = :battery_type,
+                    no_of_batteries = :no_of_batteries, 
+                    no_of_panels = :no_of_panels
+                    WHERE id = :id";
             $params = [
-                $_POST['location'],
-                $_POST['capacity'],
-                $_POST['battery_type'],
-                $_POST['no_of_batteries'],
-                $_POST['no_of_panels'],
-                $id
+                ':location' => $_POST['location'],
+                ':capacity' => $_POST['capacity'],
+                ':battery_type' => $_POST['battery_type'],
+                ':no_of_batteries' => $_POST['no_of_batteries'],
+                ':no_of_panels' => $_POST['no_of_panels'],
+                ':id' => $id
             ];
             break;
-        case 'airConditioners':
-            $sql = "UPDATE airConditioners SET 
-                    location = ?, model = ?, type = ?,
+        case 'air_conditioners':
+            $sql = "UPDATE air_conditioners SET 
+                    location = ?, model = ?, ac_type = ?,
                     no_of_units = ?, capacity = ?, status = ?
                     WHERE id = ?";
             $params = [
                 $_POST['location'],
                 $_POST['model'],
-                $_POST['type'],
+                $_POST['ac_type'],
                 $_POST['no_of_units'],
                 $_POST['capacity'],
                 $_POST['status'],
                 $id
             ];
             break;
-        case 'fireExtinguishers':
-            $sql = "UPDATE fireExtinguishers SET 
-                    type = ?, weight = ?, amount = ?,
+        case 'fire_extinguishers':
+            $sql = "UPDATE fire_extinguishers SET 
+                    fe_type = ?, weight = ?, amount = ?,
                     location = ?, status = ?, last_service_date = ?,
                     expiration_date = ?
                     WHERE id = ?";
             $params = [
-                $_POST['type'],
+                $_POST['fe_type'],
                 $_POST['weight'],
                 $_POST['amount'],
                 $_POST['location'],
@@ -115,40 +114,41 @@ try {
             throw new Exception('Invalid equipment type');    
     }
     
-    $stmt = $pdo->prepare($sql);
-    if (!$stmt) {
-        throw new Exception('Failed to prepare statement');
-    }
+   // Debug: Log SQL and params
+   error_log("Executing SQL: $sql");
+   error_log("Parameters: " . print_r($params, true));
 
-    $stmt->execute($params);
-    if (!$result) {
-        throw new Exception('Failed to execute statement');
-    }
+   $stmt = $pdo->prepare($sql);
+   if (!$stmt) {
+       $error = $pdo->errorInfo();
+       throw new Exception('Prepare failed: ' . $error[2]);
+   }
 
+   $result = $stmt->execute($params);
+   if (!$result) {
+       $error = $stmt->errorInfo();
+       throw new Exception('Execute failed: ' . $error[2]);
+   }
 
-    if ($stmt->rowCount() === 0) {
-        throw new Exception('No equipment found with the given ID');
-    }
-    
-    http_response_code(200);
-    exit(json_encode([
-        'success' => true, 
-        'message' => 'Equipment updated successfully'
-    ]));    
+   echo json_encode([
+       'success' => true,
+       'message' => 'Equipment updated successfully',
+       'affected_rows' => $stmt->rowCount()
+   ]);
 
 } catch(PDOException $e) {
-        http_response_code(500);
-        error_log("Database Error: " . $e->getMessage());
-        exit(json_encode([
-            'success' => false,
-            'message' => 'Database error occurred'
-        ]));
-    } catch(Exception $e) {
-        http_response_code(400);
-        error_log("Update Error: " . $e->getMessage());
-        exit(json_encode([
-            'success' => false,
-            'message' => $e->getMessage()
-        ]));
-    }
-?>
+   error_log("PDO Error: " . $e->getMessage());
+   http_response_code(500);
+   echo json_encode([
+       'success' => false,
+       'message' => 'Database error: ' . $e->getMessage(),
+       'code' => $e->getCode()
+   ]);
+} catch(Exception $e) {
+   error_log("General Error: " . $e->getMessage());
+   http_response_code(400);
+   echo json_encode([
+       'success' => false,
+       'message' => $e->getMessage()
+   ]);
+}

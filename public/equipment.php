@@ -218,9 +218,9 @@ require_once '../includes/auth_functions.php';
                         <th class="p-4 border-b">Battery Type</th>
                         <th class="p-4 border-b">No. of Batteries</th>
                         <th class="p-4 border-b">No. of Panels</th>
-                        <th class="p-4 border-b">Date Added</th>
+                        <th class="p-4 border-b">Installation Date</th>
+                        <th class="p-4 border-b">Service Rendered</th>
                         <th class="p-4 border-b">Action</th>
-                        <!-- <th class="p-4 border-b">Service Rendered</th> -->
                     </tr>
                 </thead>
                 <tbody id="solarData"></tbody>

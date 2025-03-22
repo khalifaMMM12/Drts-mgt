@@ -85,6 +85,16 @@ function generateSolarFields(container, equipment) {
             <input type="number" name="no_of_panels" value="${equipment.no_of_panels || ''}"
                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-yellow-500" required>
         </div>
+        <div class="form-group">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Installation Date</label>
+            <input type="date" name="installation_Date" value="${equipment.installation_date || ''}"
+                   class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-yellow-500" required>
+        </div>
+        <div class="form-group">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Service Rendered</label>
+            <input type="text" name="service_rendered" value="${equipment.service_rendered || ''}"
+                   class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-yellow-500" required>
+        </div>
     `;
 }
 function generateAirConditionerFields(container, equipment) {
@@ -269,7 +279,7 @@ document.getElementById('EditequipmentForm').addEventListener('submit', function
 function validateFormData(formData) {
     const type = formData.get('type');
     const requiredFields = {
-        solar: ['location', 'capacity', 'battery_type', 'no_of_batteries', 'no_of_panels'],
+        solar: ['location', 'capacity', 'battery_type', 'no_of_batteries', 'no_of_panels', 'installation_Date', 'service_rendered'],
         air_conditioners: ['location', 'model', 'ac_type', 'no_of_units', 'capacity', 'status'],
         fire_extinguishers: ['fe_type', 'weight', 'amount', 'location', 'status', 'last_service_date', 'expiration_date'],
         borehole: ['location', 'model', 'status'],

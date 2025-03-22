@@ -111,6 +111,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     <label for="noOfPanels" class="block">No. of Panels</label>
                     <input type="number" id="noOfPanels" name="noOfPanels" required class="border p-2 w-full mb-4">
                 </div>
+                <div>
+                    <label for="installationDate" class="block">Installation Date</label>
+                    <input type="date" id="installationDate" name="installationDate" required class="border p-2 w-full mb-4">
+                </div>
+                <div>
+                    <label for="serviceRenderd" class="block">Service renderd</label>
+                    <input type="text" id="serviceRenderd" name="serviceRenderd" required class="border p-2 w-full mb-4">
+                </div>
             `;
         } else if (type === "air_conditioners") {
             fields.innerHTML = `
@@ -512,7 +520,8 @@ function populateEquipmentRow(row, equipment, type, serialNumber) {
                 <td class="p-4">${capitalizeText(equipment.battery_type) || 'N/A'}</td>
                 <td class="p-4">${equipment.no_of_batteries || 'N/A'}</td>
                 <td class="p-4">${equipment.no_of_panels || 'N/A'}</td>
-                <td class="p-4">${equipment.date_added || 'N/A'}</td>
+                <td class="p-4">${equipment.installation_Date || 'N/A'}</td>
+                <td class="p-4">${equipment.service_rendered || 'N/A'}</td>
                 ${createActionButtons}
             `;
             break;

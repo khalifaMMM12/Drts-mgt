@@ -42,7 +42,9 @@ try {
                     capacity = :capacity, 
                     battery_type = :battery_type,
                     no_of_batteries = :no_of_batteries, 
-                    no_of_panels = :no_of_panels
+                    no_of_panels = :no_of_panels,
+                    installation_Date = :installation_Date,
+                    service_rendered = :service_rendered
                     WHERE id = :id";
             $params = [
                 ':location' => $_POST['location'],
@@ -50,6 +52,8 @@ try {
                 ':battery_type' => $_POST['battery_type'],
                 ':no_of_batteries' => $_POST['no_of_batteries'],
                 ':no_of_panels' => $_POST['no_of_panels'],
+                ':installation_Date' => $_POST['installation_Date'],
+                ':service_rendered' => $_POST['service_rendered'],
                 ':id' => $id
             ];
             break;

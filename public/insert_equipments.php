@@ -17,9 +17,11 @@ try {
             $batteryType = $_POST['batteryType'];
             $noOfBatteries = $_POST['noOfBatteries'];
             $noOfPanels = $_POST['noOfPanels'];
+            $installationDate = $_POST['installationDate'];
+            $serviceRendered = $_POST['serviceRendered'];
 
-            $stmt = $pdo->prepare("INSERT INTO solar (location, capacity, battery_type, no_of_batteries, no_of_panels, date_added) VALUES (?, ?, ?, ?, ?, NOW())");
-            $stmt->execute([$location, $capacity, $batteryType, $noOfBatteries, $noOfPanels]);
+            $stmt = $pdo->prepare("INSERT INTO solar (location, capacity, battery_type, no_of_batteries, no_of_panels, installation_Date, service_rendered) VALUES (?, ?, ?, ?, ?, ? NOW())");
+            $stmt->execute([$location, $capacity, $batteryType, $noOfBatteries, $noOfPanels, $installationDate, $serviceRendered]);
         } elseif ($equipmentType === 'air_conditioners') {
             $model = $_POST['model'];
             $ac_type = $_POST['ac_type'];

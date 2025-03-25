@@ -87,7 +87,7 @@ function generateSolarFields(container, equipment) {
         </div>
         <div class="form-group">
             <label class="block text-gray-700 text-sm font-bold mb-2">Installation Date</label>
-            <input type="date" name="installation_Date" value="${equipment.installation_date || ''}"
+            <input type="date" name="installation_Date" value="${equipment.installation_Date || ''}"
                    class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-yellow-500" required>
         </div>
         <div class="form-group">

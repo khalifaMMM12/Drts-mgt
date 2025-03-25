@@ -116,8 +116,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     <input type="date" id="installationDate" name="installationDate" required class="border p-2 w-full mb-4">
                 </div>
                 <div>
-                    <label for="serviceRenderd" class="block">Service renderd</label>
-                    <input type="text" id="serviceRenderd" name="serviceRenderd" required class="border p-2 w-full mb-4">
+                    <label for="serviceRenderd" class="block">Service rendered</label>
+                    <input type="text" id="serviceRendered" name="serviceRendered" required class="border p-2 w-full mb-4">
                 </div>
             `;
         } else if (type === "air_conditioners") {
@@ -259,24 +259,25 @@ addEquipmentForm.addEventListener("submit", function (e) {
         method: "POST",
         body: formData,
     })
-        .then((response) => response.text()) // Change from .json() to .text() to capture the raw response
-        .then((data) => {
-            console.log("Raw Response:", data); // Log the response to the console
-            return JSON.parse(data); // Then attempt to parse as JSON
-        })
-        .then((data) => {
-            if (data.success) {
-                showAlert("Equipment added successfully!", "success");
-                addEquipmentModal.classList.add("hidden");
-                addEquipmentForm.reset();
-                loadTableData(equipmentSelect.value);
-            } else {
-                showAlert("Error adding equipment: ", "error");
-            }
-        })
-        .catch((error) => {
-            console.error("Error:", error);
-        });
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(err => Promise.reject(err));
+        }
+        return response.json();
+    })
+    .then((data) => {
+        if (data.success) {
+            showAlert("Equipment added successfully!", "success");
+            addEquipmentModal.classList.add("hidden");
+            addEquipmentForm.reset();
+            loadTableData(equipmentSelect.value);
+        } else {
+            showAlert("Error adding equipment: ", "error");
+        }
+    })
+    .catch((error) => {
+        console.error("Error:", error);
+    });
     
     
 });

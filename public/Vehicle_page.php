@@ -114,40 +114,10 @@ $vehicles = $stmt->fetchAll();
                             </button>
                         </form>
                     </div>
-                    <!-- Filters -->
-                    <div class="flex flex-wrap items-center space-x-1 sm:space-x-2">
-                        <p class="text-white text-xs sm:text-sm md:text-lg font-bold">Filters:</p>
-                        <div class="relative">
-                            <input type="radio" id="noRepairs" name="vehicleFilter" value="no_repairs" class="hidden">
-                            <label for="noRepairs" class="px-2 sm:px-3 py-1 text-xs sm:text-sm cursor-pointer rounded bg-gray-700 hover:bg-yellow-500 text-white transition-colors inline-block">
-                                No Repairs
-                            </label>
-                        </div>
-                        
-                        <div class="relative">
-                            <input type="radio" id="clearedView" name="vehicleFilter" value="cleared" class="hidden">
-                            <label for="clearedView" class="px-2 sm:px-3 py-1 text-xs sm:text-sm cursor-pointer rounded bg-gray-700 hover:bg-yellow-500 text-white transition-colors inline-block">
-                                Cleared
-                            </label>
-                        </div>
-                        
-                        <div class="relative">
-                            <input type="radio" id="repairsView" name="vehicleFilter" value="repairs" class="hidden">
-                            <label for="repairsView" class="px-2 sm:px-3 py-1 text-xs sm:text-sm cursor-pointer rounded bg-gray-700 hover:bg-yellow-500 text-white transition-colors inline-block">
-                                Needs Repairs
-                            </label>
-                        </div>
-                    </div>
+                    <!-- Filters removed -->
                 </div>
-                <style>
-                    input[type="radio"]:checked + label {
-                        background-color: #F59E0B;
-                        color: black;
-                    }
-                </style>
             </div>
         </div>
-
 
         <div id="logoutModal" class="modal-overlay items-center justify-center hidden fixed z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4">
             <div id="logoutModalcontent" class="modal-content relative mx-auto shadow-xl rounded-md bg-white max-w-md">
@@ -186,26 +156,6 @@ $vehicles = $stmt->fetchAll();
             </div>
         </div>
 
-        <!-- Clear Modal -->
-        <div id="clearModal" class="modal-overlay items-center justify-center hidden fixed z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4">
-            <div id="clearModalcontent" class="modal-content relative mx-auto shadow-xl rounded-xl bg-white max-w-md">
-                <div class="p-6 pt-2 text-center">
-                <svg class="h-20 w-20 mx-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.--><path fill="#22c55e" d="M256 48a208 208 0 1 1 0 416 208 208 0 1 1 0-416zm0 464A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-111 111-47-47c-9.4-9.4-24.6-9.4-33.9 0s-9.4 24.6 0 33.9l64 64c9.4 9.4 24.6 9.4 33.9 0L369 209z"/></svg>                        
-                    <h3 class="text-xl font-normal text-black mt-5 mb-6">Clearing vehicle with registration number: 
-                        <span id="clearVehicleRegNo" class="font-bold text-green-800"></span>
-                    </h3>
-                    <a href="#" id="confirmClear" 
-                    class="text-white bg-green-500 hover:bg-green-400 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-base inline-flex items-center px-3 py-2.5 text-center mr-2">
-                    ✔ Clear
-                    </a>
-                    <button onclick="closeClearModal()" id="cancelClear"
-                    class="text-gray-900 bg-white hover:bg-gray-100 focus:ring-4 focus:ring-cyan-200 border border-gray-200 font-medium inline-flex items-center rounded-lg text-base px-3 py-2.5 text-center">
-                    Cancel
-                    </button>
-                </div>
-            </div>
-        </div>
-
         <!-- Vehicle List Table -->
         <div class="flex-1 h-full overflow-auto"> 
             <div class="border-gray-500">
@@ -217,7 +167,6 @@ $vehicles = $stmt->fetchAll();
                             <th class="p-4 border-b">Type</th>
                             <th class="p-4 border-b">Make</th>
                             <th class="p-4 border-b">Location</th>
-                            <th class="p-4 border-b">Status</th>
                             <th class="p-4 border-b">Last inspection date</th>
                             <th class="p-4 border-b">Actions</th>
                         </tr>
@@ -230,44 +179,17 @@ $vehicles = $stmt->fetchAll();
                                 <td class="p-4 border-b"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['type']))); ?></td>
                                 <td class="p-4 border-b"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['make']))); ?></td>
                                 <td class="p-4 border-"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['location']))); ?></td>
-                                <td class="p-4 border-b" id="status-<?php echo $vehicle['id']; ?>">
-                                    <?php if ($vehicle['status'] === 'Fixed'): ?>
-                                        <span class="text-green-500 font-bold">✔ Cleared</span>
-                                    <?php elseif ($vehicle['status'] === 'Needs Repairs'): ?>
-                                        <span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>
-                                    <?php else: ?>
-                                        <span class="text-gray-500 font-bold">No Repairs</span>
-                                    <?php endif; ?>
-                                </td>
                                 <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['inspection_date']); ?></td>
                                 <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
                                     <button onclick="showDetails(<?php echo $vehicle['id']; ?>)" class="text-blue-500 hover:text-blue-700">ℹ</button>
-                                    
-                                    <?php if ($vehicle['status'] === 'Fixed'): ?>
-                                            <button 
-                                                class="text-yellow-500 opacity-50 cursor-not-allowed" disabled title="This vehicle is fixed and cannot be edited">
-                                                <i class="fa-solid fa-pen-to-square"></i>
-                                            </button>
-                                        <button 
-                                            class="text-green-500 opacity-50 cursor-not-allowed" 
-                                            disabled 
-                                            title="This vehicle is already cleared">✔ Clear
-                                        </button>
-                                    <?php else: ?>
                                     <?php if (hasPermission('edit_vehicle') || isAdmin()): ?>
                                         <button 
                                             id="editButton-<?php echo $vehicle['id']; ?>" 
                                             onclick="editVehicle(<?php echo $vehicle['id']; ?>)" 
-                                            class="text-yellow-500 hover:text-yellow-700 <?php echo $vehicle['status'] === 'fixed' ? 'cursor-not-allowed opacity-50' : ''; ?>" 
-                                            <?php echo $vehicle['status'] === 'fixed' ? 'disabled' : ''; ?>><i class="fa-solid fa-pen-to-square"></i>
+                                            class="text-yellow-500 hover:text-yellow-700">
+                                            <i class="fa-solid fa-pen-to-square"></i>
                                         </button>  
                                     <?php endif; ?>
-
-                                    <button data-vehicle-id="<?php echo $vehicle['id']; ?>" data-vehicle-regno="<?php echo $vehicle['reg_no']; ?>" onclick="openDeleteModal(<?php echo $vehicle['id']; ?>, '<?php echo $vehicle['reg_no']; ?>')" class="text-green-500 hover:text-green-700">✔ Clear
-                                        
-                                    </button>
-                                    <?php endif; ?>
-                                    
                                     <?php if (hasPermission('delete_vehicle') || isAdmin()): ?>
                                         <button class="text-red-500 hover:text-red-700 delete-button" data-vehicle-id="<?php echo $vehicle['id']; ?>" data-vehicle-regno="<?php echo $vehicle['reg_no']; ?>" onclick="openDeleteModal(<?php echo $vehicle['id']; ?>, '<?php echo $vehicle['reg_no']; ?>')">
                                             <i class="fa-solid fa-trash-can"></i>
@@ -294,10 +216,7 @@ $vehicles = $stmt->fetchAll();
             <p><strong>Type:</strong> <span id="detailType"></span></p>
             <p><strong>Make:</strong> <span id="detailMake"></span></p>
             <p><strong>Location:</strong> <span id="detailLocation"></span></p>
-            <p><strong>Status:</strong> <span id="detailStatus"></span></p>
-            <p><strong>Repair Type:</strong> <span id="detailRepair"></span></p>
             <p><strong>Last inspection date:</strong> <span id="detailInspectionDate"></span></p>
-            <p><strong>fixed Date:</strong> <span id="detailRepairDate"></span></p>
         </div>
 
         <!-- Image Gallery Thumbnails -->
@@ -369,38 +288,8 @@ $vehicles = $stmt->fetchAll();
                         <label>Last inspection date:</label>
                         <input type="date" name="inspection_date" required class="border p-2 w-full mb-4">
                     </div>
-                    
-                    <div>
-                        <label>Needs Repairs:</label>
-                        <input type="checkbox" id="needsRepairs" name="needs_repairs" value= 1 onclick="toggleRepairType()">
-                        <div id="repairTypeField" class="hidden mt-4">
-                            <label>Type of Repair:</label>
-                            <textarea name="repair_type" class="border p-2 w-full"></textarea>
-                        </div>
-                    </div>
-
-                    <!-- <div class="space-y-4"> -->
-                    <div class="relative">
-                        <label title="Click to upload" for="images" class="cursor-pointer flex items-center gap-4 px-6 py-4 relative group">
-                            <div class="w-max relative z-10">
-                                <img class="w-12" src="https://www.svgrepo.com/show/485545/upload-cicle.svg" alt="file upload icon" width="512" height="512">
-                            </div>
-                            <div class="relative z-10">
-                                <span class="block text-base font-semibold relative text-blue-900 group-hover:text-blue-500">
-                                    Upload Images
-                                </span>
-                                <span class="mt-0.5 block text-sm text-gray-500">Max 2 Images</span>
-                            </div>
-                            <span class="absolute inset-0 border-dashed border-2 border-gray-400/60 rounded-3xl group-hover:border-gray-300 z-0"></span>
-                            <span class="absolute inset-0 bg-gray-100 rounded-3xl transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:scale-105 active:scale-95 z-0"></span>
-                        </label>
-
-                        <input hidden="" type="file" name="images[]" id="images" onchange="previewImages()" accept="image/*" multiple>
-                    </div>
-
                 </div>
                 <div id="imagePreview" class="grid grid-flow-col grid-rows-4 gap-4 mt-2"></div>
-                    <!-- </div> -->
                 <button type="submit" name="submit" class="bg-yellow-500 text-black p-2 rounded mt-4 w-full md:w-auto">Submit</button>
             </form>
         </div>
@@ -414,7 +303,6 @@ $vehicles = $stmt->fetchAll();
         <h2 class="text-xl mb-4 text-yellow-500 font-bold">Edit Vehicle</h2>
         <form action="edit_vehicle.php" id="editVehicleForm" onsubmit="submitEditForm(event)" method="POST" enctype="multipart/form-data">
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <!-- Form Fields -->
                 <div>
                     <label class="block">Registration No:</label>
                     <input type="text" name="reg_no" id="reg_no" value="<?php echo htmlspecialchars($vehicle['reg_no']); ?>" class="border p-2 w-full mb-4">
@@ -446,20 +334,7 @@ $vehicles = $stmt->fetchAll();
                     <label>Last inspection date:</label>
                     <input type="date" name="inspection_date" id="inspection_date" value="<?php echo htmlspecialchars($vehicle['inspection_date']); ?>" class="border p-2 w-full mb-4">
                 </div>
-                <div>
-                    <label for="editNeedsRepairs" class="block">Needs Repairs:</label>
-                    <input type="checkbox" id="editNeedsRepairs" name="needs_repairs" value="1" <?php echo ($vehicle['needs_repairs'] == 1) ? 'checked' : ''; ?>>
-                    <div id="repairTypeField" class="mt-4">
-                        <label class="block">Type of Repair:</label>
-                        <textarea name="repair_type" id="repair_type" class="border p-2 w-full"><?php echo htmlspecialchars($vehicle['repair_type']); ?></textarea>
-                    </div>
-                </div>
                 <input type="hidden" name="id" id="vehicleId" value="<?php echo htmlspecialchars($vehicle['id']); ?>">
-                <!-- <div>
-                    <label>fixed Date:</label>
-                    <input type="date" name="repair_completion_date" id="repair_completion_date" value="<?php echo htmlspecialchars($vehicle['repair_completion_date']); ?>" class="border p-2 w-full mb-4">
-                </div> -->
-
                 <div class="relative">
                     <label title="Click to upload" for="new_images" class="cursor-pointer flex items-center gap-4 px-6 py-4 relative group">
                         <div class="w-max relative z-10">
@@ -514,7 +389,43 @@ $vehicles = $stmt->fetchAll();
     <script src="../scripts/vehicle.js"></script>
     <script src="../scripts/editVehicle.js"></script>
     <script src="../scripts/delete.js"></script>
-    <script src="../scripts/clear.js"></script>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const tableBody = document.querySelector('table tbody');
+    let debounceTimeout;
+    searchInput.addEventListener('input', function() {
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(() => {
+            fetch(`api/search_vehicles.php?search=${encodeURIComponent(searchInput.value)}`)
+                .then(res => res.json())
+                .then(data => {
+                    tableBody.innerHTML = '';
+                    if (!data.vehicles || data.vehicles.length === 0) {
+                        tableBody.innerHTML = '<tr><td colspan="7" class="text-center p-4">No vehicles found</td></tr>';
+                        return;
+                    }
+                    data.vehicles.forEach((vehicle, idx) => {
+                        tableBody.innerHTML += `
+                        <tr class="hover:bg-gray-500" data-vehicle-id="${vehicle.id}">
+                            <td class="p-4 border-b font-bold ">${idx + 1}</td>
+                            <td class="p-4 border-b uppercase">${vehicle.reg_no}</td>
+                            <td class="p-4 border-b">${vehicle.type.charAt(0).toUpperCase() + vehicle.type.slice(1).toLowerCase()}</td>
+                            <td class="p-4 border-b">${vehicle.make.charAt(0).toUpperCase() + vehicle.make.slice(1).toLowerCase()}</td>
+                            <td class="p-4 border-">${vehicle.location.charAt(0).toUpperCase() + vehicle.location.slice(1).toLowerCase()}</td>
+                            <td class="p-4 border-b">${vehicle.inspection_date ? vehicle.inspection_date : ''}</td>
+                            <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
+                                <button onclick="showDetails(${vehicle.id})" class="text-blue-500 hover:text-blue-700">ℹ</button>
+                                ${(window.userPermissions && (window.userPermissions.edit_vehicle || window.isAdmin)) ? `<button id="editButton-${vehicle.id}" onclick="editVehicle(${vehicle.id})" class="text-yellow-500 hover:text-yellow-700"><i class=\"fa-solid fa-pen-to-square\"></i></button>` : ''}
+                                ${(window.userPermissions && (window.userPermissions.delete_vehicle || window.isAdmin)) ? `<button class=\"text-red-500 hover:text-red-700 delete-button\" data-vehicle-id=\"${vehicle.id}\" data-vehicle-regno=\"${vehicle.reg_no}\" onclick=\"openDeleteModal(${vehicle.id}, '${vehicle.reg_no}')\"><i class=\"fa-solid fa-trash-can\"></i></button>` : ''}
+                            </td>
+                        </tr>`;
+                    });
+                });
+        }, 300);
+    });
+});
+    </script>
 
 </body>
 </html>

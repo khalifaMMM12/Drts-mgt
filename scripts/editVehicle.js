@@ -20,8 +20,6 @@ function editVehicle(vehicleId) {
         .then(vehicle => {
             console.log("Vehicle data:", vehicle);
 
-            console.log(vehicle.needs_repairs) 
-
             document.getElementById("reg_no").value = vehicle.reg_no || "";
             document.getElementById("type").value = vehicle.type || "";
             document.getElementById("make").value = vehicle.make || "";
@@ -29,56 +27,15 @@ function editVehicle(vehicleId) {
             document.getElementById("inspection_date").value = vehicle.inspection_date || "";
             document.getElementById("vehicleId").value = vehicle.id || "";
 
-    
-            const editNeedsRepairsCheckbox  = document.getElementById("editNeedsRepairs");
-            const repairTypeField = document.getElementById("repairTypeField");
-            const repairTypeTextarea = document.getElementById("repair_type");
-            
-            console.log("Vehicle needs repairs:", vehicle.needs_repairs);
-            editNeedsRepairsCheckbox.checked = parseInt(vehicle.needs_repairs) === 1;
-            console.log("Checkbox checked state:", editNeedsRepairsCheckbox .checked);
-
-            repairTypeField.style.display = "block";
-            repairTypeTextarea.value = vehicle.repair_type || "";
-
-            updateStatusDisplay(vehicle.id, editNeedsRepairsCheckbox .checked);
-
-            editNeedsRepairsCheckbox .removeEventListener("change", handleCheckboxChange);
-            editNeedsRepairsCheckbox .addEventListener("change", handleCheckboxChange);
-
-           
-        console.log("Edit modal successfully populated.");
-        if (vehicle.images) {
-            updateImageGallery(vehicle.images, vehicle.id);
-        }
-    })
-    .catch(error => {
-        console.error("Error loading vehicle data:", error);
-        showAlert("Error loading vehicle data", "error");
-    });
+            if (vehicle.images) {
+                updateImageGallery(vehicle.images, vehicle.id);
+            }
+        })
+        .catch(error => {
+            console.error("Error loading vehicle data:", error);
+            showAlert("Error loading vehicle data", "error");
+        });
 }
-
-function handleCheckboxChange() {
-    const vehicleId = document.getElementById("vehicleId").value;
-    const isChecked = this.checked;
-    console.log("Checkbox changed:", isChecked);
-    
-    // Update status display immediately
-    const statusField = document.getElementById(`status-${vehicleId}`);
-    if (statusField) {
-        statusField.innerHTML = getStatusBadge(isChecked ? 'Needs Repairs' : 'No Repairs', isChecked ? 1 : 0);
-    }
-}
-
-function updateStatusDisplay(vehicleId, isChecked) {
-    const statusField = document.getElementById(`status-${vehicleId}`);
-    if (statusField) {
-        statusField.innerHTML = isChecked 
-            ? `<span class="text-yellow-600 font-bold">⚠ Needs Repairs</span>`
-            : `<span class="text-gray-500 font-bold">No Repairs</span>`;
-    }
-}
-
 
 function updateImageGallery(images, vehicleId) {
     const imageGallery = document.getElementById("editImagePreview");
@@ -125,17 +82,16 @@ function deleteImage(imageName, vehicleId, container) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                container.style.display = 'none';
-                container.classList.add('pending-delete');
-                container.dataset.imageName = imageName;
-                showAlert('Image marked for deletion', 'info');
+                // Remove the image container from the DOM completely
+                container.remove();
+                showAlert('Image deleted', 'info');
             } else {
                 throw new Error(data.message);
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            showAlert('Error marking image for deletion', 'error');
+            showAlert('Error deleting image', 'error');
         });
 }
 
@@ -152,17 +108,12 @@ function closeEditModal() {
 
     const form = document.getElementById('editVehicleForm');
     form.reset();
-    
-    const needsRepairsCheckbox = document.getElementById("needsRepairs");
-    const repairTypeField = document.getElementById("repairTypeField");
-    needsRepairsCheckbox.checked = false;
-    
-    needsRepairsCheckbox.removeEventListener("change", handleCheckboxChange);
 }
 
 function uploadNewImage(vehicleId) {
     const fileInput = document.getElementById("new_images");
-    const existingImages = document.querySelectorAll('#editImagePreview .relative').length;
+    // Only count visible images (not deleted)
+    const existingImages = document.querySelectorAll('#editImagePreview .relative:not([style*="display: none"])').length;
     const maxTotalImages = 2;
 
     if (!vehicleId) {
@@ -226,11 +177,6 @@ function submitEditForm(e) {
         imagesToDelete.push(img.dataset.imageName);
     });
     formData.append('images_to_delete', JSON.stringify(imagesToDelete));
-    
-    const editNeedsRepairsCheckbox  = document.getElementById("editNeedsRepairs");
-    console.log("Checkbox state:", editNeedsRepairsCheckbox .checked);
-
-    formData.set('needs_repairs', editNeedsRepairsCheckbox .checked ? '1' : '0');
 
     console.log("Form data before submit:", Object.fromEntries(formData));
 
@@ -293,28 +239,19 @@ function formatText(text, type = 'normal') {
 function updateTableRow(vehicle) {
     const row = document.querySelector(`tr[data-vehicle-id="${vehicle.id}"]`);
     if (!row) return;
-
-    console.log("Updating row with vehicle data:", vehicle);
-
-    const needs_repairs = parseInt(vehicle.needs_repairs);
-    console.log("Needs repairs value:", needs_repairs);
-
     const serialNumber = row.cells[0].textContent;
-
     row.innerHTML = `
         <td class="p-4 border-b text-center">${serialNumber}</td>
         <td class="p-4 border-b uppercase">${formatText(vehicle.reg_no, 'reg')}</td>
         <td class="p-4 border-b">${formatText(vehicle.type)}</td>
         <td class="p-4 border-b">${formatText(vehicle.make)}</td>
         <td class="p-4 border-b">${formatText(vehicle.location)}</td>
-        <td class="p-4 border-b" id="status-${vehicle.id}">${getStatusBadge(vehicle.status, needs_repairs)}</td>
         <td class="p-4 border-b">${vehicle.inspection_date}</td>
         <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
             <button onclick="showDetails(${vehicle.id})" class="text-blue-500 hover:text-blue-700">ℹ</button>
             <button onclick="editVehicle(${vehicle.id})" class="text-yellow-500 hover:text-yellow-700">
                 <i class="fa-solid fa-pen-to-square"></i>
             </button>
-            <button href="clear_vehicle.php?id=${vehicle.id}" class="text-green-500 hover:text-green-700">✔ Clear</button>
             <button onclick="openDeleteModal(${vehicle.id}, '${vehicle.reg_no}')" class="text-red-500 hover:text-red-700">
                 <i class="fa-solid fa-trash-can"></i>
             </button>

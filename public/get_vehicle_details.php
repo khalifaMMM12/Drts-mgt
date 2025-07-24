@@ -34,7 +34,7 @@ if (isset($_GET['id']) && !empty(trim($_GET['id']))) {
                 'status' => $status, 
                 'repair_type' => $vehicle['repair_type'] ?? '', 
                 'needs_repairs' => $needs_repairs, 
-                'inspection_date' => $vehicle['inspection_date'],
+                
                 'images' => $images 
             ]);
         } else {

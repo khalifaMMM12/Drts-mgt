@@ -24,7 +24,7 @@ function editVehicle(vehicleId) {
             document.getElementById("type").value = vehicle.type || "";
             document.getElementById("make").value = vehicle.make || "";
             document.getElementById("location").value = vehicle.location || "";
-            document.getElementById("inspection_date").value = vehicle.inspection_date || "";
+            
             document.getElementById("vehicleId").value = vehicle.id || "";
 
             if (vehicle.images) {
@@ -78,21 +78,18 @@ function createImageContainer(image, index, vehicleId) {
 }
 
 function deleteImage(imageName, vehicleId, container) {
-    fetch(`delete_image.php?vehicle_id=${vehicleId}&image=${imageName}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Remove the image container from the DOM completely
-                container.remove();
-                showAlert('Image deleted', 'info');
-            } else {
-                throw new Error(data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showAlert('Error deleting image', 'error');
-        });
+    // Mark for deletion visually and for form submit, but do not delete immediately
+    container.classList.add('opacity-50', 'pending-delete');
+    container.style.pointerEvents = 'none';
+    container.dataset.imageName = imageName;
+    // Optionally, add a small overlay or icon to indicate pending deletion
+    let overlay = container.querySelector('.delete-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'delete-overlay absolute inset-0 bg-red-600 bg-opacity-40 flex items-center justify-center text-white text-xs font-bold rounded-lg';
+        overlay.textContent = 'Will be deleted';
+        container.appendChild(overlay);
+    }
 }
 
 function closeEditModal() {
@@ -246,7 +243,7 @@ function updateTableRow(vehicle) {
         <td class="p-4 border-b">${formatText(vehicle.type)}</td>
         <td class="p-4 border-b">${formatText(vehicle.make)}</td>
         <td class="p-4 border-b">${formatText(vehicle.location)}</td>
-        <td class="p-4 border-b">${vehicle.inspection_date}</td>
+        
         <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
             <button onclick="showDetails(${vehicle.id})" class="text-blue-500 hover:text-blue-700">ℹ</button>
             <button onclick="editVehicle(${vehicle.id})" class="text-yellow-500 hover:text-yellow-700">

@@ -166,7 +166,7 @@ CREATE TABLE `vehicles` (
   `type` varchar(50) NOT NULL,
   `make` varchar(50) NOT NULL,
   `location` varchar(100) NOT NULL,
-  `inspection_date` date NOT NULL,
+  
   `needs_repairs` tinyint(1) NOT NULL DEFAULT 0,
   `repair_type` text DEFAULT NULL,
   `status` varchar(50) DEFAULT NULL,
@@ -179,7 +179,7 @@ CREATE TABLE `vehicles` (
 -- Dumping data for table `vehicles`
 --
 
-INSERT INTO `vehicles` (`id`, `reg_no`, `type`, `make`, `location`, `inspection_date`, `needs_repairs`, `repair_type`, `status`, `repair_completion_date`, `images`, `created_at`) VALUES
+INSERT INTO `vehicles` (`id`, `reg_no`, `type`, `make`, `location`, `needs_repairs`, `repair_type`, `status`, `repair_completion_date`, `images`, `created_at`) VALUES
 (225, 'CT003', 'SUV', 'Toyota:  PRADO', 'mabushi', '2025-01-08', 0, '', 'Fixed', '2025-02-03', '67981f0288ebc_1738022658.jpeg,img_679a10a258cd50.01454105.jpeg', '2025-01-28 00:04:18'),
 (243, '5555', 'SUV', 'Toyota:  PRADO', 'mabushi', '2025-02-03', 0, 'windscreen', 'No Repairs', NULL, '67a341ded5dd7_1738752478.jpeg', '2025-02-05 10:47:58'),
 (244, '1234', 'Sedan', 'Toyota:  PRADO', 'mabushi', '2025-02-12', 1, 'vhjvkjhjvm', 'Needs Repairs', NULL, '67a3e71feaaa8_1738794783.jpeg,67a3e71feb776_1738794783.jpeg', '2025-02-05 22:33:03'),

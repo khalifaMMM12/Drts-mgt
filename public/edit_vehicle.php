@@ -81,7 +81,7 @@ try {
             location = ?, 
             status = ?, 
             repair_type = ?, 
-            inspection_date = ?,
+            
             needs_repairs = ?,
             images = ?
         WHERE id = ?
@@ -94,7 +94,7 @@ try {
         $_POST['location'],
         $status,
         $repair_type,
-        $_POST['inspection_date'],
+        
         $needs_repairs,
         $imageString,
         $vehicleId
@@ -119,7 +119,7 @@ try {
             'status' => $status,
             'repair_type' => $repair_type,
             'needs_repairs' => $needs_repairs,
-            'inspection_date' => $vehicle['inspection_date'],
+            
             'images' => $imageString
         ]
     ]);

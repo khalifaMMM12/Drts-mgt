@@ -164,10 +164,10 @@ $vehicles = $stmt->fetchAll();
                         <tr>
                             <th class="p-4 border-b">S/N</th>
                             <th class="p-4 border-b">Reg No</th>
-                            <th class="p-4 border-b">Type</th>
                             <th class="p-4 border-b">Make</th>
+                            <th class="p-4 border-b">Type</th>
                             <th class="p-4 border-b">Location</th>
-                            <th class="p-4 border-b">Last inspection date</th>
+                            
                             <th class="p-4 border-b">Actions</th>
                         </tr>
                     </thead>
@@ -176,10 +176,10 @@ $vehicles = $stmt->fetchAll();
                             <tr class="hover:bg-gray-500" data-vehicle-id="<?php echo $vehicle['id']; ?>">
                                 <td class="p-4 border-b font-bold "><?php echo $counter++; ?></td>
                                 <td class="p-4 border-b uppercase"><?php echo htmlspecialchars($vehicle['reg_no']); ?></td>
-                                <td class="p-4 border-b"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['type']))); ?></td>
                                 <td class="p-4 border-b"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['make']))); ?></td>
+                                <td class="p-4 border-b"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['type']))); ?></td>
                                 <td class="p-4 border-"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['location']))); ?></td>
-                                <td class="p-4 border-b"><?php echo htmlspecialchars($vehicle['inspection_date']); ?></td>
+                                
                                 <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
                                     <button onclick="showDetails(<?php echo $vehicle['id']; ?>)" class="text-blue-500 hover:text-blue-700">ℹ</button>
                                     <?php if (hasPermission('edit_vehicle') || isAdmin()): ?>
@@ -216,7 +216,7 @@ $vehicles = $stmt->fetchAll();
             <p><strong>Type:</strong> <span id="detailType"></span></p>
             <p><strong>Make:</strong> <span id="detailMake"></span></p>
             <p><strong>Location:</strong> <span id="detailLocation"></span></p>
-            <p><strong>Last inspection date:</strong> <span id="detailInspectionDate"></span></p>
+            
         </div>
 
         <!-- Image Gallery Thumbnails -->
@@ -260,7 +260,6 @@ $vehicles = $stmt->fetchAll();
                         <label class="block">Registration No:</label>
                         <input type="text" name="reg_no" required class="border p-2 w-full mb-4">
                     </div>
-                    
                     <div>
                         <label class="block font-semibold">Vehicle Type</label>
                         <select name="type" class="border border-gray-300 p-2 w-full rounded" required>
@@ -278,18 +277,30 @@ $vehicles = $stmt->fetchAll();
                         <label>Make:</label>
                         <input type="text" name="make" required class="border p-2 w-full mb-4">
                     </div>
-
                     <div>
                         <label>Location:</label>
                         <input type="text" name="location" required class="border p-2 w-full mb-4">
                     </div>
-
-                    <div>
-                        <label>Last inspection date:</label>
-                        <input type="date" name="inspection_date" required class="border p-2 w-full mb-4">
+                    <div class="md:col-span-2">
+                        <label title="Click to upload" for="add_images" class="cursor-pointer flex items-center gap-4 px-6 py-4 relative group">
+                            <div class="w-max relative z-10">
+                                <img class="w-12" src="https://www.svgrepo.com/show/485545/upload-cicle.svg" alt="file upload icon" width="512" height="512">
+                            </div>
+                            <div class="relative z-10">
+                                <span class="block text-base font-semibold relative text-blue-900 group-hover:text-blue-500">
+                                        Upload Vehicle Images
+                                </span>
+                                <span class="mt-0.5 block text-sm text-gray-500">Max 2 MB</span>
+                            </div>
+                            <span class="absolute inset-0 border-dashed border-2 border-gray-400/60 rounded-3xl group-hover:border-gray-300 z-0"></span>
+                            <span class="absolute inset-0 bg-gray-100 rounded-3xl transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:scale-105 active:scale-95 z-0"></span>
+                        </label>
+                        <input hidden type="file" name="images[]" id="add_images" accept="image/*" multiple>
+                        <div id="addImageError" class="text-red-600 text-sm mt-1"></div>
                     </div>
                 </div>
-                <div id="imagePreview" class="grid grid-flow-col grid-rows-4 gap-4 mt-2"></div>
+                <div id="imagePreview" class="col-span-2 grid grid-cols-2 gap-4 md:grid-cols-4 rounded-3xl mt-2"></div>
+                <!-- Image preview script moved to vehicle.js -->
                 <button type="submit" name="submit" class="bg-yellow-500 text-black p-2 rounded mt-4 w-full md:w-auto">Submit</button>
             </form>
         </div>
@@ -331,8 +342,7 @@ $vehicles = $stmt->fetchAll();
                     <input type="text" name="location" id="location" value="<?php echo htmlspecialchars($vehicle['location']); ?>" class="border p-2 w-full mb-4">
                 </div>
                 <div>
-                    <label>Last inspection date:</label>
-                    <input type="date" name="inspection_date" id="inspection_date" value="<?php echo htmlspecialchars($vehicle['inspection_date']); ?>" class="border p-2 w-full mb-4">
+                    
                 </div>
                 <input type="hidden" name="id" id="vehicleId" value="<?php echo htmlspecialchars($vehicle['id']); ?>">
                 <div class="relative">
@@ -357,9 +367,9 @@ $vehicles = $stmt->fetchAll();
                     <?php if (!empty($vehicle['images'])): ?>
                         <?php foreach (explode(',', $vehicle['images']) as $index => $image): ?>
                             <div class="relative group">
-                                <img src="../assets/vehicles/<?php echo htmlspecialchars(trim($image)); ?>" 
-                                    class="w-32 h-32 object-cover rounded-lg shadow-lg">
-                                <button type="button" 
+                                <img src="../assets/vehicles/<?php echo htmlspecialchars(trim($image)); ?>"
+                                    class="w-24 h-24 md:w-32 md:h-32 object-cover rounded-xl shadow-lg border border-gray-200">
+                                <button type="button"
                                     onclick="deleteImage('<?php echo htmlspecialchars(trim($image)); ?>', <?php echo $vehicle['id']; ?>, this.parentElement)"
                                     class="absolute opacity-0 group-hover:opacity-100 flex items-center justify-center top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-6 h-6 z-10 transition-opacity duration-200">
                                 ×
@@ -413,7 +423,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <td class="p-4 border-b">${vehicle.type.charAt(0).toUpperCase() + vehicle.type.slice(1).toLowerCase()}</td>
                             <td class="p-4 border-b">${vehicle.make.charAt(0).toUpperCase() + vehicle.make.slice(1).toLowerCase()}</td>
                             <td class="p-4 border-">${vehicle.location.charAt(0).toUpperCase() + vehicle.location.slice(1).toLowerCase()}</td>
-                            <td class="p-4 border-b">${vehicle.inspection_date ? vehicle.inspection_date : ''}</td>
+                            
                             <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
                                 <button onclick="showDetails(${vehicle.id})" class="text-blue-500 hover:text-blue-700">ℹ</button>
                                 ${(window.userPermissions && (window.userPermissions.edit_vehicle || window.isAdmin)) ? `<button id="editButton-${vehicle.id}" onclick="editVehicle(${vehicle.id})" class="text-yellow-500 hover:text-yellow-700"><i class=\"fa-solid fa-pen-to-square\"></i></button>` : ''}

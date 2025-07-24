@@ -1,3 +1,44 @@
+// --- Add Vehicle image preview and validation (max 2 images, error below upload button) ---
+function setupAddVehicleImagePreview() {
+    const addImagesInput = document.getElementById('add_images');
+    const imagePreview = document.getElementById('imagePreview');
+    const addImageError = document.getElementById('addImageError');
+    const maxImages = 2;
+    if (addImagesInput && imagePreview && addImageError) {
+        addImagesInput.addEventListener('change', function(event) {
+            imagePreview.innerHTML = '';
+            addImageError.textContent = '';
+            const files = Array.from(event.target.files);
+            if (files.length > maxImages) {
+                addImageError.textContent = 'You can only upload 2 images or less';
+                addImagesInput.value = '';
+                return;
+            }
+            files.forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'relative group';
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'w-32 h-32 object-cover rounded-lg shadow-lg';
+                        wrapper.appendChild(img);
+                        imagePreview.appendChild(wrapper);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    }
+}
+
+// Always run this after DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupAddVehicleImagePreview);
+} else {
+    setupAddVehicleImagePreview();
+}
 function openLogoutModal() {
     const logoutModal = document.getElementById('logoutModal');
     const logoutModalcontent = document.getElementById('logoutModalcontent');
@@ -118,6 +159,10 @@ if (addVehicleForm) {
             responseMessage.classList.remove('text-red-600');
             responseMessage.textContent = data.message;
             responseMessage.classList.add('text-green-600');
+            // Insert new vehicle row into the table
+            if (data.vehicle) {
+                insertVehicleRow(data.vehicle);
+            }
             if (typeof closeModal === 'function') {
                 closeModal();
                 this.reset();
@@ -125,6 +170,43 @@ if (addVehicleForm) {
                 responseMessage.textContent = '';
             }
             showAlert('Vehicle Added successfully', 'success');
+// Insert a new vehicle row into the table
+function insertVehicleRow(vehicle) {
+    const tableBody = document.querySelector('table tbody');
+    if (!tableBody) return;
+    // Find the current number of rows for S/N
+    let sn = 1;
+    if (tableBody.firstChild && tableBody.firstChild.firstChild) {
+        const firstCell = tableBody.firstChild.firstChild;
+        if (firstCell && !isNaN(parseInt(firstCell.textContent))) {
+            sn = parseInt(firstCell.textContent);
+        }
+    }
+    // Build the row HTML
+    const row = document.createElement('tr');
+    row.className = 'hover:bg-gray-500';
+    row.setAttribute('data-vehicle-id', vehicle.id);
+    row.innerHTML = `
+        <td class="p-4 border-b font-bold ">${sn}</td>
+        <td class="p-4 border-b uppercase">${vehicle.reg_no}</td>
+        <td class="p-4 border-b">${vehicle.make ? formatText(vehicle.make) : ''}</td>
+        <td class="p-4 border-b">${vehicle.type ? formatText(vehicle.type) : ''}</td>
+        <td class="p-4 border-">${vehicle.location ? formatText(vehicle.location) : ''}</td>
+        <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
+            <button onclick="showDetails(${vehicle.id})" class="text-blue-500 hover:text-blue-700">ℹ</button>
+            ${(window.userPermissions && (window.userPermissions.edit_vehicle || window.isAdmin)) ? `<button id="editButton-${vehicle.id}" onclick="editVehicle(${vehicle.id})" class="text-yellow-500 hover:text-yellow-700"><i class=\"fa-solid fa-pen-to-square\"></i></button>` : ''}
+            ${(window.userPermissions && (window.userPermissions.delete_vehicle || window.isAdmin)) ? `<button class=\"text-red-500 hover:text-red-700 delete-button\" data-vehicle-id=\"${vehicle.id}\" data-vehicle-regno=\"${vehicle.reg_no}\" onclick=\"openDeleteModal(${vehicle.id}, '${vehicle.reg_no}')\"><i class=\"fa-solid fa-trash-can\"></i></button>` : ''}
+        </td>
+    `;
+    // Insert at the top
+    tableBody.insertBefore(row, tableBody.firstChild);
+    // Update S/N for all rows
+    let idx = 1;
+    tableBody.querySelectorAll('tr').forEach(tr => {
+        const snCell = tr.querySelector('td');
+        if (snCell) snCell.textContent = idx++;
+    });
+}
         })
         .catch(error => {
             responseMessage.textContent = error.message || 'An error occurred while uploading. Please try again.';
@@ -160,7 +242,7 @@ function showDetails(vehicleId) {
             document.getElementById("detailType").textContent = vehicle.type || 'N/A';
             document.getElementById("detailMake").textContent = vehicle.make || 'N/A';
             document.getElementById("detailLocation").textContent = vehicle.location || 'N/A';
-            document.getElementById("detailInspectionDate").textContent = vehicle.inspection_date || 'N/A';
+            
             // Images
             const imageGallery = document.getElementById("imageGallery");
             imageGallery.innerHTML = '';

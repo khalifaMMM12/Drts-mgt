@@ -178,8 +178,7 @@ $vehicles = $stmt->fetchAll();
                                 <td class="p-4 border-b uppercase"><?php echo htmlspecialchars($vehicle['reg_no']); ?></td>
                                 <td class="p-4 border-b"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['make']))); ?></td>
                                 <td class="p-4 border-b"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['type']))); ?></td>
-                                <td class="p-4 border-"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['location']))); ?></td>
-                                
+                                <td class="p-4 border-b"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['location']))); ?></td>
                                 <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
                                     <button onclick="showDetails(<?php echo $vehicle['id']; ?>)" class="text-blue-500 hover:text-blue-700">ℹ</button>
                                     <?php if (hasPermission('edit_vehicle') || isAdmin()): ?>
@@ -270,6 +269,8 @@ $vehicles = $stmt->fetchAll();
                             <option value="Bus">Bus</option>
                             <option value="Bike">Bike</option>
                             <option value="Van">Van</option>
+                            <option value="Truck">Truck</option>
+                            <option value="Tow Truck">Tow Truck</option>
                             <option value="Wagon">Wagon</option>
                         </select>
                     </div>
@@ -328,6 +329,8 @@ $vehicles = $stmt->fetchAll();
                         <option value="Bus" <?php if ($vehicle['type'] === 'Bus') echo 'selected'; ?>>Bus</option>
                         <option value="Bike" <?php if ($vehicle['type'] === 'Bike') echo 'selected'; ?>>Bike</option>
                         <option value="Van" <?php if ($vehicle['type'] === 'Van') echo 'selected'; ?>>Van</option>
+                        <option value="Truck" <?php if ($vehicle['type'] === 'Truck') echo 'selected'; ?>>Truck</option>
+                        <option value="Tow Truck" <?php if ($vehicle['type'] === 'Tow Truck') echo 'selected'; ?>>Tow Truck</option>
                         <option value="Wagon" <?php if ($vehicle['type'] === 'Wagon') echo 'selected'; ?>>Wagon</option>
                         <option value="Coupe" <?php if ($vehicle['type'] === 'Coupe') echo 'selected'; ?>>Coupe</option>
                         <option value="Convertible" <?php if ($vehicle['type'] === 'Convertible') echo 'selected'; ?>>Convertible</option>

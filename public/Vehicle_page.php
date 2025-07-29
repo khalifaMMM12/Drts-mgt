@@ -156,55 +156,56 @@ $vehicles = $stmt->fetchAll();
             </div>
         </div>
 
-        <!-- Vehicle List Table -->
-        <div class="flex-1 h-full overflow-auto"> 
-            <div class="border-gray-500">
-                <table class="w-full bg-white shadow-lg rounded text-sm md:text-base">
-                    <thead class="bg-yellow-500 text-black">
-                        <tr>
-                            <th class="p-4 border-b">S/N</th>
-                            <th class="p-4 border-b">Reg No</th>
-                            <th class="p-4 border-b">Make</th>
-                            <th class="p-4 border-b">Type</th>
-                            <th class="p-4 border-b">Location</th>
-                            
-                            <th class="p-4 border-b">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php $counter = 1; foreach ($vehicles as $vehicle): ?>
-                            <tr class="hover:bg-gray-500" data-vehicle-id="<?php echo $vehicle['id']; ?>">
-                                <td class="p-4 border-b font-bold "><?php echo $counter++; ?></td>
-                                <td class="p-4 border-b uppercase"><?php echo htmlspecialchars($vehicle['reg_no']); ?></td>
-                                <td class="p-4 border-b"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['make']))); ?></td>
-                                <td class="p-4 border-b"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['type']))); ?></td>
-                                <td class="p-4 border-b"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['location']))); ?></td>
-                                <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
-                                    <button onclick="showDetails(<?php echo $vehicle['id']; ?>)" class="text-blue-500 hover:text-blue-700">ℹ</button>
-                                    <?php if (hasPermission('edit_vehicle') || isAdmin()): ?>
-                                        <button 
-                                            id="editButton-<?php echo $vehicle['id']; ?>" 
-                                            onclick="editVehicle(<?php echo $vehicle['id']; ?>)" 
-                                            class="text-yellow-500 hover:text-yellow-700">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </button>  
-                                    <?php endif; ?>
-                                    <?php if (hasPermission('delete_vehicle') || isAdmin()): ?>
-                                        <button class="text-red-500 hover:text-red-700 delete-button" data-vehicle-id="<?php echo $vehicle['id']; ?>" data-vehicle-regno="<?php echo $vehicle['reg_no']; ?>" onclick="openDeleteModal(<?php echo $vehicle['id']; ?>, '<?php echo $vehicle['reg_no']; ?>')">
-                                            <i class="fa-solid fa-trash-can"></i>
-                                        </button> 
-                                    <?php endif; ?>                           
-                                </td>
+                <!-- Vehicle List Table -->
+        <div class="flex-1 overflow-hidden"> 
+            <div class="border-gray-500 h-full">
+                <div class="overflow-auto h-full max-h-[calc(200vh-300px)]">
+                    <table class="w-full bg-white shadow-lg rounded text-sm md:text-base">
+                        <thead class="bg-yellow-500 text-black sticky top-0 z-0">
+                            <tr>
+                                <th class="p-4 border-b">S/N</th>
+                                <th class="p-4 border-b">Reg No</th>
+                                <th class="p-4 border-b">Make</th>
+                                <th class="p-4 border-b">Type</th>
+                                <th class="p-4 border-b">Location</th>
+                                <th class="p-4 border-b">Actions</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php $counter = 1; foreach ($vehicles as $vehicle): ?>
+                                <tr class="hover:bg-gray-500" data-vehicle-id="<?php echo $vehicle['id']; ?>">
+                                    <td class="p-4 border-b font-bold "><?php echo $counter++; ?></td>
+                                    <td class="p-4 border-b uppercase"><?php echo htmlspecialchars($vehicle['reg_no']); ?></td>
+                                    <td class="p-4 border-b"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['make']))); ?></td>
+                                    <td class="p-4 border-b"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['type']))); ?></td>
+                                    <td class="p-4 border-b"><?php echo htmlspecialchars(ucwords(strtolower($vehicle['location']))); ?></td>
+                                    <td class="p-4 border-b flex items-center justify-around space-x-2 text-lg">
+                                        <button onclick="showDetails(<?php echo $vehicle['id']; ?>)" class="text-blue-500 hover:text-blue-700">ℹ</button>
+                                        <?php if (hasPermission('edit_vehicle') || isAdmin()): ?>
+                                            <button 
+                                                id="editButton-<?php echo $vehicle['id']; ?>" 
+                                                onclick="editVehicle(<?php echo $vehicle['id']; ?>)" 
+                                                class="text-yellow-500 hover:text-yellow-700">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </button>  
+                                        <?php endif; ?>
+                                        <?php if (hasPermission('delete_vehicle') || isAdmin()): ?>
+                                            <button class="text-red-500 hover:text-red-700 delete-button" data-vehicle-id="<?php echo $vehicle['id']; ?>" data-vehicle-regno="<?php echo $vehicle['reg_no']; ?>" onclick="openDeleteModal(<?php echo $vehicle['id']; ?>, '<?php echo $vehicle['reg_no']; ?>')">
+                                                <i class="fa-solid fa-trash-can"></i>
+                                            </button> 
+                                        <?php endif; ?>                           
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
   <!-- Vehicle Details Modal -->
-<div id="detailsModal" class="modal-overlay fixed inset-0 bg-gray-500 bg-opacity-75 hidden items-center justify-center p-4">
+<div id="detailsModal" class="modal-overlay fixed inset-0 bg-gray-500 bg-opacity-75 hidden items-center justify-center p-4 z-50">
     <div id="detailsModalContent" class="modal-content relative bg-white p-8 rounded-lg shadow-2xl border-4 border-yellow-400 w-full max-w-lg md:max-w-2xl lg:max-w-3xl">
         <button onclick="closeDetailsModal()" id="closeDetails" class="absolute top-4 right-4 text-gray-600 text-3xl font-bold hover:text-gray-800">&times;</button>
         
@@ -249,7 +250,7 @@ $vehicles = $stmt->fetchAll();
 </div>
 
     <!-- Add Vehicle Modal -->
-    <div id="vehicleModal" class="modal-overlay hidden fixed inset-0 bg-gray-500 bg-opacity-75 items-center justify-center p-4">
+    <div id="vehicleModal" class="modal-overlay hidden fixed inset-0 bg-gray-500 bg-opacity-75 items-center justify-center p-4 z-50">
         <div id="vehicleModalContent" class="modal-content relative bg-white p-6 rounded-lg shadow-lg border-2 border-yellow-400 w-full max-w-lg md:max-w-2xl lg:max-w-3xl overflow-y-auto max-h-full">
             <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-700 text-4xl">&times;</button>            
             <h2 class="text-xl mb-4 text-yellow-500 font-bold">Add Vehicle</h2>
@@ -309,7 +310,7 @@ $vehicles = $stmt->fetchAll();
 
 
 <!-- Edit vehicle Modal -->
-    <div id="EditvehicleModal" class="modal-overlay hidden fixed inset-0 bg-gray-500 bg-opacity-75 items-center justify-center p-4">
+    <div id="EditvehicleModal" class="modal-overlay hidden fixed inset-0 bg-gray-500 bg-opacity-75 items-center justify-center p-4 z-50">
     <div id="EditvehicleContent" class="modal-content relative bg-white p-6 rounded-lg shadow-lg border-2 border-yellow-400 w-full max-w-lg md:max-w-2xl lg:max-w-3xl overflow-y-auto max-h-full">
         <button onclick="closeEditModal()" class="absolute top-2 right-2 text-gray-700 text-4xl">&times;</button>
         <h2 class="text-xl mb-4 text-yellow-500 font-bold">Edit Vehicle</h2>

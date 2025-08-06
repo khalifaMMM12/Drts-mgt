@@ -1,6 +1,6 @@
 <?php
 $host = 'localhost';
-$db = 'drtsgovn_assets_db';
+$db = 'drts-livechat';
 $user = 'root';
 $pass = '';
 

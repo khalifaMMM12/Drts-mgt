@@ -114,10 +114,46 @@ $vehicles = $stmt->fetchAll();
                             </button>
                         </form>
                     </div>
+                    <div class="relative flex items-center ml-4">
+                        <a href="chat.php" class="nav-link flex items-center justify-center relative">
+                            <i class="fa-regular fa-message text-2xl"></i>
+                            <span class="absolute -top-2 -right-2 badge rounded-pill bg-danger text-white px-2 py-1 text-xs">
+                                <!-- Show unread count -->
+                            </span>
+                        </a>
+                    </div>
                     <!-- Filters removed -->
                 </div>
             </div>
         </div>
+
+        <!-- add new chat modal -->
+        <div class="modal fade" id="newChatModal" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Start a New Chat</h5>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group">
+                    <?php
+                    // All users except self
+                    $stmt = $pdo->prepare("SELECT id, username FROM users WHERE id != ?");
+                    $stmt->execute([$user_id]);
+                    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    foreach ($users as $u): ?>
+                    <li class="list-group-item">
+                        <a href="messages.php?user=<?php echo $u['id']; ?>">
+                        <?php echo htmlspecialchars($u['username']); ?>
+                        </a>
+                    </li>
+                    <?php endforeach; ?>
+                    </ul>
+                </div>
+                </div>
+            </div>
+            </div>
+
 
         <div id="logoutModal" class="modal-overlay items-center justify-center hidden fixed z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4">
             <div id="logoutModalcontent" class="modal-content relative mx-auto shadow-xl rounded-md bg-white max-w-md">

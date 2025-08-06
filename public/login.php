@@ -1,5 +1,7 @@
 <?php
 session_start();
+echo "Session ID: " . session_id() . "<br>";
+var_dump($_SESSION);
 include '../config/db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -19,6 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($admin && password_verify($password, $admin['password'])) {
             $_SESSION['loggedin'] = true;
+            $_SESSION['user_id'] = $admin['id'];
             $_SESSION['username'] = $admin['username'];
             $_SESSION['role'] = 'admin';
             header("Location: vehicle_page.php");
@@ -32,6 +35,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($user && password_verify($password, $user['password'])) {
             $_SESSION['loggedin'] = true;
+            $_SESSION['user_id'] = $user['user_id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = 'user';
             $_SESSION['permissions'] = array(

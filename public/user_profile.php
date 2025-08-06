@@ -8,8 +8,8 @@ $success = null;
 try {
     $table = ($_SESSION['role'] === 'admin') ? 'admin' : 'users';
     $fields = $table === 'admin' ? 
-        ['id', 'username', 'role'] : 
-        ['id', 'username', 'role', 'created_at', 'can_delete_vehicle', 'can_edit_vehicle', 'can_add_vehicle'];
+        ['user_id', 'username', 'role'] : 
+        ['user_id', 'username', 'role', 'created_at', 'can_delete_vehicle', 'can_edit_vehicle', 'can_add_vehicle'];
     
     $query = "SELECT " . implode(', ', $fields) . ", password FROM $table WHERE username = ?";
 

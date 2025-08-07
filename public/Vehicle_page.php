@@ -115,7 +115,7 @@ $vehicles = $stmt->fetchAll();
                         </form>
                     </div>
                     <div class="relative flex items-center ml-4">
-                        <a href="chat.php" class="nav-link flex items-center justify-center relative">
+                        <a href="#" onclick="openLiveChatModal();return false;" class="nav-link flex items-center justify-center relative start-chat-link">
                             <i class="fa-regular fa-message text-2xl"></i>
                             <span class="absolute -top-2 -right-2 badge rounded-pill bg-danger text-white px-2 py-1 text-xs">
                                 <!-- Show unread count -->
@@ -127,33 +127,63 @@ $vehicles = $stmt->fetchAll();
             </div>
         </div>
 
-        <!-- add new chat modal -->
-        <div class="modal fade" id="newChatModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Start a New Chat</h5>
-                </div>
-                <div class="modal-body">
-                    <ul class="list-group">
-                    <?php
-                    // All users except self
-                    $stmt = $pdo->prepare("SELECT id, username FROM users WHERE id != ?");
-                    $stmt->execute([$user_id]);
-                    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                    foreach ($users as $u): ?>
-                    <li class="list-group-item">
-                        <a href="messages.php?user=<?php echo $u['id']; ?>">
-                        <?php echo htmlspecialchars($u['username']); ?>
-                        </a>
-                    </li>
-                    <?php endforeach; ?>
-                    </ul>
-                </div>
-                </div>
-            </div>
-            </div>
 
+        <!-- Live Chat Sidebar Overlay -->
+        <div id="livechatSidebarOverlay" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:9999;background:rgba(0,0,0,0.25);backdrop-filter:blur(1px);">
+          <div id="livechatSidebarWrapper" style="position:fixed;top:0;right:0;width:350px;height:100vh;background:#fff;box-shadow:-2px 0 16px rgba(0,0,0,0.18);border-radius:12px 0 0 12px;overflow:hidden;z-index:10000;transition:all 0.3s;display:flex;flex-direction:column;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:1rem 1.2rem 0.5rem 1.2rem;border-bottom:1px solid #eee;flex-shrink:0;">
+              <span style="font-weight:bold;font-size:1.1em;">Live Chat</span>
+              <button onclick="closeChatSidebar()" style="background:#222;color:#fff;border:none;border-radius:50%;width:32px;height:32px;font-size:20px;box-shadow:0 2px 8px rgba(0,0,0,0.12);cursor:pointer;display:flex;align-items:center;justify-content:center;">&times;</button>
+            </div>
+            <div style="flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;">
+              <iframe id="livechatIframe" src="messages.php" style="width:100%;height:100%;border:none;background:#fff;flex:1;display:block;" title="Live Chat"></iframe>
+            </div>
+          </div>
+        </div>
+        <style>
+        @media (max-width: 900px) {
+            #livechatSidebarWrapper {
+                width: 100vw;
+                height: 70vh;
+                left: 50%;
+                right: auto;
+                top: 50%;
+                bottom: auto;
+                transform: translate(-50%, -50%);
+                border-radius: 16px;
+            }
+        }
+        </style>
+        <script>
+function openLiveChatModal(chatUrl) {
+    var overlay = document.getElementById('livechatSidebarOverlay');
+    var iframe = document.getElementById('livechatIframe');
+    var newSrc = chatUrl ? chatUrl : 'messages.php';
+    // Only update src if different to avoid flicker
+    if (iframe.src !== newSrc && iframe.contentWindow.location.href !== newSrc) {
+        iframe.src = newSrc;
+    }
+    overlay.style.display = 'block';
+    setTimeout(function(){
+        var closeBtn = document.querySelector('#livechatSidebarWrapper button');
+        if(closeBtn) closeBtn.focus();
+    }, 100);
+}
+        function closeChatSidebar() {
+            var overlay = document.getElementById('livechatSidebarOverlay');
+            if (overlay.contains(document.activeElement)) document.activeElement.blur();
+            overlay.style.display = 'none';
+        }
+
+        // Listen for chat partner clicks from inside the iframe
+        window.addEventListener('message', function(event) {
+            // Only accept messages from our own origin
+            if(event.origin !== window.location.origin) return;
+            if(event.data && event.data.type === 'openChat' && event.data.url) {
+                openLiveChatModal(event.data.url);
+            }
+        });
+        </script>
 
         <div id="logoutModal" class="modal-overlay items-center justify-center hidden fixed z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4">
             <div id="logoutModalcontent" class="modal-content relative mx-auto shadow-xl rounded-md bg-white max-w-md">

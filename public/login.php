@@ -33,6 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute([$username]);
         $user = $stmt->fetch();
 
+        var_dump($password, $user['password'], password_verify($password, $user['password']));
         if ($user && password_verify($password, $user['password'])) {
             $_SESSION['loggedin'] = true;
             $_SESSION['user_id'] = $user['user_id'];

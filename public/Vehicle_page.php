@@ -28,6 +28,7 @@ $vehicles = $stmt->fetchAll();
     <link href="../style/style.css" rel="stylesheet">
     <link href="../style/output.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <audio id="chatNotificationSound" src="../assets/vehicles/notification_sound.mp3" preload="auto"></audio>
 </head>
 <body class="bg-gray-200">
 
@@ -117,7 +118,7 @@ $vehicles = $stmt->fetchAll();
                     <div class="relative flex items-center ml-4">
                         <a href="#" onclick="openLiveChatModal();return false;" class="nav-link flex items-center justify-center relative start-chat-link">
                             <i class="fa-regular fa-message text-2xl"></i>
-                            <span class="absolute -top-2 -right-2 badge rounded-pill bg-danger text-white px-2 py-1 text-xs">
+                            <span id="chatBadge" class="absolute -top-2 -right-2 badge rounded-pill bg-danger text-white px-2 py-1 text-xs" style="display:none;">
                                 <!-- Show unread count -->
                             </span>
                         </a>
@@ -155,20 +156,20 @@ $vehicles = $stmt->fetchAll();
         }
         </style>
         <script>
-function openLiveChatModal(chatUrl) {
-    var overlay = document.getElementById('livechatSidebarOverlay');
-    var iframe = document.getElementById('livechatIframe');
-    var newSrc = chatUrl ? chatUrl : 'messages.php';
-    // Only update src if different to avoid flicker
-    if (iframe.src !== newSrc && iframe.contentWindow.location.href !== newSrc) {
-        iframe.src = newSrc;
-    }
-    overlay.style.display = 'block';
-    setTimeout(function(){
-        var closeBtn = document.querySelector('#livechatSidebarWrapper button');
-        if(closeBtn) closeBtn.focus();
-    }, 100);
-}
+            function openLiveChatModal(chatUrl) {
+                var overlay = document.getElementById('livechatSidebarOverlay');
+                var iframe = document.getElementById('livechatIframe');
+                var newSrc = chatUrl ? chatUrl : 'messages.php';
+                // Only update src if different to avoid flicker
+                if (iframe.src !== newSrc && iframe.contentWindow.location.href !== newSrc) {
+                    iframe.src = newSrc;
+                }
+                overlay.style.display = 'block';
+                setTimeout(function(){
+                    var closeBtn = document.querySelector('#livechatSidebarWrapper button');
+                    if(closeBtn) closeBtn.focus();
+                }, 100);
+            }
         function closeChatSidebar() {
             var overlay = document.getElementById('livechatSidebarOverlay');
             if (overlay.contains(document.activeElement)) document.activeElement.blur();
@@ -181,6 +182,57 @@ function openLiveChatModal(chatUrl) {
             if(event.origin !== window.location.origin) return;
             if(event.data && event.data.type === 'openChat' && event.data.url) {
                 openLiveChatModal(event.data.url);
+            }
+        });
+
+        let lastUnreadCount = 0;
+
+        if ("Notification" in window && Notification.permission !== "granted") {
+        Notification.requestPermission();
+        }
+
+        function showChatNotification(title, body) {
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification(title, { body: body, icon: '../img/DRTS_logo.png' });
+            }
+        }
+
+        // Poll for unread messages every 10 seconds
+        setInterval(fetchUnreadCount, 10000);
+        document.addEventListener('DOMContentLoaded', fetchUnreadCount);
+
+        function fetchUnreadCount() {
+            fetch('api/unread_count.php')
+                .then(res => res.json())
+                .then(data => {
+                    const badge = document.getElementById('chatBadge');
+                    if (data.unread > 0) {
+                        badge.textContent = data.unread;
+                        badge.style.display = 'inline-block';
+                        // Play sound only if unread count increased
+                        if (data.unread > lastUnreadCount) {
+                            playNotificationSound();
+                            showChatNotification('New Chat Message', 'You have a new message!');
+                        }
+                    } else {
+                        badge.style.display = 'none';
+                    } 
+                    lastUnreadCount = data.unread;
+                });
+        }
+
+        function playNotificationSound() {
+            const audio = document.getElementById('chatNotificationSound');
+            if (audio) {
+                audio.currentTime = 0;
+                audio.play();
+            }
+        }
+
+        window.addEventListener('message', function(event) {
+            if(event.origin !== window.location.origin) return;
+            if(event.data && event.data.type === 'chatNotification') {
+                playNotificationSound();
             }
         });
         </script>

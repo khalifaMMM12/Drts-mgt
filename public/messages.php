@@ -8,11 +8,9 @@ $my_role = $_SESSION['role'];
 $other = $_GET['user'] ?? 0;
 $other_role = $_GET['role'] ?? 'user';
 
-// Mark messages as read
 $pdo->prepare("UPDATE messages SET is_read = 1 WHERE sender_id = ? AND receiver_id = ?")
     ->execute([$other, $me]);
 
-// Load messages for current chat
 $stmt = $pdo->prepare("
   SELECT * FROM messages 
   WHERE ((sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?))
@@ -21,7 +19,6 @@ $stmt = $pdo->prepare("
 $stmt->execute([$me, $other, $other, $me]);
 $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Fetch partner's username
 if($other_role === 'admin') {
     $partnerStmt = $pdo->prepare("SELECT username FROM admin WHERE id = ?");
 } else {
@@ -30,7 +27,6 @@ if($other_role === 'admin') {
 $partnerStmt->execute([$other]);
 $partner_name = $partnerStmt->fetchColumn();
 
-// Fetch your own username
 if($my_role === 'admin') {
     $meStmt = $pdo->prepare("SELECT username FROM admin WHERE id = ?");
 } else {
@@ -39,7 +35,6 @@ if($my_role === 'admin') {
 $meStmt->execute([$me]);
 $my_name = $meStmt->fetchColumn();
 
-// Fetch chat list for sidebar
 $chatListStmt = $pdo->prepare("
     SELECT
         t.partner_id,
@@ -83,12 +78,10 @@ $chats = $chatListStmt->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="../style/ChatStyles.css">
     <script>
-        // No-op: always show both sidebar and chat area
     </script>
 </head>
 <body>
 <div class="chat-container">
-    <!-- Sidebar (list only, or hidden when chat is open) -->
     <div class="sidebar" id="sidebar"<?php if ($other && $other != 0) echo ' style="display:none;"'; ?>>
         <div class="sidebar-header" style="display:flex;align-items:center;justify-content:space-between;">
             <span>Chats</span>
@@ -141,7 +134,6 @@ $chats = $chatListStmt->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
     </div>
-    <!-- Chat Panel (only, with back button) -->
     <div class="chat-panel<?php if ($other && $other != 0) echo ' active'; ?>" id="chatPanel"<?php if (!($other && $other != 0)) echo ' style="display:none;"'; ?>>
     <?php if ($other && $other != 0): ?>
         <div class="chat-main">
@@ -183,7 +175,6 @@ $chats = $chatListStmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 </div>
 <script>
-    // Show/hide sidebar and chat panel for mobile-style experience
     function goBack() {
         document.getElementById('sidebar').style.display = '';
         document.getElementById('chatPanel').style.display = 'none';
@@ -203,25 +194,20 @@ $chats = $chatListStmt->fetchAll(PDO::FETCH_ASSOC);
         }
     }
     document.addEventListener('DOMContentLoaded', function() {
-        // Accessibility fix: blur .start-chat-link before modal closes to avoid aria-hidden warning
         document.querySelectorAll('.start-chat-link').forEach(function(link) {
             link.addEventListener('click', function(e) {
                 this.blur();
-                // Intercept and open chat in the panel without full reload
                 e.preventDefault();
                 var href = this.getAttribute('href');
-                // Close modal
                 var modal = document.getElementById('newChatModal');
                 if (modal && window.bootstrap) {
                     var bsModal = window.bootstrap.Modal.getOrCreateInstance(modal);
                     bsModal.hide();
                 }
-                // Navigate to the chat (simulate link click)
                 window.location.href = href;
             });
         });
         reattachNewChatModal();
-        // If chat is open, hide sidebar
         if (window.location.search.match(/user=\d+/)) {
             document.getElementById('sidebar').style.display = 'none';
             document.getElementById('chatPanel').style.display = '';
@@ -229,7 +215,6 @@ $chats = $chatListStmt->fetchAll(PDO::FETCH_ASSOC);
     });
 </script>
 </body>
-<!-- Bootstrap 5 JS and CSS (for modal functionality) -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </html>

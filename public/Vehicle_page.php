@@ -141,101 +141,8 @@ $vehicles = $stmt->fetchAll();
             </div>
           </div>
         </div>
-        <style>
-        @media (max-width: 900px) {
-            #livechatSidebarWrapper {
-                width: 100vw;
-                height: 70vh;
-                left: 50%;
-                right: auto;
-                top: 50%;
-                bottom: auto;
-                transform: translate(-50%, -50%);
-                border-radius: 16px;
-            }
-        }
-        </style>
-        <script>
-            function openLiveChatModal(chatUrl) {
-                var overlay = document.getElementById('livechatSidebarOverlay');
-                var iframe = document.getElementById('livechatIframe');
-                var newSrc = chatUrl ? chatUrl : 'messages.php';
-                // Only update src if different to avoid flicker
-                if (iframe.src !== newSrc && iframe.contentWindow.location.href !== newSrc) {
-                    iframe.src = newSrc;
-                }
-                overlay.style.display = 'block';
-                setTimeout(function(){
-                    var closeBtn = document.querySelector('#livechatSidebarWrapper button');
-                    if(closeBtn) closeBtn.focus();
-                }, 100);
-            }
-        function closeChatSidebar() {
-            var overlay = document.getElementById('livechatSidebarOverlay');
-            if (overlay.contains(document.activeElement)) document.activeElement.blur();
-            overlay.style.display = 'none';
-        }
-
-        // Listen for chat partner clicks from inside the iframe
-        window.addEventListener('message', function(event) {
-            // Only accept messages from our own origin
-            if(event.origin !== window.location.origin) return;
-            if(event.data && event.data.type === 'openChat' && event.data.url) {
-                openLiveChatModal(event.data.url);
-            }
-        });
-
-        let lastUnreadCount = 0;
-
-        if ("Notification" in window && Notification.permission !== "granted") {
-        Notification.requestPermission();
-        }
-
-        function showChatNotification(title, body) {
-            if ("Notification" in window && Notification.permission === "granted") {
-                new Notification(title, { body: body, icon: '../img/DRTS_logo.png' });
-            }
-        }
-
-        // Poll for unread messages every 10 seconds
-        setInterval(fetchUnreadCount, 10000);
-        document.addEventListener('DOMContentLoaded', fetchUnreadCount);
-
-        function fetchUnreadCount() {
-            fetch('api/unread_count.php')
-                .then(res => res.json())
-                .then(data => {
-                    const badge = document.getElementById('chatBadge');
-                    if (data.unread > 0) {
-                        badge.textContent = data.unread;
-                        badge.style.display = 'inline-block';
-                        // Play sound only if unread count increased
-                        if (data.unread > lastUnreadCount) {
-                            playNotificationSound();
-                            showChatNotification('New Chat Message', 'You have a new message!');
-                        }
-                    } else {
-                        badge.style.display = 'none';
-                    } 
-                    lastUnreadCount = data.unread;
-                });
-        }
-
-        function playNotificationSound() {
-            const audio = document.getElementById('chatNotificationSound');
-            if (audio) {
-                audio.currentTime = 0;
-                audio.play();
-            }
-        }
-
-        window.addEventListener('message', function(event) {
-            if(event.origin !== window.location.origin) return;
-            if(event.data && event.data.type === 'chatNotification') {
-                playNotificationSound();
-            }
-        });
-        </script>
+        
+       
 
         <div id="logoutModal" class="modal-overlay items-center justify-center hidden fixed z-50 inset-0 bg-gray-900 bg-opacity-60 overflow-y-auto h-full w-full px-4">
             <div id="logoutModalcontent" class="modal-content relative mx-auto shadow-xl rounded-md bg-white max-w-md">
@@ -521,6 +428,7 @@ $vehicles = $stmt->fetchAll();
     <script src="../scripts/vehicle.js"></script>
     <script src="../scripts/editVehicle.js"></script>
     <script src="../scripts/delete.js"></script>
+    <script src="../scripts/LiveChat.js"></script>
     <script>
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');
